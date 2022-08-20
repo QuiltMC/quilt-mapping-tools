@@ -1,29 +1,36 @@
 plugins {
-    id 'java'
+	id 'java'
+	id 'org.quiltmc.gradle.licenser' version "1.1.+"
 }
 
 group 'org.quiltmc'
 version '1.0.0'
 
 repositories {
-    mavenCentral()
-    maven {
-        url "https://maven.quiltmc.org/repository/release"
-    }
+	mavenCentral()
+	maven {
+		url "https://maven.quiltmc.org/repository/release"
+	}
 }
 
 dependencies {
-    implementation 'org.ow2.asm:asm:9.3'
-    implementation 'org.ow2.asm:asm-tree:9.3'
+	implementation 'org.ow2.asm:asm:9.3'
+	implementation 'org.ow2.asm:asm-tree:9.3'
 
-    implementation 'org.quiltmc:quilt-json5:1.0.2'
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation 'org.quiltmc:lorenz-tiny:3.0.0'
+	implementation 'org.quiltmc:quilt-json5:1.0.2'
+	implementation 'org.jetbrains:annotations:20.1.0'
+	implementation 'org.quiltmc:lorenz-tiny:3.0.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
+}
+
+license {
+	rule rootProject.file("codeformat/HEADER")
+
+	include "**/*.java"
 }

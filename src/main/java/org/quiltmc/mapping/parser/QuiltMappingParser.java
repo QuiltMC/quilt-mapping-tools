@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 QuiltMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.quiltmc.mapping.parser;
 
 import java.io.IOException;
@@ -22,226 +38,226 @@ import org.quiltmc.mapping.parser.exception.MissingValueException;
 
 
 public class QuiltMappingParser {
-    public final Map<String, MappingType<?>> types;
-    private final String input;
+	public final Map<String, MappingType<?>> types;
+	private final String input;
 
-    private final ThreadLocal<JsonReader> reader = new ThreadLocal<>();
+	private final ThreadLocal<JsonReader> reader = new ThreadLocal<>();
 
-    public QuiltMappingParser(String input, Collection<MappingType<?>> types) {
-        this.input = input;
-        this.types = types.stream().collect(Collectors.toMap(
-                MappingType::key,
-                Function.identity()
-        ));
-    }
+	public QuiltMappingParser(String input, Collection<MappingType<?>> types) {
+		this.input = input;
+		this.types = types.stream().collect(Collectors.toMap(
+				MappingType::key,
+				Function.identity()
+		));
+	}
 
-    public QuiltMappingFile parse() {
-        JsonReader reader = JsonReader.json5(input);
-        this.reader.set(reader);
+	public QuiltMappingFile parse() {
+		JsonReader reader = JsonReader.json5(input);
+		this.reader.set(reader);
 
-        return this.object(() -> {
-            String from = null;
-            String to = "";
-            List<String> extensions = List.of();
+		return this.object(() -> {
+			String from = null;
+			String to = "";
+			List<String> extensions = List.of();
 
-            List<MappingEntry<?>> entries = new ArrayList<>();
+			List<MappingEntry<?>> entries = new ArrayList<>();
 
-            while (this.hasValues()) {
-                String name = this.valueName();
-                switch (name) {
-                    case "from" -> from = this.string();
-                    case "to" -> to = this.string();
-                    case "extensions" -> extensions = List.copyOf(this.array(this::string));
-                    default -> parseChildToken(entries, name);
-                }
-            }
+			while (this.hasValues()) {
+				String name = this.valueName();
+				switch (name) {
+					case "from" -> from = this.string();
+					case "to" -> to = this.string();
+					case "extensions" -> extensions = List.copyOf(this.array(this::string));
+					default -> parseChildToken(entries, name);
+				}
+			}
 
-            this.checkValuePresent("from", from);
+			this.checkValuePresent("from", from);
 
-            return new QuiltMappingFile(new MappingHeader(from, to, extensions), entries);
-        });
-    }
+			return new QuiltMappingFile(new MappingHeader(from, to, extensions), entries);
+		});
+	}
 
-    public void parseChildToken(List<MappingEntry<?>> children, String name) {
-        if (types.containsKey(name)) {
-            MappingType<?> type = types.get(name);
-            if (type.tokenType().isArray()) {
-                children.addAll(parseMappingEntryArray(type));
-            } else {
-                children.add(parseMappingEntry(type));
-            }
-        } else {
-            System.out.println("unknown token: " + name);
-            this.skip();
-        }
-    }
+	public void parseChildToken(List<MappingEntry<?>> children, String name) {
+		if (types.containsKey(name)) {
+			MappingType<?> type = types.get(name);
+			if (type.tokenType().isArray()) {
+				children.addAll(parseMappingEntryArray(type));
+			} else {
+				children.add(parseMappingEntry(type));
+			}
+		} else {
+			System.out.println("unknown token: " + name);
+			this.skip();
+		}
+	}
 
-    public <T extends MappingEntry<T>> T parseMappingEntry(MappingType<T> mappingType) {
-        if (mappingType.tokenType().isObject()) {
-            return this.object(() -> mappingType.parser().parse(this));
-        }
+	public <T extends MappingEntry<T>> T parseMappingEntry(MappingType<T> mappingType) {
+		if (mappingType.tokenType().isObject()) {
+			return this.object(() -> mappingType.parser().parse(this));
+		}
 
-        return mappingType.parser().parse(this);
-    }
+		return mappingType.parser().parse(this);
+	}
 
-    public <T extends MappingEntry<T>> List<T> parseMappingEntryArray(MappingType<T> mappingType) {
-        return this.array(() -> parseMappingEntry(mappingType));
-    }
+	public <T extends MappingEntry<T>> List<T> parseMappingEntryArray(MappingType<T> mappingType) {
+		return this.array(() -> parseMappingEntry(mappingType));
+	}
 
-    @Contract("_, null -> fail")
-    public <T> void checkValuePresent(String name, T value) {
-        checkValue(name, value, v -> v == null || v instanceof String s && s.isEmpty());
-    }
+	@Contract("_, null -> fail")
+	public <T> void checkValuePresent(String name, T value) {
+		checkValue(name, value, v -> v == null || v instanceof String s && s.isEmpty());
+	}
 
-    @Contract("_, null, _ -> fail")
-    public <T> void checkValue(String name, T value, Predicate<T> tester) {
-        if (tester.test(value)) {
-            throw new MissingValueException(this, "Missing or invalid value for mapping field " + name);
-        }
-    }
+	@Contract("_, null, _ -> fail")
+	public <T> void checkValue(String name, T value, Predicate<T> tester) {
+		if (tester.test(value)) {
+			throw new MissingValueException(this, "Missing or invalid value for mapping field " + name);
+		}
+	}
 
-    private <T> T wrapSyntaxError(ThrowableSupplier<T, IOException> toRun) {
-        try {
-            return toRun.get();
-        } catch (Exception ex) {
-            throw new InvalidSyntaxException(this, ex);
-        }
-    }
+	private <T> T wrapSyntaxError(ThrowableSupplier<T, IOException> toRun) {
+		try {
+			return toRun.get();
+		} catch (Exception ex) {
+			throw new InvalidSyntaxException(this, ex);
+		}
+	}
 
-    private void wrapSyntaxError(ThrowableRunnable<IOException> toRun) {
-        try {
-            toRun.run();
-        } catch (Exception ex) {
-            throw new InvalidSyntaxException(this, ex);
-        }
-    }
+	private void wrapSyntaxError(ThrowableRunnable<IOException> toRun) {
+		try {
+			toRun.run();
+		} catch (Exception ex) {
+			throw new InvalidSyntaxException(this, ex);
+		}
+	}
 
-    public boolean hasValues() {
-        return wrapSyntaxError(this.reader.get()::hasNext);
-    }
+	public boolean hasValues() {
+		return wrapSyntaxError(this.reader.get()::hasNext);
+	}
 
-    public String valueName() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextName();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public String valueName() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextName();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public String string() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextString();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public String string() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextString();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public int integerValue() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextInt();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected an int but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public int integerValue() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextInt();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected an int but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public long longValue() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextLong();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a long but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public long longValue() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextLong();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a long but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public double doubleValue() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextDouble();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a double but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public double doubleValue() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextDouble();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a double but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public float floatValue() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextNumber().floatValue();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a float but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public float floatValue() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextNumber().floatValue();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a float but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public boolean booleanValue() {
-        return wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextBoolean();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a boolean but found: " + this.reader.get().peek(), e);
-            }
-        });
-    }
+	public boolean booleanValue() {
+		return wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextBoolean();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a boolean but found: " + this.reader.get().peek(), e);
+			}
+		});
+	}
 
-    public <T extends Enum<?>> T enumValue(Class<T> clazz) {
-        T[] enums = clazz.getEnumConstants();
+	public <T extends Enum<?>> T enumValue(Class<T> clazz) {
+		T[] enums = clazz.getEnumConstants();
 
-        String name = wrapSyntaxError(() -> {
-            try {
-                return this.reader.get().nextString();
-            } catch (IllegalStateException e) {
-                throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
-            }
-        }).toUpperCase();
+		String name = wrapSyntaxError(() -> {
+			try {
+				return this.reader.get().nextString();
+			} catch (IllegalStateException e) {
+				throw new InvalidValueException(this, "Expected a string but found: " + this.reader.get().peek(), e);
+			}
+		}).toUpperCase();
 
-        for (T e : enums) {
-            if (e.name().equals(name)) {
-                return e;
-            }
-        }
+		for (T e : enums) {
+			if (e.name().equals(name)) {
+				return e;
+			}
+		}
 
-        throw new InvalidValueException(this, "Could not find enum constant `" + name + "` in `" + clazz.getSimpleName() + "`");
-    }
+		throw new InvalidValueException(this, "Could not find enum constant `" + name + "` in `" + clazz.getSimpleName() + "`");
+	}
 
-    public String location() {
-        return this.reader.get().locationString();
-    }
+	public String location() {
+		return this.reader.get().locationString();
+	}
 
-    public <T> List<T> array(Supplier<T> generator) {
-        JsonReader reader = this.reader.get();
-        List<T> list = new ArrayList<>();
-        this.wrapSyntaxError(reader::beginArray);
-        while (this.hasValues()) {
-            list.add(generator.get());
-        }
-        this.wrapSyntaxError(reader::endArray);
-        return List.copyOf(list);
-    }
+	public <T> List<T> array(Supplier<T> generator) {
+		JsonReader reader = this.reader.get();
+		List<T> list = new ArrayList<>();
+		this.wrapSyntaxError(reader::beginArray);
+		while (this.hasValues()) {
+			list.add(generator.get());
+		}
+		this.wrapSyntaxError(reader::endArray);
+		return List.copyOf(list);
+	}
 
-    public <T> T object(Supplier<T> generator) {
-        JsonReader reader = this.reader.get();
-        this.wrapSyntaxError(reader::beginObject);
-        T t = generator.get();
-        this.wrapSyntaxError(reader::endObject);
-        return t;
-    }
+	public <T> T object(Supplier<T> generator) {
+		JsonReader reader = this.reader.get();
+		this.wrapSyntaxError(reader::beginObject);
+		T t = generator.get();
+		this.wrapSyntaxError(reader::endObject);
+		return t;
+	}
 
-    public void skip() {
-        wrapSyntaxError(this.reader.get()::skipValue);
-    }
+	public void skip() {
+		wrapSyntaxError(this.reader.get()::skipValue);
+	}
 
-    private interface ThrowableSupplier<V, T extends Throwable> {
-        V get() throws T;
-    }
+	private interface ThrowableSupplier<V, T extends Throwable> {
+		V get() throws T;
+	}
 
-    private interface ThrowableRunnable<T extends Throwable> {
-        void run() throws T;
-    }
+	private interface ThrowableRunnable<T extends Throwable> {
+		void run() throws T;
+	}
 }

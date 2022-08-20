@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 QuiltMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.quiltmc.mapping.writer;
 
 import java.io.IOException;
@@ -16,142 +32,142 @@ import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 
 public class QuiltMappingsWriter {
-    public final Map<String, MappingType<?>> types;
-    private final QuiltMappingFile mappingFile;
-    private final ThreadLocal<JsonWriter> writer = new ThreadLocal<>();
+	public final Map<String, MappingType<?>> types;
+	private final QuiltMappingFile mappingFile;
+	private final ThreadLocal<JsonWriter> writer = new ThreadLocal<>();
 
-    public QuiltMappingsWriter(QuiltMappingFile mappingFile, Collection<MappingType<?>> types) {
-        this.mappingFile = mappingFile;
-        this.types = types.stream().collect(Collectors.toMap(
-                MappingType::key,
-                Function.identity()
-        ));
-    }
+	public QuiltMappingsWriter(QuiltMappingFile mappingFile, Collection<MappingType<?>> types) {
+		this.mappingFile = mappingFile;
+		this.types = types.stream().collect(Collectors.toMap(
+				MappingType::key,
+				Function.identity()
+		));
+	}
 
-    public void write(Writer writer) throws IOException {
-        JsonWriter jsonWriter = JsonWriter.json5(writer);
-        this.writer.set(jsonWriter);
-        this.write();
-    }
+	public void write(Writer writer) throws IOException {
+		JsonWriter jsonWriter = JsonWriter.json5(writer);
+		this.writer.set(jsonWriter);
+		this.write();
+	}
 
-    public void write(Path output) throws IOException {
-        JsonWriter writer = JsonWriter.json5(output);
-        this.writer.set(writer);
-        this.write();
-    }
+	public void write(Path output) throws IOException {
+		JsonWriter writer = JsonWriter.json5(output);
+		this.writer.set(writer);
+		this.write();
+	}
 
-    private void write() throws IOException {
-        this.wrapSyntaxError(this.writer.get()::beginObject);
-        this.writeString("from", this.mappingFile.header().fromNamespace());
-        this.writeString("to", this.mappingFile.header().toNamespace());
-        this.name("extensions");
-        this.array(this.mappingFile.header().extensions(), this::writeString);
-        this.writeChildren(this.mappingFile.entries());
-        this.wrapSyntaxError(this.writer.get()::endObject);
+	private void write() throws IOException {
+		this.wrapSyntaxError(this.writer.get()::beginObject);
+		this.writeString("from", this.mappingFile.header().fromNamespace());
+		this.writeString("to", this.mappingFile.header().toNamespace());
+		this.name("extensions");
+		this.array(this.mappingFile.header().extensions(), this::writeString);
+		this.writeChildren(this.mappingFile.entries());
+		this.wrapSyntaxError(this.writer.get()::endObject);
 
-        this.writer.get().flush();
-    }
+		this.writer.get().flush();
+	}
 
-    public void writeString(String value) {
-        wrapSyntaxError(() -> this.writer.get().value(value));
-    }
+	public void writeString(String value) {
+		wrapSyntaxError(() -> this.writer.get().value(value));
+	}
 
-    public void writeString(String name, String value) {
-        wrapSyntaxError(() -> this.writer.get().name(name).value(value));
-    }
+	public void writeString(String name, String value) {
+		wrapSyntaxError(() -> this.writer.get().name(name).value(value));
+	}
 
-    public void writeNumber(String name, Number value) {
-        wrapSyntaxError(() -> this.writer.get().name(name).value(value));
-    }
+	public void writeNumber(String name, Number value) {
+		wrapSyntaxError(() -> this.writer.get().name(name).value(value));
+	}
 
-    public void number(Number value) {
-        wrapSyntaxError(() -> this.writer.get().value(value));
-    }
+	public void number(Number value) {
+		wrapSyntaxError(() -> this.writer.get().value(value));
+	}
 
-    public void bool(Boolean value) {
-        wrapSyntaxError(() -> this.writer.get().value(value));
-    }
+	public void bool(Boolean value) {
+		wrapSyntaxError(() -> this.writer.get().value(value));
+	}
 
-    public <T extends Enum<?>> void writeEnum(String name, T value) {
-        wrapSyntaxError(() -> this.writer.get().name(name).value(value.toString().toLowerCase()));
-    }
+	public <T extends Enum<?>> void writeEnum(String name, T value) {
+		wrapSyntaxError(() -> this.writer.get().name(name).value(value.toString().toLowerCase()));
+	}
 
-    public void writeInt(String name, int value) {
-        wrapSyntaxError(() -> this.writer.get().name(name).value(value));
-    }
+	public void writeInt(String name, int value) {
+		wrapSyntaxError(() -> this.writer.get().name(name).value(value));
+	}
 
-    public void comment(String comment) {
-        wrapSyntaxError(() -> this.writer.get().comment(comment));
-    }
+	public void comment(String comment) {
+		wrapSyntaxError(() -> this.writer.get().comment(comment));
+	}
 
-    public void writeChildren(List<MappingEntry<?>> children) {
-        Map<MappingType<?>, List<MappingEntry<?>>> types = children.stream().collect(Collectors.groupingBy(MappingEntry::getType));
-        for (Map.Entry<MappingType<?>, List<MappingEntry<?>>> entry : types.entrySet()) {
-            writeChildTypeAnon(entry.getKey(), entry.getValue());
-        }
-    }
+	public void writeChildren(List<MappingEntry<?>> children) {
+		Map<MappingType<?>, List<MappingEntry<?>>> types = children.stream().collect(Collectors.groupingBy(MappingEntry::getType));
+		for (Map.Entry<MappingType<?>, List<MappingEntry<?>>> entry : types.entrySet()) {
+			writeChildTypeAnon(entry.getKey(), entry.getValue());
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    private <T extends MappingEntry<T>> void writeChildTypeAnon(MappingType<?> key, List<MappingEntry<?>> value) {
-        writeChildType((MappingType<T>) key, (List<MappingEntry<T>>) (List<?>) value);
-    }
+	@SuppressWarnings("unchecked")
+	private <T extends MappingEntry<T>> void writeChildTypeAnon(MappingType<?> key, List<MappingEntry<?>> value) {
+		writeChildType((MappingType<T>) key, (List<MappingEntry<T>>) (List<?>) value);
+	}
 
-    public void name(String name) {
-        this.wrapSyntaxError(() -> this.writer.get().name(name));
-    }
+	public void name(String name) {
+		this.wrapSyntaxError(() -> this.writer.get().name(name));
+	}
 
-    public <T> void array(List<T> values, Consumer<T> writer) {
-        this.wrapSyntaxError(this.writer.get()::beginArray);
-        values.forEach(writer);
-        this.wrapSyntaxError(this.writer.get()::endArray);
-    }
+	public <T> void array(List<T> values, Consumer<T> writer) {
+		this.wrapSyntaxError(this.writer.get()::beginArray);
+		values.forEach(writer);
+		this.wrapSyntaxError(this.writer.get()::endArray);
+	}
 
-    public void object(Runnable writer) {
-        this.wrapSyntaxError(this.writer.get()::beginObject);
-        writer.run();
-        this.wrapSyntaxError(this.writer.get()::endObject);
-    }
+	public void object(Runnable writer) {
+		this.wrapSyntaxError(this.writer.get()::beginObject);
+		writer.run();
+		this.wrapSyntaxError(this.writer.get()::endObject);
+	}
 
-    @SuppressWarnings("unchecked")
-    public <T extends MappingEntry<T>> void writeChildType(MappingType<T> type, List<MappingEntry<T>> values) {
-        if (!type.tokenType().isArray() && values.size() > 1) {
-            throw new RuntimeException("Too many values for " + type.key() + " mapping type");
-        }
+	@SuppressWarnings("unchecked")
+	public <T extends MappingEntry<T>> void writeChildType(MappingType<T> type, List<MappingEntry<T>> values) {
+		if (!type.tokenType().isArray() && values.size() > 1) {
+			throw new RuntimeException("Too many values for " + type.key() + " mapping type");
+		}
 
-        this.wrapSyntaxError(() -> this.writer.get().name(type.key()));
+		this.wrapSyntaxError(() -> this.writer.get().name(type.key()));
 
-        if (type.tokenType().isArray()) {
-            this.wrapSyntaxError(this.writer.get()::beginArray);
-        }
+		if (type.tokenType().isArray()) {
+			this.wrapSyntaxError(this.writer.get()::beginArray);
+		}
 
-        for (MappingEntry<T> value : values) {
-            if (type.tokenType().isObject()) {
-                this.wrapSyntaxError(this.writer.get()::beginObject);
-            }
-            type.writer().write((T) value, this);
-            if (type.tokenType().isObject()) {
-                this.wrapSyntaxError(this.writer.get()::endObject);
-            }
-        }
+		for (MappingEntry<T> value : values) {
+			if (type.tokenType().isObject()) {
+				this.wrapSyntaxError(this.writer.get()::beginObject);
+			}
+			type.writer().write((T) value, this);
+			if (type.tokenType().isObject()) {
+				this.wrapSyntaxError(this.writer.get()::endObject);
+			}
+		}
 
-        if (type.tokenType().isArray()) {
-            this.wrapSyntaxError(this.writer.get()::endArray);
-        }
-    }
+		if (type.tokenType().isArray()) {
+			this.wrapSyntaxError(this.writer.get()::endArray);
+		}
+	}
 
-    private interface ThrowableSupplier<V, T extends Throwable> {
-        V get() throws T;
-    }
+	private void wrapSyntaxError(ThrowableRunnable<IOException> toRun) {
+		try {
+			toRun.run();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex); // TODO: change this exception?
+		}
+	}
 
-    private interface ThrowableRunnable<T extends Throwable> {
-        void run() throws T;
-    }
+	private interface ThrowableSupplier<V, T extends Throwable> {
+		V get() throws T;
+	}
 
-    private void wrapSyntaxError(ThrowableRunnable<IOException> toRun) {
-        try {
-            toRun.run();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex); // TODO: change this exception?
-        }
-    }
+	private interface ThrowableRunnable<T extends Throwable> {
+		void run() throws T;
+	}
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 QuiltMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.quiltmc.mapping.entry.annotation;
 
 import java.util.List;
@@ -8,30 +24,30 @@ import org.quiltmc.mapping.parser.QuiltMappingParser;
 import org.quiltmc.mapping.writer.QuiltMappingsWriter;
 
 public record AnnotationRemovalMapping(
-        String descriptor) implements MappingEntry<AnnotationRemovalMapping> {
-    public static final MappingType<AnnotationRemovalMapping> ANNOTATION_REMOVAL_MAPPING_TYPE = new MappingType<>("removals", MappingType.TokenType.LITERAL_ARRAY, AnnotationRemovalMapping.class, AnnotationRemovalMapping::parse, AnnotationRemovalMapping::write);
+		String descriptor) implements MappingEntry<AnnotationRemovalMapping> {
+	public static final MappingType<AnnotationRemovalMapping> ANNOTATION_REMOVAL_MAPPING_TYPE = new MappingType<>("removals", MappingType.TokenType.LITERAL_ARRAY, AnnotationRemovalMapping.class, AnnotationRemovalMapping::parse, AnnotationRemovalMapping::write);
 
-    public static AnnotationRemovalMapping parse(QuiltMappingParser parser) {
-        return new AnnotationRemovalMapping(parser.string());
-    }
+	public static AnnotationRemovalMapping parse(QuiltMappingParser parser) {
+		return new AnnotationRemovalMapping(parser.string());
+	}
 
-    public void write(QuiltMappingsWriter writer) {
-        writer.writeString(this.descriptor);
-    }
+	public void write(QuiltMappingsWriter writer) {
+		writer.writeString(this.descriptor);
+	}
 
-    @Override
-    public AnnotationRemovalMapping remap() {
-        return null;
-    }
+	@Override
+	public AnnotationRemovalMapping remap() {
+		return null;
+	}
 
-    @Override
-    public MappingType<AnnotationRemovalMapping> getType() {
-        return ANNOTATION_REMOVAL_MAPPING_TYPE;
-    }
+	@Override
+	public MappingType<AnnotationRemovalMapping> getType() {
+		return ANNOTATION_REMOVAL_MAPPING_TYPE;
+	}
 
-    @Override
-    public List<MappingType<?>> getTargetTypes() {
-        return List.of(AnnotationModifications.ANNOTATION_MODIFICATIONS_MAPPING_TYPE);
-    }
+	@Override
+	public List<MappingType<?>> getTargetTypes() {
+		return List.of(AnnotationModifications.ANNOTATION_MODIFICATIONS_MAPPING_TYPE);
+	}
 
 }
