@@ -29,8 +29,12 @@ test {
 	useJUnitPlatform()
 }
 
-license {
-	rule rootProject.file("codeformat/HEADER")
+allprojects {
+	apply plugin: "org.quiltmc.gradle.licenser"
 
-	include "**/*.java"
+	license {
+		rule rootProject.file("codeformat/HEADER")
+
+		include "**/*.java"
+	}
 }

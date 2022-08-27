@@ -1,7 +1,8 @@
 plugins {
-	id("java")
-	id("org.jetbrains.intellij") version "1.8.1"
+	id "org.jetbrains.intellij" version "1.8.1"
 }
+
+apply plugin: "java"
 
 group = "org.quiltmc"
 version = "1.0-SNAPSHOT"
