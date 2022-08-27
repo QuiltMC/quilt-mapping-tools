@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 913.53 913.53" width="16" height="16">
+    <!-- https://github.com/QuiltMC/art/blob/4bceaea67151dc55240b9aefaa90e67bc5c431ac/brand/svg/quilt_mini_mono_white_transparent.svg -->
+    <defs>
+        <style>.cls-1{fill:#fff;}</style>
+    </defs>
+    <rect class="cls-1" x="125.44" y="125.44" width="311.12" height="311.12" rx="15.94"/>
+    <rect class="cls-1" x="476.97" y="125.44" width="311.12" height="311.12" rx="15.94"/>
+    <rect class="cls-1" x="125.44" y="476.97" width="311.12" height="311.12" rx="15.94"/>
+    <rect class="cls-1" x="541.4" y="541.4" width="311.12" height="311.12" rx="15.94" transform="translate(-288.69 696.96) rotate(-45)"/>
+</svg>
