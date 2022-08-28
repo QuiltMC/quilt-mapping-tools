@@ -62,4 +62,9 @@ tasks {
 		pathToParser = "org/quiltmc/mapping.intellij/language/QuiltMappingParser.java"
 		pathToPsiRoot = "org/quiltmc/mapping.intellij/language/psi/"
 	}
+
+	// TODO: Find a way to exclude a source directory
+	checkLicenseMain {
+		enabled false
+	}
 }
