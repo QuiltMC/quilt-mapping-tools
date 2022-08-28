@@ -1,5 +1,6 @@
 plugins {
 	id "org.jetbrains.intellij" version "1.8.1"
+	id "org.jetbrains.grammarkit" version "2021.2.2"
 }
 
 apply plugin: "java"
@@ -11,6 +12,8 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets.main.java.srcDirs("src/main/gen")
+
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
@@ -18,6 +21,10 @@ intellij {
 	type.set("IC") // Target IDE Platform
 
 	plugins.set([/* Plugin Dependencies */])
+}
+
+grammarKit {
+	intellijRelease = "2021.3"
 }
 
 // Set the JVM compatibility versions
@@ -41,4 +48,12 @@ tasks {
 	publishPlugin {
 		token.set(System.getenv("PUBLISH_TOKEN"))
 	}
+
+	build {
+		dependsOn generateParser
+	}
+}
+
+license {
+	exclude "src/main/gen/**/*"
 }
