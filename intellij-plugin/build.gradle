@@ -12,7 +12,13 @@ repositories {
 	mavenCentral()
 }
 
-sourceSets.main.java.srcDirs("src/main/gen")
+sourceSets {
+	main {
+		java {
+			srcDirs("src/generated")
+		}
+	}
+}
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -24,7 +30,8 @@ intellij {
 }
 
 grammarKit {
-	intellijRelease = "2021.3"
+	jflexRelease = "1.7.0-1"
+	grammarKitRelease = "2021.1.2"
 }
 
 // Set the JVM compatibility versions
@@ -49,11 +56,10 @@ tasks {
 		token.set(System.getenv("PUBLISH_TOKEN"))
 	}
 
-	build {
-		dependsOn generateParser
+	generateParser {
+		source = "src/main/java/org/quiltmc/mapping/intellij/language/QuiltMapping.bnf"
+		targetRoot = "src/generated/"
+		pathToParser = "org/quiltmc/mapping.intellij/language/QuiltMappingParser.java"
+		pathToPsiRoot = "org/quiltmc/mapping.intellij/language/psi/"
 	}
-}
-
-license {
-	exclude "src/main/gen/**/*"
 }
