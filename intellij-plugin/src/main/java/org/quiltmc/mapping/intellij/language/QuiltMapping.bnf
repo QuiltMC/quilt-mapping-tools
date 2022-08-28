@@ -30,8 +30,8 @@
     // decimal [-+]?(\d+\.?\d*|\.\d+)
     //   allow trailing decimal point \d+\.?\d*
     //   with leading decimal point \.\d+
-    // with exponent [-+]?\d+[Ee][-+]?\d+
-    NUMBER='regexp:[-+]?0[xX]([A-Fa-f0-9]+)|[-+]?(\d+\.?\d*|\.\d+)|[-+]?\d+[Ee][-+]?\d+'
+    // with exponent [-+]?\d+\.?\d*[Ee][-+]?\d+
+    NUMBER='regexp:[-+]?0[xX]([A-Fa-f0-9]+)|[-+]?(\d+\.?\d*|\.\d+)|[-+]?\d+\.?\d*[Ee][-+]?\d+'
     TRUE='true'
     FALSE='false'
     NULL='null'

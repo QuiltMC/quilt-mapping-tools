@@ -40,6 +40,10 @@ java {
 	targetCompatibility = "11"
 }
 
+task generateCode {
+	dependsOn generateLexer, generateParser
+}
+
 tasks {
 	patchPluginXml {
 		sinceBuild.set("213")
