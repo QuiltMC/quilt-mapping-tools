@@ -30,5 +30,8 @@
 				fieldName="INSTANCE"
 				language="QuiltMapping"
 				extensions="quiltmapping"/>
+		<lang.parserDefinition
+			language="QuiltMapping"
+			implementationClass="org.quiltmc.mapping.intellij.language.QuiltMappingParserDefinition"/>
 	</extensions>
 </idea-plugin>
