@@ -56,11 +56,17 @@ tasks {
 		token.set(System.getenv("PUBLISH_TOKEN"))
 	}
 
+	generateLexer {
+		source = "src/main/java/org/quiltmc/mapping/intellij/language/QuiltMapping.flex"
+		targetDir = "src/generated/org/quiltmc/mapping/intellij/language/"
+		targetClass = "QuiltMappingLexer.java"
+	}
+
 	generateParser {
 		source = "src/main/java/org/quiltmc/mapping/intellij/language/QuiltMapping.bnf"
 		targetRoot = "src/generated/"
-		pathToParser = "org/quiltmc/mapping.intellij/language/QuiltMappingParser.java"
-		pathToPsiRoot = "org/quiltmc/mapping.intellij/language/psi/"
+		pathToParser = "org/quiltmc/mapping/intellij/language/QuiltMappingParser.java"
+		pathToPsiRoot = "org/quiltmc/mapping/intellij/language/psi/"
 	}
 
 	// TODO: Find a way to exclude a source directory

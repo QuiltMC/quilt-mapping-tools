@@ -27,9 +27,11 @@
     SINGLE_QUOTED_STRING="regexp:'([^'\n]|\\\n)*'?"
 
     // hexadecimal [-+]?0[xX]([A-Fa-f0-9]+)
-    // decimal [-+]?(?=.?\d+)\d*\.?\d* - allow leading/trailing commas, ensure there's at least one digit (via lookahead)
+    // decimal [-+]?(\d+\.?\d*|\.\d+)
+    //   allow trailing decimal point \d+\.?\d*
+    //   with leading decimal point \.\d+
     // with exponent [-+]?\d+[Ee][-+]?\d+
-    NUMBER='regexp:[-+]?0[xX]([A-Fa-f0-9]+)|[-+]?(?=\.?\d+)\d*\.?\d*|[-+]?\d+[Ee][-+]?\d+'
+    NUMBER='regexp:[-+]?0[xX]([A-Fa-f0-9]+)|[-+]?(\d+\.?\d*|\.\d+)|[-+]?\d+[Ee][-+]?\d+'
     TRUE='true'
     FALSE='false'
     NULL='null'
