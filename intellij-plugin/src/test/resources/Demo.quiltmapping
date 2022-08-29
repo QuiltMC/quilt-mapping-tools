@@ -1,0 +1,20 @@
+{
+  // Its format is json5 based
+  keywords: [],
+  numbers: [
+    /*
+     * Leading and trailing decimal points,
+     * hexadecimal, and exponents are supported
+     */
+    1.23,
+    .456,
+    789.,
+    0xC0FFEE,
+    1.6605e-24, // Trailing commas are also allowed
+  ],
+  "foo": 'Bar',
+  'multiline': "No need for \n \
+    Just end the line with a single \
+    backslash",
+  bad value: [ property: 'value' ],
+}
