@@ -1,6 +1,6 @@
 {
   // Its format is json5 based
-  keywords: [],
+  keywords: [true, false, null],
   numbers: [
     /*
      * Leading and trailing decimal points,

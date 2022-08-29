@@ -41,7 +41,7 @@
     FALSE='false'
     NULL='null'
 
-    IDENTIFIER="regexp:[A-z][A-z0-9_$]*"
+    IDENTIFIER="regexp:[A-Za-z][A-Za-z0-9_$]*"
 
     space = 'regexp:\s+' // ignore whitespace?
   ]

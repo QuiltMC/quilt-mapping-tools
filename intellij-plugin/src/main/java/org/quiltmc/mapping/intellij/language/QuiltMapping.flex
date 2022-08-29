@@ -30,7 +30,7 @@ BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*(\*+"/")?
 DOUBLE_QUOTED_STRING=\"([^\"\n]|\\\n)*\"?
 SINGLE_QUOTED_STRING='([^'\n]|\\\n)*'?
 NUMBER=[-+]?(0[xX][A-Fa-f0-9]+|([0-9]+\.?[0-9]*|\.[0-9]+)([eE][-+]?[0-9]*)?)
-IDENTIFIER=[A-z][A-z0-9_$]*
+IDENTIFIER=[A-Za-z][A-Za-z0-9_$]*
 SPACE=[ \t\n\x0B\f\r]+
 
 %%

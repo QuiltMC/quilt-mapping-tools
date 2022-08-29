@@ -42,7 +42,7 @@ public class QuiltMappingColorSettingsPage implements ColorSettingsPage {
 	public @NonNls @NotNull String getDemoText() {
 		return "{\n" +
 				"  // Its format is json5 based\n" +
-				"  keywords: [],\n" +
+				"  keywords: [true, false, null],\n" +
 				"  numbers: [\n" +
 				"    /*\n" +
 				"     * Leading and trailing decimal points,\n" +
