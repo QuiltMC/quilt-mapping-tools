@@ -33,5 +33,10 @@
 		<lang.parserDefinition
 			language="QuiltMapping"
 			implementationClass="org.quiltmc.mapping.intellij.language.QuiltMappingParserDefinition"/>
+		<lang.syntaxHighlighterFactory
+			language="QuiltMapping"
+			implementationClass="org.quiltmc.mapping.intellij.language.QuiltMappingSyntaxHighlighterFactory"/>
+		<colorSettingsPage
+				implementation="org.quiltmc.mapping.intellij.language.QuiltMappingColorSettingsPage"/>
 	</extensions>
 </idea-plugin>
