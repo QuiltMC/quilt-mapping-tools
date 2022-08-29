@@ -28,6 +28,13 @@ public class QuiltMappingTokenType extends IElementType {
 
 	@Override
 	public String toString() {
-		return "QuiltMappingTokenType." + super.toString();
+		String debugName = super.toString();
+		if (debugName.length() == 1) {
+			debugName = "'" + Character.getName(debugName.charAt(0)) + "'";
+		} else if (debugName.length() < 1) {
+			debugName = "<empty>";
+		}
+
+		return "QuiltMappingTokenType." + debugName;
 	}
 }
