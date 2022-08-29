@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -58,7 +59,7 @@ public class QuiltMappingParser {
 		return this.object(() -> {
 			String from = null;
 			String to = "";
-			List<String> extensions = List.of();
+			Set<String> extensions = Set.of();
 
 			List<MappingEntry<?>> entries = new ArrayList<>();
 
@@ -67,7 +68,7 @@ public class QuiltMappingParser {
 				switch (name) {
 					case "from" -> from = this.string();
 					case "to" -> to = this.string();
-					case "extensions" -> extensions = List.copyOf(this.array(this::string));
+					case "extensions" -> extensions = Set.copyOf(this.array(this::string));
 					default -> parseChildToken(entries, name);
 				}
 			}

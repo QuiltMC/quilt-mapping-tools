@@ -44,6 +44,16 @@ public record TransitiveEntry(String name) implements MappingEntry<TransitiveEnt
 	}
 
 	@Override
+	public boolean shouldMerge(MappingEntry<?> other) {
+		return MappingEntry.super.shouldMerge(other) && this.name.equals(((TransitiveEntry) other).name);
+	}
+
+	@Override
+	public TransitiveEntry merge(MappingEntry<?> other) {
+		return this;
+	}
+
+	@Override
 	public MappingType<TransitiveEntry> getType() {
 		return TRANSITIVE_MAPPING_TYPE;
 	}

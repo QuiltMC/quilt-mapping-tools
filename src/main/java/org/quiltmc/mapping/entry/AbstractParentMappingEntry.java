@@ -16,9 +16,11 @@
 
 package org.quiltmc.mapping.entry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.MappingType;
 
@@ -41,11 +43,35 @@ public abstract class AbstractParentMappingEntry<T extends AbstractParentMapping
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public boolean shouldMerge(MappingEntry<?> other) {
+		return MappingEntry.super.shouldMerge(other) && this.fromName.equals(((T) other).fromName);
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		AbstractParentMappingEntry<?> that = (AbstractParentMappingEntry<?>) o;
 		return Objects.equals(fromName, that.fromName) && Objects.equals(toName, that.toName) && this.children.containsAll(that.children) && that.children.containsAll(this.children);
+	}
+
+	@NotNull
+	public static List<MappingEntry<?>> mergeChildren(List<MappingEntry<?>> children, List<MappingEntry<?>> otherChildren) {
+		List<MappingEntry<?>> newChildren = new ArrayList<>(children);
+
+		for (MappingEntry<?> newChild : otherChildren) {
+			for (int i = 0; i < newChildren.size(); i++) {
+				MappingEntry<?> child = newChildren.get(i);
+				if (child.shouldMerge(newChild)) {
+					newChild = child.merge(newChild);
+					newChildren.remove(i);
+					break;
+				}
+			}
+			newChildren.add(newChild);
+		}
+		return newChildren;
 	}
 
 	@Override

@@ -116,7 +116,7 @@ public class QuiltMappingsWriter {
 		this.wrapSyntaxError(() -> this.writer.get().name(name));
 	}
 
-	public <T> void array(List<T> values, Consumer<T> writer) {
+	public <T> void array(Collection<T> values, Consumer<T> writer) {
 		this.wrapSyntaxError(this.writer.get()::beginArray);
 		values.forEach(writer);
 		this.wrapSyntaxError(this.writer.get()::endArray);

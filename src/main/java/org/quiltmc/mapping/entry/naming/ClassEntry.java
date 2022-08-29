@@ -48,7 +48,7 @@ public class ClassEntry extends AbstractParentMappingEntry<ClassEntry> {
 		}
 
 		parser.checkValuePresent("from_name", fromName);
-		parser.checkValue("to_name", toName, String::isEmpty);
+		parser.checkValue("to_name", toName, s -> s != null && s.isEmpty());
 
 		return new ClassEntry(fromName, toName, children);
 	}
@@ -70,6 +70,13 @@ public class ClassEntry extends AbstractParentMappingEntry<ClassEntry> {
 	@Override
 	public List<MappingType<?>> getTargetTypes() {
 		return List.of(CLASS_MAPPING_TYPE);
+	}
+
+	@Override
+	public ClassEntry merge(MappingEntry<?> other) {
+		ClassEntry clazz = ((ClassEntry) other);
+		List<MappingEntry<?>> children = mergeChildren(this.children, clazz.children);
+		return new ClassEntry(this.fromName, this.toName != null ? this.toName : clazz.toName, children);
 	}
 
 	@Override

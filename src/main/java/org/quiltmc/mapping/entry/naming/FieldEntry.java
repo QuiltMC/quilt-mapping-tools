@@ -76,6 +76,14 @@ public class FieldEntry extends AbstractParentDescriptorMappingEntry<FieldEntry>
 		return List.of(ClassEntry.CLASS_MAPPING_TYPE);
 	}
 
+
+	@Override
+	public FieldEntry merge(MappingEntry<?> other) {
+		FieldEntry field = ((FieldEntry) other);
+		List<MappingEntry<?>> children = mergeChildren(this.children, field.children);
+		return new FieldEntry(this.fromName, this.toName != null ? this.toName : field.toName, this.descriptor, children);
+	}
+
 	@Override
 	public String toString() {
 		return "FieldEntry[" +

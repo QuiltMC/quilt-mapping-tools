@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
@@ -56,6 +57,16 @@ public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> c
 		writer.writeChildren(this.children);
 	}
 
+	@Override
+	public boolean shouldMerge(MappingEntry<?> other) {
+		return MappingEntry.super.shouldMerge(other) && this.index == ((ArgEntry) other).index;
+	}
+
+	@Override
+	public ArgEntry merge(MappingEntry<?> other) {
+		ArgEntry arg = (ArgEntry) other;
+		return new ArgEntry(this.index, this.name != null ? this.name : arg.name, AbstractParentMappingEntry.mergeChildren(this.children, arg.children));
+	}
 
 	@Override
 	public ArgEntry remap() {

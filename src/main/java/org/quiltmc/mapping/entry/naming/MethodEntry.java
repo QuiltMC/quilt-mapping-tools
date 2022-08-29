@@ -67,6 +67,13 @@ public class MethodEntry extends AbstractParentDescriptorMappingEntry<MethodEntr
 	}
 
 	@Override
+	public MethodEntry merge(MappingEntry<?> other) {
+		MethodEntry method = ((MethodEntry) other);
+		List<MappingEntry<?>> children = mergeChildren(this.children, method.children);
+		return new MethodEntry(this.fromName, this.toName != null ? this.toName : method.toName, this.descriptor, children);
+	}
+
+	@Override
 	public MethodEntry remap() {
 		return null;
 	}

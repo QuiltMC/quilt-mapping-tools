@@ -55,6 +55,15 @@ public record UnpickEntry(String group, @Nullable UnpickType type) implements Ma
 		}
 	}
 
+	@Override
+	public boolean shouldMerge(MappingEntry<?> other) {
+		return MappingEntry.super.shouldMerge(other) && this.group.equals(((UnpickEntry) other).group);
+	}
+
+	@Override
+	public UnpickEntry merge(MappingEntry<?> other) {
+		return this;
+	}
 
 	@Override
 	public UnpickEntry remap() {

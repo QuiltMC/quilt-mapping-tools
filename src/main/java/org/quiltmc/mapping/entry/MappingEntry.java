@@ -26,4 +26,13 @@ public interface MappingEntry<T extends MappingEntry<T>> {
 	MappingType<T> getType();
 
 	List<MappingType<?>> getTargetTypes();
+
+	default boolean shouldMerge(MappingEntry<?> other) {
+		return this.getType().equals(other.getType());
+	}
+
+	@SuppressWarnings("unchecked")
+	default T merge(MappingEntry<?> other) {
+		return (T) this;
+	}
 }

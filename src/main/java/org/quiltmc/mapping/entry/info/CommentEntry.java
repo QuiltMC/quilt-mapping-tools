@@ -43,6 +43,11 @@ public record CommentEntry(String comment) implements MappingEntry<CommentEntry>
 	}
 
 	@Override
+	public CommentEntry merge(MappingEntry<?> other) {
+		return new CommentEntry(this.comment + "\n" + ((CommentEntry) other).comment);
+	}
+
+	@Override
 	public MappingType<CommentEntry> getType() {
 		return COMMENT_MAPPING_TYPE;
 	}

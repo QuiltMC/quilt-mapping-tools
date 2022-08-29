@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
@@ -41,6 +42,12 @@ public record ReturnEntry(List<MappingEntry<?>> children) implements MappingEntr
 
 	public void write(QuiltMappingsWriter writer) {
 		writer.writeChildren(this.children);
+	}
+
+	@Override
+	public ReturnEntry merge(MappingEntry<?> other) {
+		ReturnEntry ret = (ReturnEntry) other;
+		return new ReturnEntry(AbstractParentMappingEntry.mergeChildren(this.children, ret.children));
 	}
 
 	@Override
