@@ -22,9 +22,9 @@
     COLON=':'
     COMMENT='regexp://.*'
     BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*(\*+/)?'
-    // '\\\n' -> require escaped new lines
-    DOUBLE_QUOTED_STRING="regexp:\"([^\"\n]|\\\n)*\"?"
-    SINGLE_QUOTED_STRING="regexp:'([^'\n]|\\\n)*'?"
+    // escaped new lines are checked in the SyntaxHighlighter (TODO)
+    DOUBLE_QUOTED_STRING="regexp:\"[^\"]*\"?"
+    SINGLE_QUOTED_STRING="regexp:'[^']*'?"
 
     // [-+]? ( 0[xX][A-Fa-f0-9]+ | ( \d+\.?\d* | \.\d+ ) ([eE][-+]?\d*)? )
     // <optional sign> ( <hexadecimal> | <decimal> )
