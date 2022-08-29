@@ -41,7 +41,10 @@ java {
 }
 
 task generateCode {
-	dependsOn generateLexer, generateParser
+	finalizedBy generateLexer, generateParser
+	doFirst {
+		file("src/generated/").delete()
+	}
 }
 
 tasks {
