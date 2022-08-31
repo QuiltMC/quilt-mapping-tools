@@ -1,0 +1,59 @@
+{
+  from: "<from_namespace>",
+  to: "[to_namespace]",
+  extensions: [
+    "unpick",
+    "comment",
+    "transitive"
+  ],
+  classes: [
+    {
+      from_name: "<from_name>",
+      to_name: "[to_name]",
+      comment: "This is a test comment!",
+      fields: [
+        {
+          from_name: "<from_name>",
+          to_name: "[to_name]",
+          descriptor: "<from_descriptor>",
+          unpick: {
+            group: "<test_group>",
+            type: "constant"
+          }
+        }
+      ],
+      classes: [
+        {
+          from_name: "<nested_from_name>",
+          to_name: "[nested_to_name]",
+        }
+      ],
+      methods: [
+        {
+          from_name: "<from_name>",
+          to_name: "[to_name]",
+          descriptor: "<from_descriptor>",
+          args: [
+            {
+              index: 0,
+              name: "[name]",
+              unpick: {
+                group: "<test_group>"
+              }
+            }
+          ],
+          return: {
+            unpick: {
+              group: "<test_group>"
+            }
+          }
+        },
+        {
+          from_name: "<from_name_transitive>",
+          descriptor: "<from_descriptor_transitive>",
+          transitive: "<from_name>"
+        }
+      ]
+    }
+  ]
+}
