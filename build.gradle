@@ -25,15 +25,15 @@ allprojects {
 }
 
 dependencies {
-	implementation 'org.ow2.asm:asm:9.3'
-	implementation 'org.ow2.asm:asm-tree:9.3'
+	implementation "org.ow2.asm:asm:${project.asm}"
+	implementation "org.ow2.asm:asm-tree:${project.asm}"
 
-	implementation 'org.quiltmc:quilt-json5:1.0.2'
-	implementation 'org.jetbrains:annotations:20.1.0'
-	implementation 'org.quiltmc:lorenz-tiny:3.0.0'
+	implementation "org.quiltmc:quilt-json5:${project.quilt_json5}"
+	implementation "org.jetbrains:annotations:${project.annotations}"
+	implementation "org.quiltmc:lorenz-tiny:${project.lorenz_tiny}"
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_bom}"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_bom}"
 }
 
 test {
