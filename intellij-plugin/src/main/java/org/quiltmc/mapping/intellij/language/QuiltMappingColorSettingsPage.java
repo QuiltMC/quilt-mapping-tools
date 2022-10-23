@@ -26,6 +26,8 @@ public class QuiltMappingColorSettingsPage implements ColorSettingsPage {
 			new AttributesDescriptor("Number", QuiltMappingSyntaxHighlighter.NUMBER),
 			new AttributesDescriptor("String", QuiltMappingSyntaxHighlighter.STRING),
 			new AttributesDescriptor("Property name", QuiltMappingSyntaxHighlighter.PROPERTY_NAME),
+			new AttributesDescriptor("Valid escape sequence", QuiltMappingSyntaxHighlighter.VALID_ESCAPE),
+			new AttributesDescriptor("Invalid escape sequence", QuiltMappingSyntaxHighlighter.INVALID_ESCAPE),
 	};
 
 	@Override

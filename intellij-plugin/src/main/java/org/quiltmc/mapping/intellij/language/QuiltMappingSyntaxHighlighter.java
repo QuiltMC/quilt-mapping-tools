@@ -1,12 +1,18 @@
 package org.quiltmc.mapping.intellij.language;
 
+import com.intellij.lexer.LayeredLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.lexer.StringLiteralLexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
+import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuiltMappingSyntaxHighlighter extends SyntaxHighlighterBase {
 	public static final TextAttributesKey BRACES =
@@ -33,46 +39,69 @@ public class QuiltMappingSyntaxHighlighter extends SyntaxHighlighterBase {
 	public static final TextAttributesKey PROPERTY_NAME =
 			TextAttributesKey.createTextAttributesKey("QUILT_MAPPING_PROPERTY_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 
-	private static final TextAttributesKey[] BRACE_KEYS = new TextAttributesKey[]{BRACES};
-	private static final TextAttributesKey[] BRACKET_KEYS = new TextAttributesKey[]{BRACKETS};
-	private static final TextAttributesKey[] BLOCK_COMMENT_KEYS = new TextAttributesKey[]{BLOCK_COMMENT};
-	private static final TextAttributesKey[] LINE_COMMENT_KEYS = new TextAttributesKey[]{LINE_COMMENT};
-	private static final TextAttributesKey[] COLON_KEYS = new TextAttributesKey[]{COLON};
-	private static final TextAttributesKey[] COMMA_KEYS = new TextAttributesKey[]{COMMA};
-	private static final TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{KEYWORD};
-	private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
-	private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
-	private static final TextAttributesKey[] PROPERTY_NAME_KEYS = new TextAttributesKey[]{PROPERTY_NAME};
+	public static final TextAttributesKey VALID_ESCAPE =
+			TextAttributesKey.createTextAttributesKey("QUILT_MAPPING_VALID_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
+	public static final TextAttributesKey INVALID_ESCAPE =
+			TextAttributesKey.createTextAttributesKey("QUILT_MAPPING_INVALID_ESCAPE", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
+
+	private static final Map<IElementType, TextAttributesKey> ATTRIBUTES = new HashMap<>();
+
+	static {
+		fillMap(ATTRIBUTES, BRACES, QuiltMappingTypes.LBRACE, QuiltMappingTypes.RBRACE);
+		fillMap(ATTRIBUTES, BRACKETS, QuiltMappingTypes.LBRACKET, QuiltMappingTypes.RBRACKET);
+		fillMap(ATTRIBUTES, BLOCK_COMMENT, QuiltMappingTypes.BLOCK_COMMENT);
+		fillMap(ATTRIBUTES, LINE_COMMENT, QuiltMappingTypes.COMMENT);
+		fillMap(ATTRIBUTES, COLON, QuiltMappingTypes.COLON);
+		fillMap(ATTRIBUTES, COMMA, QuiltMappingTypes.COMMA);
+		fillMap(ATTRIBUTES, KEYWORD, QuiltMappingTypes.TRUE, QuiltMappingTypes.FALSE, QuiltMappingTypes.NULL);
+		fillMap(ATTRIBUTES, NUMBER, QuiltMappingTypes.NUMBER);
+		fillMap(ATTRIBUTES, STRING, QuiltMappingTypes.SINGLE_QUOTED_STRING, QuiltMappingTypes.DOUBLE_QUOTED_STRING);
+		fillMap(ATTRIBUTES, PROPERTY_NAME, QuiltMappingTypes.IDENTIFIER);
+
+		fillMap(ATTRIBUTES, VALID_ESCAPE, StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN);
+		fillMap(ATTRIBUTES, INVALID_ESCAPE, StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN);
+	}
 
 	@Override
 	public @NotNull Lexer getHighlightingLexer() {
-		return new QuiltMappingLexerAdapter();
+		LayeredLexer lexer = new LayeredLexer(new QuiltMappingLexerAdapter());
+		lexer.registerSelfStoppingLayer(new StringEscapesLexer('\"', QuiltMappingTypes.DOUBLE_QUOTED_STRING), new IElementType[]{QuiltMappingTypes.DOUBLE_QUOTED_STRING}, IElementType.EMPTY_ARRAY);
+		lexer.registerSelfStoppingLayer(new StringEscapesLexer('\'', QuiltMappingTypes.SINGLE_QUOTED_STRING), new IElementType[]{QuiltMappingTypes.SINGLE_QUOTED_STRING}, IElementType.EMPTY_ARRAY);
+		return lexer;
 	}
 
 	@Override
 	public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
-		if (tokenType.equals(QuiltMappingTypes.LBRACE) || tokenType.equals(QuiltMappingTypes.RBRACE)) {
-			return BRACE_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.LBRACKET) || tokenType.equals(QuiltMappingTypes.RBRACKET)) {
-			return BRACKET_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.BLOCK_COMMENT)) {
-			return BLOCK_COMMENT_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.COMMENT)) {
-			return LINE_COMMENT_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.COLON)) {
-			return COLON_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.COMMA)) {
-			return COMMA_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.TRUE) || tokenType.equals(QuiltMappingTypes.FALSE) || tokenType.equals(QuiltMappingTypes.NULL)) {
-			return KEYWORD_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.NUMBER)) {
-			return NUMBER_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.SINGLE_QUOTED_STRING) || tokenType.equals(QuiltMappingTypes.DOUBLE_QUOTED_STRING)) {
-			return STRING_KEYS;
-		} else if (tokenType.equals(QuiltMappingTypes.IDENTIFIER)) {
-			return PROPERTY_NAME_KEYS;
+		return pack(ATTRIBUTES.get(tokenType));
+	}
+
+	private static class StringEscapesLexer extends StringLiteralLexer {
+		private static final String ESCAPES;
+
+		public StringEscapesLexer(char quoteChar, IElementType originalLiteralToken) {
+			super(quoteChar, originalLiteralToken, true, ESCAPES, false, true);
 		}
 
-		return TextAttributesKey.EMPTY_ARRAY;
+		@Override
+		protected @NotNull IElementType handleSingleSlashEscapeSequence() {
+			return myOriginalLiteralToken;
+		}
+
+		@Override
+		protected boolean shouldAllowSlashZero() {
+			return true;
+		}
+
+		static {
+			StringBuilder builder = new StringBuilder("/");
+
+			for (char c = '\1'; c < '\255'; c++) {
+				if (!Character.isDigit(c) && c != 'x' && c != 'u' && c != '\n' && c != '\r') {
+					builder.append(c);
+				}
+			}
+
+			ESCAPES = builder.toString();
+		}
 	}
 }
