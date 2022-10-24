@@ -12,6 +12,8 @@
   elementTypeClass = 'org.quiltmc.mapping.intellij.language.psi.QuiltMappingElementType'
   tokenTypeClass = 'org.quiltmc.mapping.intellij.language.psi.QuiltMappingTokenType'
 
+  psiImplUtilClass = 'org.quiltmc.mapping.intellij.language.psi.impl.QuiltMappingPsiUtil'
+
   tokens = [
     LBRACE='{'
     RBRACE='}'

@@ -30,6 +30,9 @@
 				fieldName="INSTANCE"
 				language="QuiltMapping"
 				extensions="quiltmapping"/>
+		<lang.foldingBuilder
+			language="QuiltMapping"
+			implementationClass="org.quiltmc.mapping.intellij.language.QuiltMappingFoldingBuilder"/>
 		<lang.parserDefinition
 			language="QuiltMapping"
 			implementationClass="org.quiltmc.mapping.intellij.language.QuiltMappingParserDefinition"/>
