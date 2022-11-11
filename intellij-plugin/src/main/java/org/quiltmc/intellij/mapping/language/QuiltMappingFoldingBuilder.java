@@ -1,4 +1,4 @@
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
@@ -11,8 +11,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes;
-import org.quiltmc.mapping.intellij.language.psi.impl.QuiltMappingPsiUtil;
+import org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes;
+import org.quiltmc.intellij.mapping.language.psi.impl.QuiltMappingPsiUtil;
 
 import java.util.ArrayList;
 import java.util.List;

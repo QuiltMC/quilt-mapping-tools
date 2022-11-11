@@ -1,4 +1,4 @@
-package org.quiltmc.mapping.intellij.language.psi.impl;
+package org.quiltmc.intellij.mapping.language.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Couple;
@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes;
+import org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes;
 
 import java.util.List;
 

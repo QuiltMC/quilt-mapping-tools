@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij;
+package org.quiltmc.intellij.mapping.language.psi;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.quiltmc.intellij.mapping.language.QuiltMappingLanguage;
 
-import javax.swing.Icon;
-
-public class QuiltMappingIcons {
-	public static final Icon FILE = IconLoader.getIcon("/icons/quiltMiniLogo.svg", QuiltMappingIcons.class);
+public class QuiltMappingElementType extends IElementType {
+	public QuiltMappingElementType(@NonNls @NotNull String debugName) {
+		super(debugName, QuiltMappingLanguage.INSTANCE);
+	}
 }

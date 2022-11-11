@@ -1,4 +1,4 @@
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.lexer.LayeredLexer;
 import com.intellij.lexer.Lexer;
@@ -9,7 +9,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes;
+import org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes;
 
 import java.util.HashMap;
 import java.util.Map;

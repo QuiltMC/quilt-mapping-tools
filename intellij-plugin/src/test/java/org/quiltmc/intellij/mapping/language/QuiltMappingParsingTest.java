@@ -1,4 +1,4 @@
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.testFramework.ParsingTestCase;
 

@@ -1,18 +1,18 @@
 {
-  parserClass = 'org.quiltmc.mapping.intellij.language.QuiltMappingParser'
+  parserClass = 'org.quiltmc.intellij.mapping.language.QuiltMappingParser'
 
   extends = 'com.intellij.extapi.psi.ASTWrapperPsiElement'
 
   psiClassPrefix = 'QuiltMapping'
   psiImplClassSuffix = 'Impl'
-  psiPackage = 'org.quiltmc.mapping.intellij.language.psi'
-  psiImplPackage = 'org.quiltmc.mapping.intellij.language.psi.impl'
+  psiPackage = 'org.quiltmc.intellij.mapping.language.psi'
+  psiImplPackage = 'org.quiltmc.intellij.mapping.language.psi.impl'
 
-  elementTypeHolderClass = 'org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes'
-  elementTypeClass = 'org.quiltmc.mapping.intellij.language.psi.QuiltMappingElementType'
-  tokenTypeClass = 'org.quiltmc.mapping.intellij.language.psi.QuiltMappingTokenType'
+  elementTypeHolderClass = 'org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes'
+  elementTypeClass = 'org.quiltmc.intellij.mapping.language.psi.QuiltMappingElementType'
+  tokenTypeClass = 'org.quiltmc.intellij.mapping.language.psi.QuiltMappingTokenType'
 
-  psiImplUtilClass = 'org.quiltmc.mapping.intellij.language.psi.impl.QuiltMappingPsiUtil'
+  psiImplUtilClass = 'org.quiltmc.intellij.mapping.language.psi.impl.QuiltMappingPsiUtil'
 
   tokens = [
     LBRACE='{'

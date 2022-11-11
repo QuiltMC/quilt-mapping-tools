@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping;
 
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.IconLoader;
 
-public class QuiltMappingFile extends PsiFileBase {
-	protected QuiltMappingFile(@NotNull FileViewProvider viewProvider) {
-		super(viewProvider, QuiltMappingLanguage.INSTANCE);
-	}
+import javax.swing.Icon;
 
-	@Override
-	public @NotNull FileType getFileType() {
-		return QuiltMappingFileType.INSTANCE;
-	}
-
-	@Override
-	public String toString() {
-		return "Quilt Mapping File";
-	}
+public class QuiltMappingIcons {
+	public static final Icon FILE = IconLoader.getIcon("/icons/quiltMiniLogo.svg", QuiltMappingIcons.class);
 }

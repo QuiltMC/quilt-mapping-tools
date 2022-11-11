@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -27,7 +27,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes;
+import org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes;
 
 public class QuiltMappingParserDefinition implements ParserDefinition {
 	public static final TokenSet COMMENTS = TokenSet.create(QuiltMappingTypes.COMMENT, QuiltMappingTypes.BLOCK_COMMENT);

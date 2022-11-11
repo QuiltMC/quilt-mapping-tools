@@ -1,11 +1,11 @@
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static org.quiltmc.mapping.intellij.language.psi.QuiltMappingTypes.*;
+import static org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes.*;
 
 %%
 

@@ -1,4 +1,4 @@
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -9,7 +9,7 @@ import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.intellij.QuiltMappingIcons;
+import org.quiltmc.intellij.mapping.QuiltMappingIcons;
 
 import javax.swing.Icon;
 import java.util.Map;

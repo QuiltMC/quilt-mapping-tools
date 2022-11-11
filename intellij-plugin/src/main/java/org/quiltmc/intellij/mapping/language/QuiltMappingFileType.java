@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.intellij.QuiltMappingIcons;
+import org.quiltmc.intellij.mapping.QuiltMappingIcons;
 
 import javax.swing.Icon;
 

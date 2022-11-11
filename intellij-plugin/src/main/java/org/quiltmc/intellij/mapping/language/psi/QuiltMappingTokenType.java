@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language.psi;
+package org.quiltmc.intellij.mapping.language.psi;
 
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.mapping.intellij.language.QuiltMappingLanguage;
+import org.quiltmc.intellij.mapping.language.QuiltMappingLanguage;
 
-public class QuiltMappingElementType extends IElementType {
-	public QuiltMappingElementType(@NonNls @NotNull String debugName) {
+public class QuiltMappingTokenType extends IElementType {
+	public QuiltMappingTokenType(@NonNls @NotNull String debugName) {
 		super(debugName, QuiltMappingLanguage.INSTANCE);
+	}
+
+	@Override
+	public String toString() {
+		String debugName = super.toString();
+		if (debugName.length() == 1) {
+			debugName = "'" + Character.getName(debugName.charAt(0)) + "'";
+		} else if (debugName.length() < 1) {
+			debugName = "<empty>";
+		}
+
+		return "QuiltMappingTokenType." + debugName;
 	}
 }

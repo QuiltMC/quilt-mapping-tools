@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language.psi;
+package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.mapping.intellij.language.QuiltMappingLanguage;
 
-public class QuiltMappingTokenType extends IElementType {
-	public QuiltMappingTokenType(@NonNls @NotNull String debugName) {
-		super(debugName, QuiltMappingLanguage.INSTANCE);
+public class QuiltMappingFile extends PsiFileBase {
+	protected QuiltMappingFile(@NotNull FileViewProvider viewProvider) {
+		super(viewProvider, QuiltMappingLanguage.INSTANCE);
+	}
+
+	@Override
+	public @NotNull FileType getFileType() {
+		return QuiltMappingFileType.INSTANCE;
 	}
 
 	@Override
 	public String toString() {
-		String debugName = super.toString();
-		if (debugName.length() == 1) {
-			debugName = "'" + Character.getName(debugName.charAt(0)) + "'";
-		} else if (debugName.length() < 1) {
-			debugName = "<empty>";
-		}
-
-		return "QuiltMappingTokenType." + debugName;
+		return "Quilt Mapping File";
 	}
 }

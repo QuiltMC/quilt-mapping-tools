@@ -1,5 +1,5 @@
 plugins {
-	id "org.jetbrains.intellij" version "1.8.1"
+	id "org.jetbrains.intellij" version "1.9.0"
 	id "org.jetbrains.grammarkit" version "2021.2.2"
 }
 
@@ -64,16 +64,16 @@ tasks {
 	}
 
 	generateLexer {
-		source = "src/main/java/org/quiltmc/mapping/intellij/language/QuiltMapping.flex"
-		targetDir = "src/generated/org/quiltmc/mapping/intellij/language/"
+		source = "src/main/java/org/quiltmc/intellij/mapping/language/QuiltMapping.flex"
+		targetDir = "src/generated/org/quiltmc/intellij/mapping/language/"
 		targetClass = "QuiltMappingLexer.java"
 	}
 
 	generateParser {
-		source = "src/main/java/org/quiltmc/mapping/intellij/language/QuiltMapping.bnf"
+		source = "src/main/java/org/quiltmc/intellij/mapping/language/QuiltMapping.bnf"
 		targetRoot = "src/generated/"
-		pathToParser = "org/quiltmc/mapping/intellij/language/QuiltMappingParser.java"
-		pathToPsiRoot = "org/quiltmc/mapping/intellij/language/psi/"
+		pathToParser = "org/quiltmc/intellij/mapping/language/QuiltMappingParser.java"
+		pathToPsiRoot = "org/quiltmc/intellij/mapping/language/psi/"
 	}
 
 	// TODO: Find a way to exclude a source directory

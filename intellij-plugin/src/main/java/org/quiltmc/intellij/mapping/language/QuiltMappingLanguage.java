@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.intellij.language;
+package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.lexer.FlexAdapter;
+import com.intellij.lang.Language;
 
-public class QuiltMappingLexerAdapter extends FlexAdapter {
-	public QuiltMappingLexerAdapter() {
-		super(new QuiltMappingLexer());
+public class QuiltMappingLanguage extends Language {
+	public static final QuiltMappingLanguage INSTANCE = new QuiltMappingLanguage();
+
+	private QuiltMappingLanguage() {
+		super("QuiltMapping");
 	}
 }
