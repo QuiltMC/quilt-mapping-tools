@@ -25,20 +25,27 @@
 		 Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
 	<extensions defaultExtensionNs="com.intellij">
 		<fileType
+				name="Enigma Mappings"
+				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingFileType"
+				fieldName="INSTANCE"
+				language="EnigmaMapping"
+				extensions="mapping"/>
+
+		<fileType
 				name="Quilt Mapping"
 				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingFileType"
 				fieldName="INSTANCE"
 				language="QuiltMapping"
 				extensions="quiltmapping"/>
 		<lang.foldingBuilder
-			language="QuiltMapping"
-			implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingFoldingBuilder"/>
+				language="QuiltMapping"
+				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingFoldingBuilder"/>
 		<lang.parserDefinition
-			language="QuiltMapping"
-			implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingParserDefinition"/>
+				language="QuiltMapping"
+				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingParserDefinition"/>
 		<lang.syntaxHighlighterFactory
-			language="QuiltMapping"
-			implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingSyntaxHighlighterFactory"/>
+				language="QuiltMapping"
+				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingSyntaxHighlighterFactory"/>
 		<colorSettingsPage
 				implementation="org.quiltmc.intellij.mapping.language.QuiltMappingColorSettingsPage"/>
 	</extensions>
