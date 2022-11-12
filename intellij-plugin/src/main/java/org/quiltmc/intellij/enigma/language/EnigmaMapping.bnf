@@ -1,0 +1,22 @@
+{
+  parserClass = 'org.quiltmc.intellij.enigma.language.parser.EnigmaMappingParser'
+
+  extends = 'com.intellij.extapi.psi.ASTWrapperPsiElement'
+
+    psiClassPrefix = 'EnigmaMapping'
+    psiImplClassSuffix = 'Impl'
+    psiPackage = 'org.quiltmc.intellij.enigma.language.psi'
+    psiImplPackage = 'org.quiltmc.intellij.enigma.language.psi.impl'
+
+    elementTypeHolderClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes'
+    elementTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingElementType'
+    tokenTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTokenType'
+
+    tokens = [
+      CLASS_KEYWORD = "CLASS"
+    ]
+}
+
+root ::= class
+
+class ::= CLASS_KEYWORD

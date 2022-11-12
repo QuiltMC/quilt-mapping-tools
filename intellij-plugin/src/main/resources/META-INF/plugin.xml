@@ -30,6 +30,9 @@
 				fieldName="INSTANCE"
 				language="EnigmaMapping"
 				extensions="mapping"/>
+		<lang.parserDefinition
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingParserDefinition"/>
 
 		<fileType
 				name="Quilt Mapping"
