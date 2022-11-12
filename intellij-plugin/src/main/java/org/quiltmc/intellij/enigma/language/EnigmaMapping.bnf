@@ -13,10 +13,91 @@
     tokenTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTokenType'
 
     tokens = [
+      BINARY_NAME = "regexp:\S+"
+
+      ACC_PREFIX = "ACC:"
+      ACC_PRIVATE = "ACC:PRIVATE"
+      ACC_PROTECTED = "ACC:PROTECTED"
+      ACC_PUBLIC = "ACC:PUBLIC"
+
       CLASS_KEYWORD = "CLASS"
+
+//    EOL = "\n"
+//    INDENT = "\t"
+//    UNQUALIFIED_NAME = "regexp:[^.;\[/]+"
+//    BINARY_NAME = "regexp:.*"
+//    IDENTIFIER = "regexp:[A-Za-z_$][A-Za-z0-9_$]"
+//    NUMBER = "regexp:\d+"
+//
+//    BYTE_DESCRIPTOR = "B"
+//    CHAR_DESCRIPTOR = "C"
+//    DOUBLE_DESCRIPTOR = "D"
+//    FLOAT_DESCRIPTOR = "F"
+//    INT_DESCRIPTOR = "I"
+//    LONG_DESCRIPTOR = "J"
+//    SHORT_DESCRIPTOR = "S"
+//    BOOLEAN_DESCRIPTOR = "Z"
+//    VOID_DESCRIPTOR = "V"
+//
+//    CLASS_DESCRIPTOR_PREFIX = "L"
+//    CLASS_DESCRIPTOR_SUFFIX = ";"
+//    ARRAY_DESCRIPTOR_PREFIX = "["
+//
+//    JAVADOC = "regexp:[^\n]+"
+//    ACCESS_MODIFIER_PREFIX = "ACC:"
+//    ACC_PRIVATE = "PRIVATE"
+//    ACC_PROTECTED = "PROTECTED"
+//    ACC_PUBLIC = "PUBLIC"
+//
+//    CLASS_MARKER = "CLASS"
+//    FIELD_MARKER = "FIELD"
+//    METHOD_MARKER = "METHOD"
+//    ARG_MARKER = "ARG"
+//    COMMENT_MARKER = "COMMENT"
+//
+//    space = 'regexp:\s+'
     ]
 }
 
 root ::= class
 
-class ::= CLASS_KEYWORD
+class ::= CLASS_KEYWORD binary-name [ access-modifier | binary-name [ access-modifier ] ]
+
+access-modifier ::= access { pin="ACC_PREFIX" }
+private access ::= ACC_PRIVATE | ACC_PROTECTED | ACC_PUBLIC
+
+// JVMS§4.2.1
+private binary-name ::= BINARY_NAME
+
+//private class-member ::= field | method | class
+//
+//field ::= FIELD_MARKER unqualified-name [ identifier-name ] [ access-modifier ] field-descriptor [ EOL [ INDENT* comment ] ] { pin=1 }
+//
+//method ::= METHOD_MARKER unqualified-name [ identifier-name ] [ access-modifier ] method-descriptor [ EOL [ INDENT* comment ] (INDENT* arg)* ] { pin=1 }
+//
+//arg ::= ARG_MARKER NUMBER identifier-name [ EOL [ INDENT* comment ] ] { pin=1 }
+//
+//comment ::= comment-line [ EOL [ INDENT* comment ] ]
+//private comment-line ::= COMMENT_MARKER JAVADOC { pin=1 }
+//
+//identifier-name ::= IDENTIFIER
+//
+//// JVMS§4.2.1, JVMS§4.2.2
+//private binary-name ::= BINARY_NAME
+//private unqualified-name ::= UNQUALIFIED_NAME
+//
+//// JVMS§4.3.2
+//field-descriptor ::= field-type
+//private field-type ::= base-type | object-type | array-type
+//
+//// JVMS§4.3.3
+//method-descriptor ::= "(" (parameter-descriptor)* ")" return-descriptor
+//parameter-descriptor ::= field-type
+//return-descriptor ::= field-type | void-descriptor
+//private void-descriptor ::= VOID_DESCRIPTOR
+//
+//// JVMS§4.3.2
+//private base-type ::= BYTE_DESCRIPTOR | CHAR_DESCRIPTOR | DOUBLE_DESCRIPTOR | FLOAT_DESCRIPTOR | INT_DESCRIPTOR | LONG_DESCRIPTOR | SHORT_DESCRIPTOR | BOOLEAN_DESCRIPTOR
+//private object-type ::= CLASS_DESCRIPTOR_PREFIX binary-name CLASS_DESCRIPTOR_SUFFIX
+//private array-type ::= ARRAY_DESCRIPTOR_PREFIX component-type
+//private component-type ::= field-type
