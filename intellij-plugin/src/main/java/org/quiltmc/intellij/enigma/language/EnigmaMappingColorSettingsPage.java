@@ -30,16 +30,16 @@ public class EnigmaMappingColorSettingsPage implements ColorSettingsPage {
 
 	@Override
 	public @NonNls @NotNull String getDemoText() {
-		return "CLASS\n" +
+		return "CLASS a/a com/example/Foo\n" +
 				"\tCOMMENT lorem ipsum dolor sit amet consectetur adipiscing elit,\n" +
 				"\tCOMMENT sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n" +
-				"\tMETHOD\n" +
-				"\tCLASS\n" +
+				"\tMETHOD a foo\n" +
+				"\tCLASS a/a$b com/example/Foo$Bar\n" +
 				"\t\tCOMMENT foo\n" +
-				"\t\tMETHOD\n" +
+				"\t\tMETHOD b bar\n" +
 				"\t\t\tCOMMENT bar\n" +
-				"\t\tFIELD\n" +
-				"\tFIELD\n";
+				"\t\tFIELD a i\n" +
+				"\tFIELD a x\n";
 	}
 
 	@Override

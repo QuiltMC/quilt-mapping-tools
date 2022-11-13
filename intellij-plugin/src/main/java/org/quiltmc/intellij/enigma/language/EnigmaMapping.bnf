@@ -31,19 +31,23 @@
 
 root ::= clazz ln* // validate any amount of trailing new lines
 
-clazz ::= 'CLASS' class-children { pin=1 extends=entry }
+clazz ::= 'CLASS' binary-name [ binary-name ] class-children { pin=1 extends=entry }
 private class-children ::= (ln ind comment)* (ln ind class-member)*
 private class-member ::= field | method | clazz
 
-field ::= 'FIELD' (ln ind comment)* { pin=1 extends=entry }
+field ::= 'FIELD' identifier [ identifier ] (ln ind comment)* { pin=1 extends=entry }
 
-method ::= 'METHOD' (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
+method ::= 'METHOD' identifier [ identifier ] (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
 arg ::= 'ARG' (ln ind comment)* { pin=1 extends=entry }
 
-comment ::= 'COMMENT' 'regexp:[^\r\n \t]+'* { pin=1 extends=entry }
+comment ::= 'COMMENT' any* { pin=1 }
 
 fake entry ::=
 
+binary-name ::= (any '/')* any { pin(".*")=2 }
+identifier ::= any
+
 private ln ::= 'regexp:\r?\n'
+private any ::= 'regexp:[^\r\n \t]+'
 external ind ::= parseIndent
