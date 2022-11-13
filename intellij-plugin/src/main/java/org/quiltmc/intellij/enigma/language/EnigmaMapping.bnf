@@ -3,39 +3,45 @@
 
   extends = 'com.intellij.extapi.psi.ASTWrapperPsiElement'
 
-    psiClassPrefix = 'EnigmaMapping'
-    psiImplClassSuffix = 'Impl'
-    psiPackage = 'org.quiltmc.intellij.enigma.language.psi'
-    psiImplPackage = 'org.quiltmc.intellij.enigma.language.psi.impl'
+  psiClassPrefix = 'EnigmaMapping'
+  psiImplClassSuffix = 'Impl'
+  psiPackage = 'org.quiltmc.intellij.enigma.language.psi'
+  psiImplPackage = 'org.quiltmc.intellij.enigma.language.psi.impl'
 
-    elementTypeHolderClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes'
-    elementTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingElementType'
-    tokenTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTokenType'
+  elementTypeHolderClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes'
+  elementTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingElementType'
+  tokenTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTokenType'
 
-    tokens = [
-      NEW_LINE = "regexp:\r?\n"
-      WHITE_SPACE = "regexp:[ \t]+"
+  parserUtilClass = 'org.quiltmc.intellij.enigma.language.parser.EnigmaMappingParserUtil'
 
-      CLASS_KEYWORD = "CLASS"
-      FIELD_KEYWORD = "FIELD"
-      METHOD_KEYWORD = "METHOD"
-      ARG_KEYWORD = "ARG"
-      COMMENT_KEYWORD = "COMMENT"
-    ]
+  tokens = [
+    NEW_LINE = "regexp:\r?\n"
+    WHITE_SPACE = "regexp:[ ]+"
+    TAB = "regexp:\t"
+
+    CLASS_KEYWORD = "CLASS"
+    FIELD_KEYWORD = "FIELD"
+    METHOD_KEYWORD = "METHOD"
+    ARG_KEYWORD = "ARG"
+    COMMENT_KEYWORD = "COMMENT"
+  ]
 }
 
-root ::= clazz [ ln ]
+root ::= clazz ln* // validate any amount of trailing new lines
 
-clazz ::= 'CLASS' [ class-children ]
-private class-children ::= (ln comment)* (ln class-member)*
+clazz ::= 'CLASS' class-children { pin=1 extends=entry }
+private class-children ::= (ln ind comment)* (ln ind class-member)*
 private class-member ::= field | method | clazz
 
-field ::= 'FIELD' (ln comment)*
+field ::= 'FIELD' (ln ind comment)* { pin=1 extends=entry }
 
-method ::= 'METHOD' (ln comment)* (ln arg)*
+method ::= 'METHOD' (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
-arg ::= 'ARG' (ln comment)*
+arg ::= 'ARG' (ln ind comment)* { pin=1 extends=entry }
 
-comment ::= 'COMMENT'
+comment ::= 'COMMENT' { pin=1 extends=entry }
+
+fake entry ::=
 
 private ln ::= 'regexp:\r?\n'
+external ind ::= parseIndent

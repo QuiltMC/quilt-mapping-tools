@@ -19,6 +19,6 @@ public class EnigmaMappingFile extends PsiFileBase {
 
 	@Override
 	public String toString() {
-		return "Enigma Mapping";
+		return "EnigmaMappingFile: " + getName();
 	}
 }

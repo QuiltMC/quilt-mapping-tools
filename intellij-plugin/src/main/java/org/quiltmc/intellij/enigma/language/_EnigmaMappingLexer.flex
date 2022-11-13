@@ -26,7 +26,8 @@ EOL=\R
 WHITE_SPACE=\s+
 
 NEW_LINE=\r?\n
-WHITE_SPACE=[ \t]+
+WHITE_SPACE=[ ]+
+TAB=\t
 
 %%
 <YYINITIAL> {
@@ -40,6 +41,7 @@ WHITE_SPACE=[ \t]+
 
   {NEW_LINE}         { return NEW_LINE; }
   {WHITE_SPACE}      { return WHITE_SPACE; }
+  {TAB}              { return TAB; }
 
 }
 
