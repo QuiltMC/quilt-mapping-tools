@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.Icon;
 
 public class EnigmaMappingFileType extends LanguageFileType {
+	public static final Icon ICON = AllIcons.FileTypes.Text;
+	public static final String NAME = "Enigma Mappings";
 	public static final EnigmaMappingFileType INSTANCE = new EnigmaMappingFileType();
 
 	protected EnigmaMappingFileType() {
@@ -35,7 +37,7 @@ public class EnigmaMappingFileType extends LanguageFileType {
 
 	@Override
 	public @NonNls @NotNull String getName() {
-		return "Enigma Mappings";
+		return NAME;
 	}
 
 	@Override
@@ -50,6 +52,6 @@ public class EnigmaMappingFileType extends LanguageFileType {
 
 	@Override
 	public @Nullable Icon getIcon() {
-		return AllIcons.FileTypes.Text;
+		return ICON;
 	}
 }

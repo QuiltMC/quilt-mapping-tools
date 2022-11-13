@@ -16,5 +16,10 @@
 
 package org.quiltmc.intellij.enigma.language.psi;
 
+import com.intellij.psi.tree.TokenSet;
+
+import static org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes.*;
+
 public interface EnigmaMappingTokenSets {
+	TokenSet KEYWORDS = TokenSet.create(CLASS_KEYWORD, FIELD_KEYWORD, METHOD_KEYWORD, ARG_KEYWORD, COMMENT_KEYWORD);
 }

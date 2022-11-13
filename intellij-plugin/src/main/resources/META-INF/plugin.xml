@@ -33,6 +33,11 @@
 		<lang.parserDefinition
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingParserDefinition"/>
+		<lang.syntaxHighlighterFactory
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingSyntaxHighlighterFactory"/>
+		<colorSettingsPage
+				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingColorSettingsPage"/>
 
 		<fileType
 				name="Quilt Mapping"
