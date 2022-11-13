@@ -25,19 +25,21 @@ import static org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes.*;
 EOL=\R
 WHITE_SPACE=\s+
 
-BINARY_NAME=[^ \t\n\x0B\f\r]+
+NEW_LINE=\r?\n
+WHITE_SPACE=[ \t]+
 
 %%
 <YYINITIAL> {
-  {WHITE_SPACE}        { return WHITE_SPACE; }
+  {WHITE_SPACE}      { return WHITE_SPACE; }
 
-  "ACC:"               { return ACC_PREFIX; }
-  "ACC:PRIVATE"        { return ACC_PRIVATE; }
-  "ACC:PROTECTED"      { return ACC_PROTECTED; }
-  "ACC:PUBLIC"         { return ACC_PUBLIC; }
-  "CLASS"              { return CLASS_KEYWORD; }
+  "CLASS"            { return CLASS_KEYWORD; }
+  "FIELD"            { return FIELD_KEYWORD; }
+  "METHOD"           { return METHOD_KEYWORD; }
+  "ARG"              { return ARG_KEYWORD; }
+  "COMMENT"          { return COMMENT_KEYWORD; }
 
-  {BINARY_NAME}        { return BINARY_NAME; }
+  {NEW_LINE}         { return NEW_LINE; }
+  {WHITE_SPACE}      { return WHITE_SPACE; }
 
 }
 
