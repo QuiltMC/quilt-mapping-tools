@@ -28,6 +28,7 @@ WHITE_SPACE=\s+
 NEW_LINE=\r?\n
 WHITE_SPACE=[ ]+
 TAB=\t
+ANY=[^\r\n \t]+
 
 %%
 <YYINITIAL> {
@@ -42,6 +43,7 @@ TAB=\t
   {NEW_LINE}         { return NEW_LINE; }
   {WHITE_SPACE}      { return WHITE_SPACE; }
   {TAB}              { return TAB; }
+  {ANY}              { return ANY; }
 
 }
 

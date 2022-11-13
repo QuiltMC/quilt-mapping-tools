@@ -17,6 +17,9 @@ indent_style = tab
 indent_style = space
 indent_size = 2
 
+[*.mapping]
+indent_style = tab
+
 [*.quiltmapping]
 indent_style = space
 indent_size = 2

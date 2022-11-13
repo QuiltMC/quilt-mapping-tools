@@ -24,6 +24,8 @@
     METHOD_KEYWORD = "METHOD"
     ARG_KEYWORD = "ARG"
     COMMENT_KEYWORD = "COMMENT"
+
+    ANY = "regexp:[^\r\n \t]+"
   ]
 }
 
@@ -39,7 +41,7 @@ method ::= 'METHOD' (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
 arg ::= 'ARG' (ln ind comment)* { pin=1 extends=entry }
 
-comment ::= 'COMMENT' { pin=1 extends=entry }
+comment ::= 'COMMENT' 'regexp:[^\r\n \t]+'* { pin=1 extends=entry }
 
 fake entry ::=
 

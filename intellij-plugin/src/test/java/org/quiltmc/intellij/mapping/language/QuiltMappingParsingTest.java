@@ -1,28 +1,9 @@
 package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.testFramework.ParsingTestCase;
+import org.quiltmc.intellij.test.language.AbstractParsingTestCase;
 
-public class QuiltMappingParsingTest extends ParsingTestCase {
+public class QuiltMappingParsingTest extends AbstractParsingTestCase {
 	public QuiltMappingParsingTest() {
-		super("", "quiltmapping", new QuiltMappingParserDefinition());
-	}
-
-	public void testParsingTestData() {
-		doTest(true);
-	}
-
-	@Override
-	protected String getTestDataPath() {
-		return "src/test/testData";
-	}
-
-	@Override
-	protected boolean skipSpaces() {
-		return false;
-	}
-
-	@Override
-	protected boolean includeRanges() {
-		return true;
+		super("quiltmapping", "quiltmapping", new QuiltMappingParserDefinition());
 	}
 }

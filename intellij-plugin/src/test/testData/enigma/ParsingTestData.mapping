@@ -1,0 +1,10 @@
+CLASS
+	COMMENT lorem ipsum dolor sit amet consectetur adipiscing elit,
+	COMMENT sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+	METHOD
+	CLASS
+		COMMENT foo
+		METHOD
+			COMMENT bar
+		FIELD
+	FIELD
