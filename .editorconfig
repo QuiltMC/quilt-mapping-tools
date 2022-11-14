@@ -38,3 +38,7 @@ indent_style = tab
 [*.bnf]
 indent_style = space
 indent_size = 2
+
+[*.flex]
+indent_style = space
+indent_size = 2

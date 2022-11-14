@@ -6,6 +6,6 @@ CLASS a/a com/example/Foo
 	METHOD a foo ()V
 	CLASS a/a$b com/example/Foo$Bar
 		COMMENT foo
-		FIELD a i I
+		FIELD a i [[I
 		METHOD b bar (I)V
 			COMMENT bar
