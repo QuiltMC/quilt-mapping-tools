@@ -9,3 +9,5 @@ CLASS a/a com/example/Foo
 		FIELD a i [[I
 		METHOD b bar (I)V
 			COMMENT bar
+			ARG 1 count
+				COMMENT the count

@@ -31,6 +31,8 @@
     // Match by character
     DESCRIPTOR = "regexp:[^ ](?=[^\r\n\t ]*\r?\n)" // [^ ]/[^\r\n\t ]*\r?\n in JFlex
 
+    NUMBER = "regexp:\d+"
+
     COMMENT_TEXT = "regexp:[^\r\n\t]+"
   ]
 
@@ -47,7 +49,7 @@ field ::= 'FIELD' identifier-name [ identifier-name ] field-descriptor (ln ind c
 
 method ::= 'METHOD' identifier-name [ identifier-name ] method-descriptor (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
-arg ::= 'ARG' (ln ind comment)* { pin=1 extends=entry }
+arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* { pin=1 extends=entry }
 
 comment ::= 'COMMENT' comment-text* { pin=1 }
 private comment-text ::= 'regexp:[^\r\n\t]+'

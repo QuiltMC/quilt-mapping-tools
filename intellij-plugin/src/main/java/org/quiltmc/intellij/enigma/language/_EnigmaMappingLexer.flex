@@ -35,6 +35,7 @@ import static org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes.*;
 %type IElementType
 %state CLASS_DEF
 %state ENTRY_DEF
+%state ARG_DEF
 %state IN_COMMENT
 %unicode
 
@@ -45,6 +46,7 @@ NEW_LINE=\r?\n
 WHITE_SPACE=[ ]+
 TAB=\t
 IDENTIFIER=[^\r\n\t /]+
+NUMBER=\d+
 COMMENT_TEXT=[^\r\n\t]+
 
 %%
@@ -54,7 +56,7 @@ COMMENT_TEXT=[^\r\n\t]+
   "CLASS"            { yypushstate(CLASS_DEF); return CLASS_KEYWORD; }
   "FIELD"            { yypushstate(ENTRY_DEF); return FIELD_KEYWORD; }
   "METHOD"           { yypushstate(ENTRY_DEF); return METHOD_KEYWORD; }
-  "ARG"              { return ARG_KEYWORD; }
+  "ARG"              { yypushstate(ARG_DEF); return ARG_KEYWORD; }
   "COMMENT"          { yypushstate(IN_COMMENT); return COMMENT_KEYWORD; }
 
   {NEW_LINE}         { return NEW_LINE; }
@@ -77,6 +79,14 @@ COMMENT_TEXT=[^\r\n\t]+
   [^ ]/[^\r\n\t ]*\r?\n  { return DESCRIPTOR; }
   {NEW_LINE}             { yypopstate(); return NEW_LINE; }
   {IDENTIFIER}           { return IDENTIFIER; }
+}
+
+<ARG_DEF> {
+  {WHITE_SPACE}      { return WHITE_SPACE; }
+
+  {NEW_LINE}         { yypopstate(); return NEW_LINE; }
+  {NUMBER}           { return NUMBER; }
+  {IDENTIFIER}       { return IDENTIFIER; }
 }
 
 <IN_COMMENT> {
