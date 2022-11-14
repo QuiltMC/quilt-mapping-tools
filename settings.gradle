@@ -16,4 +16,6 @@ pluginManagement {
 
 rootProject.name = 'quilt-mapping-tools'
 
+include("core")
+include("annotation")
 include("intellij-plugin")

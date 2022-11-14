@@ -1,0 +1,21 @@
+{
+  from: "<from_namespace>",
+  to: "[to_namespace]",
+  extensions: [
+    "comment"
+  ],
+  classes: [
+    {
+      from_name: "<from_name>",
+      methods: [
+        {
+          from_name: "<from_name>",
+          descriptor: "<from_descriptor>",
+          return: {
+            comment: "Return value"
+          }
+        }
+      ]
+    }
+  ]
+}
