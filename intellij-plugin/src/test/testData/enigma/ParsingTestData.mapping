@@ -1,10 +1,11 @@
 CLASS a/a com/example/Foo
 	COMMENT lorem ipsum dolor sit amet consectetur adipiscing elit,
 	COMMENT sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-	METHOD a foo
+	FIELD a x I
+	FIELD b INSTANCE La/a;
+	METHOD a foo ()V
 	CLASS a/a$b com/example/Foo$Bar
 		COMMENT foo
-		METHOD b bar
+		FIELD a i I
+		METHOD b bar (I)V
 			COMMENT bar
-		FIELD a i
-	FIELD a x
