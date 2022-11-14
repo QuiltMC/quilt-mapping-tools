@@ -80,7 +80,7 @@ object-type ::= 'L' class-name ';' { pin=1 extends=abstract-type }
 array-type ::= '[' component-type { pin=1 extends=abstract-type }
 private component-type ::= field-type
 
-private class-name ::= !';' DESCRIPTOR (!';' DESCRIPTOR)* { pin=2 }
+class-name ::= !';' DESCRIPTOR (!';' DESCRIPTOR)* { pin=2 }
 
 private ln ::= 'regexp:\r?\n'
 external ind ::= parseIndent
