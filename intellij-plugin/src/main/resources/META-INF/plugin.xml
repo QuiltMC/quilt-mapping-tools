@@ -38,6 +38,9 @@
 				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingSyntaxHighlighterFactory"/>
 		<colorSettingsPage
 				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingColorSettingsPage"/>
+		<spellchecker.support
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.spellcheck.EnigmaMappingSpellcheckingStrategy"/>
 
 		<fileType
 				name="Quilt Mapping"
