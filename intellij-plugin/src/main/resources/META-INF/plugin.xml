@@ -48,16 +48,11 @@
 				fieldName="INSTANCE"
 				language="QuiltMapping"
 				extensions="quiltmapping"/>
-		<lang.foldingBuilder
-				language="QuiltMapping"
-				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingFoldingBuilder"/>
 		<lang.parserDefinition
 				language="QuiltMapping"
 				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingParserDefinition"/>
 		<lang.syntaxHighlighterFactory
 				language="QuiltMapping"
 				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingSyntaxHighlighterFactory"/>
-		<colorSettingsPage
-				implementation="org.quiltmc.intellij.mapping.language.QuiltMappingColorSettingsPage"/>
 	</extensions>
 </idea-plugin>

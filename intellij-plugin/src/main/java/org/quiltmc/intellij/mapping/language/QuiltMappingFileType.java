@@ -33,13 +33,13 @@ public class QuiltMappingFileType extends LanguageFileType {
 	@NotNull
 	@Override
 	public String getName() {
-		return "Quilt Mapping";
+		return "Quilt Mappings";
 	}
 
 	@NotNull
 	@Override
 	public String getDescription() {
-		return "Quilt Mapping file";
+		return "Mappings file (Quilt format)";
 	}
 
 	@NotNull

@@ -16,16 +16,19 @@
 
 package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.json.highlighting.JsonSyntaxHighlighterFactory;
+import com.intellij.json.json5.Json5Lexer;
+import com.intellij.lexer.Lexer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class QuiltMappingSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
+public class QuiltMappingSyntaxHighlighterFactory extends JsonSyntaxHighlighterFactory {
 	@Override
-	public @NotNull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-		return new QuiltMappingSyntaxHighlighter();
+	protected @NotNull Lexer getLexer() {
+		return new Json5Lexer();
+	}
+
+	@Override
+	protected boolean isCanEscapeEol() {
+		return true;
 	}
 }

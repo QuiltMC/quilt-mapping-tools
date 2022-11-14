@@ -16,12 +16,17 @@
 
 package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.lang.Language;
+import com.intellij.json.JsonLanguage;
 
-public class QuiltMappingLanguage extends Language {
+public class QuiltMappingLanguage extends JsonLanguage {
 	public static final QuiltMappingLanguage INSTANCE = new QuiltMappingLanguage();
 
 	private QuiltMappingLanguage() {
 		super("QuiltMapping");
+	}
+
+	@Override
+	public boolean hasPermissiveStrings() {
+		return true;
 	}
 }

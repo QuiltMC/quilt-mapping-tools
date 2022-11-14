@@ -1,16 +1,6 @@
-buildscript {
-	repositories {
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-	}
-	dependencies {
-		classpath "org.jetbrains.intellij.plugins:gradle-grammarkit-plugin:2021.2.2"
-	}
-}
-
 plugins {
 	id "org.jetbrains.intellij" version "1.9.0"
+	id "org.jetbrains.grammarkit" version "2021.2.2"
 }
 
 apply plugin: "java"
@@ -52,24 +42,8 @@ java {
 	targetCompatibility = "11"
 }
 
-import org.jetbrains.grammarkit.tasks.GenerateLexerTask
-import org.jetbrains.grammarkit.tasks.GenerateParserTask
-
-task generateEnigmaLexer(type: GenerateLexerTask) {
-	source = "src/main/java/org/quiltmc/intellij/enigma/language/_EnigmaMappingLexer.flex"
-	targetDir = "src/generated/org/quiltmc/intellij/enigma/language/"
-	targetClass = "EnigmaMappingLexer.java"
-}
-
-task generateEnigmaParser(type: GenerateParserTask) {
-	source = "src/main/java/org/quiltmc/intellij/enigma/language/EnigmaMapping.bnf"
-	targetRoot = "src/generated/"
-	pathToParser = "org/quiltmc/intellij/enigma/language/EnigmaMappingParser.java"
-	pathToPsiRoot = "org/quiltmc/intellij/enigma/language/psi/"
-}
-
 task generateCode {
-	finalizedBy generateLexer, generateParser, generateEnigmaLexer, generateEnigmaParser
+	finalizedBy generateLexer, generateParser
 }
 
 tasks {
@@ -89,16 +63,16 @@ tasks {
 	}
 
 	generateLexer {
-		source = "src/main/java/org/quiltmc/intellij/mapping/language/QuiltMapping.flex"
-		targetDir = "src/generated/org/quiltmc/intellij/mapping/language/"
-		targetClass = "QuiltMappingLexer.java"
+		source = "src/main/java/org/quiltmc/intellij/enigma/language/_EnigmaMappingLexer.flex"
+		targetDir = "src/generated/org/quiltmc/intellij/enigma/language/"
+		targetClass = "EnigmaMappingLexer.java"
 	}
 
 	generateParser {
-		source = "src/main/java/org/quiltmc/intellij/mapping/language/QuiltMapping.bnf"
+		source = "src/main/java/org/quiltmc/intellij/enigma/language/EnigmaMapping.bnf"
 		targetRoot = "src/generated/"
-		pathToParser = "org/quiltmc/intellij/mapping/language/QuiltMappingParser.java"
-		pathToPsiRoot = "org/quiltmc/intellij/mapping/language/psi/"
+		pathToParser = "org/quiltmc/intellij/enigma/language/EnigmaMappingParser.java"
+		pathToPsiRoot = "org/quiltmc/intellij/enigma/language/psi/"
 	}
 
 	// TODO: Find a way to exclude a source directory

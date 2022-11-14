@@ -16,52 +16,26 @@
 
 package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
+import com.intellij.json.JsonParserDefinition;
+import com.intellij.json.json5.Json5Lexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.intellij.mapping.language.psi.QuiltMappingTypes;
 
-public class QuiltMappingParserDefinition implements ParserDefinition {
-	public static final TokenSet COMMENTS = TokenSet.create(QuiltMappingTypes.COMMENT, QuiltMappingTypes.BLOCK_COMMENT);
-	public static final TokenSet STRING_LITERALS = TokenSet.create(QuiltMappingTypes.STRING_LITERAL);
+public class QuiltMappingParserDefinition extends JsonParserDefinition {
 	public static final IFileElementType FILE = new IFileElementType(QuiltMappingLanguage.INSTANCE);
 
 	@Override
 	public @NotNull Lexer createLexer(Project project) {
-		return new QuiltMappingLexerAdapter();
-	}
-
-	@Override
-	public @NotNull PsiParser createParser(Project project) {
-		return new QuiltMappingParser();
+		return new Json5Lexer();
 	}
 
 	@Override
 	public @NotNull IFileElementType getFileNodeType() {
 		return FILE;
-	}
-
-	@Override
-	public @NotNull TokenSet getCommentTokens() {
-		return COMMENTS;
-	}
-
-	@Override
-	public @NotNull TokenSet getStringLiteralElements() {
-		return STRING_LITERALS;
-	}
-
-	@Override
-	public @NotNull PsiElement createElement(ASTNode node) {
-		return QuiltMappingTypes.Factory.createElement(node);
 	}
 
 	@Override

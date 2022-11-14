@@ -16,12 +16,12 @@
 
 package org.quiltmc.intellij.mapping.language;
 
-import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.json.psi.impl.JsonFileImpl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import org.jetbrains.annotations.NotNull;
 
-public class QuiltMappingFile extends PsiFileBase {
+public class QuiltMappingFile extends JsonFileImpl {
 	protected QuiltMappingFile(@NotNull FileViewProvider viewProvider) {
 		super(viewProvider, QuiltMappingLanguage.INSTANCE);
 	}
@@ -33,6 +33,6 @@ public class QuiltMappingFile extends PsiFileBase {
 
 	@Override
 	public String toString() {
-		return "Quilt Mapping File";
+		return "Quilt Mapping File: " + getName();
 	}
 }
