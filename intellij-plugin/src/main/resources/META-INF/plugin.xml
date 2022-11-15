@@ -36,6 +36,9 @@
 		<lang.syntaxHighlighterFactory
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingSyntaxHighlighterFactory"/>
+		<lang.foldingBuilder
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingFoldingBuilder"/>
 		<colorSettingsPage
 				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingColorSettingsPage"/>
 		<spellchecker.support
@@ -43,7 +46,7 @@
 				implementationClass="org.quiltmc.intellij.enigma.language.spellcheck.EnigmaMappingSpellcheckingStrategy"/>
 
 		<fileType
-				name="Quilt Mapping"
+				name="Quilt Mappings"
 				implementationClass="org.quiltmc.intellij.mapping.language.QuiltMappingFileType"
 				fieldName="INSTANCE"
 				language="QuiltMapping"
