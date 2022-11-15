@@ -37,6 +37,7 @@
   ]
 
   extends(".*descriptor")="descriptor"
+  mixin("entry")="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
 }
 
 root ::= clazz ln* // validate any amount of trailing new lines

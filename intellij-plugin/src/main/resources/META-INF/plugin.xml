@@ -39,6 +39,9 @@
 		<lang.foldingBuilder
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingFoldingBuilder"/>
+		<lang.psiStructureViewFactory
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.structureview.EnigmaMappingStructureViewFactory"/>
 		<colorSettingsPage
 				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingColorSettingsPage"/>
 		<spellchecker.support

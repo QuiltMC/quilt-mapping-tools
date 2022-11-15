@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 QuiltMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.quiltmc.intellij.enigma.language;
 
 import com.intellij.lang.ASTNode;
@@ -7,11 +23,16 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.intellij.enigma.language.psi.*;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingArg;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingComment;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingEntry;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingField;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingMethod;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,43 +92,7 @@ public class EnigmaMappingFoldingBuilder extends FoldingBuilderEx implements Dum
 
 	@Override
 	public @Nullable String getPlaceholderText(@NotNull ASTNode node) {
-		IElementType type = node.getElementType();
-		if (type == EnigmaMappingTypes.CLAZZ) {
-			EnigmaMappingClazz clazz = node.getPsi(EnigmaMappingClazz.class);
-			List<EnigmaMappingBinaryName> names = clazz.getBinaryNameList();
-			if (!names.isEmpty()) {
-				EnigmaMappingBinaryName name = names.get(names.size() - 1);
-				return "CLASS " + name.getText() + " ...";
-			}
-
-			return "CLASS ...";
-		} else if (type == EnigmaMappingTypes.FIELD) {
-			EnigmaMappingField field = node.getPsi(EnigmaMappingField.class);
-			List<EnigmaMappingIdentifierName> names = field.getIdentifierNameList();
-			if (!names.isEmpty()) {
-				EnigmaMappingIdentifierName name = names.get(names.size() - 1);
-				EnigmaMappingFieldDescriptor desc = field.getFieldDescriptor();
-				return "FIELD " + name.getText() + " " + (desc != null ? desc.getText() + " ..." : "...");
-			}
-
-			return "FIELD ...";
-		} else if (type == EnigmaMappingTypes.METHOD) {
-			EnigmaMappingMethod method = node.getPsi(EnigmaMappingMethod.class);
-			List<EnigmaMappingIdentifierName> names = method.getIdentifierNameList();
-			if (!names.isEmpty()) {
-				EnigmaMappingIdentifierName name = names.get(names.size() - 1);
-				EnigmaMappingMethodDescriptor desc = method.getMethodDescriptor();
-				return "METHOD " + name.getText() + " " + (desc != null ? desc.getText() + " ..." : "...");
-			}
-
-			return "METHOD ...";
-		} else if (type == EnigmaMappingTypes.ARG) {
-			return "ARG ...";
-		} else if (type == EnigmaMappingTypes.COMMENT) {
-			return "COMMENT ...";
-		}
-
-		return "...";
+		return EnigmaMappingPsiUtil.toString(node) + " ...";
 	}
 
 	@Override
