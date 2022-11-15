@@ -47,6 +47,7 @@
 		<spellchecker.support
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.spellcheck.EnigmaMappingSpellcheckingStrategy"/>
+		<navbar implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingStructureAwareNavbar"/>
 
 		<fileType
 				name="Quilt Mappings"

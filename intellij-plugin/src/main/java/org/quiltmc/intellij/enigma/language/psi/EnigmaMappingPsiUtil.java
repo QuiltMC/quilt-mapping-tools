@@ -98,7 +98,8 @@ public final class EnigmaMappingPsiUtil {
 			if (descriptor == null) return "METHOD " + name;
 			return "METHOD " + name + " " + descriptor;
 		} else if (type == EnigmaMappingTypes.ARG) {
-			return "ARG";
+			if (name == null) return "ARG";
+			return "ARG " + name;
 		} else if (type == EnigmaMappingTypes.COMMENT) {
 			return "COMMENT";
 		}
