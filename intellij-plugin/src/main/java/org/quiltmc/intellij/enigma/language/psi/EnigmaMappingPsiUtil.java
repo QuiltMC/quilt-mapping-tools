@@ -59,7 +59,7 @@ public final class EnigmaMappingPsiUtil {
 			return null;
 		}
 
-		return names.get(names.size() - 1).getText();
+		return !names.isEmpty() ? names.get(names.size() - 1).getText() : null;
 	}
 
 	@Nullable
@@ -85,7 +85,7 @@ public final class EnigmaMappingPsiUtil {
 		return toString(type, name, descriptor);
 	}
 
-	private static String toString(IElementType type, String name, String descriptor) {
+	private static String toString(@NotNull IElementType type, @Nullable String name, @Nullable String descriptor) {
 		if (type == EnigmaMappingTypes.CLAZZ) {
 			if (name == null) return "CLASS";
 			return "CLASS " + name;
@@ -122,7 +122,7 @@ public final class EnigmaMappingPsiUtil {
 			return null;
 		}
 
-		return names.get(names.size() - 1).getText();
+		return !names.isEmpty() ? names.get(names.size() - 1).getText() : null;
 	}
 
 	@Nullable
