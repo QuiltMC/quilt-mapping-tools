@@ -37,7 +37,6 @@
   ]
 
   extends(".*descriptor")="descriptor"
-  mixin("entry")="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
 }
 
 root ::= clazz ln* // validate any amount of trailing new lines
@@ -55,7 +54,15 @@ arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* { pin=1 extends
 comment ::= 'COMMENT' comment-text* { pin=1 }
 private comment-text ::= 'regexp:[^\r\n\t]+'
 
-fake entry ::=
+fake entry ::= binary-name+ | identifier-name+ {
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
+  methods=[
+    obfBinary="/binary-name[0]"
+    namedBinary="/binary-name[last]"
+    obf="/identifier-name[0]"
+    named="/identifier-name[last]"
+  ]
+}
 
 binary-name ::= (identifier-name '/')* identifier-name { pin(".*")=2 }
 identifier-name ::= 'regexp:[^\r\n\t /]+'

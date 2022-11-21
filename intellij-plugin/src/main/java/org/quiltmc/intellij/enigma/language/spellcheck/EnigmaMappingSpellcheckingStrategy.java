@@ -51,38 +51,19 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 	private final Tokenizer<EnigmaMappingClazz> classTokenizer = new Tokenizer<>() {
 		@Override
 		public void tokenize(@NotNull EnigmaMappingClazz element, TokenConsumer consumer) {
-			if (element.getBinaryNameList().size() == 2) {
-				EnigmaMappingBinaryName name = element.getBinaryNameList().get(1);
+			EnigmaMappingBinaryName name = element.getNamedBinary();
+			if (name != null && name != element.getObfBinary()) {
 				name.getIdentifierNameList().forEach(n -> identifierTokenizer.tokenize(n, consumer));
 			}
 		}
 	};
 
-	private final Tokenizer<EnigmaMappingField> fieldTokenizer = new Tokenizer<>() {
+	private final Tokenizer<EnigmaMappingEntry> entryTokenizer = new Tokenizer<>() {
 		@Override
-		public void tokenize(@NotNull EnigmaMappingField element, TokenConsumer consumer) {
-			if (element.getIdentifierNameList().size() == 2) {
-				EnigmaMappingIdentifierName name = element.getIdentifierNameList().get(1);
+		public void tokenize(@NotNull EnigmaMappingEntry element, TokenConsumer consumer) {
+			EnigmaMappingIdentifierName name = element.getNamed();
+			if (name != null && name != element.getObf()) {
 				identifierTokenizer.tokenize(name, consumer);
-			}
-		}
-	};
-
-	private final Tokenizer<EnigmaMappingMethod> methodTokenizer = new Tokenizer<>() {
-		@Override
-		public void tokenize(@NotNull EnigmaMappingMethod element, TokenConsumer consumer) {
-			if (element.getIdentifierNameList().size() == 2) {
-				EnigmaMappingIdentifierName name = element.getIdentifierNameList().get(1);
-				identifierTokenizer.tokenize(name, consumer);
-			}
-		}
-	};
-
-	private final Tokenizer<EnigmaMappingArg> argTokenizer = new Tokenizer<>() {
-		@Override
-		public void tokenize(@NotNull EnigmaMappingArg element, TokenConsumer consumer) {
-			if (element.getIdentifierName() != null) {
-				identifierTokenizer.tokenize(element.getIdentifierName(), consumer);
 			}
 		}
 	};
@@ -97,16 +78,8 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 			return classTokenizer;
 		}
 
-		if (element instanceof EnigmaMappingField) {
-			return fieldTokenizer;
-		}
-
-		if (element instanceof EnigmaMappingMethod) {
-			return methodTokenizer;
-		}
-
-		if (element instanceof EnigmaMappingArg) {
-			return argTokenizer;
+		if (element instanceof EnigmaMappingEntry) {
+			return entryTokenizer;
 		}
 
 		return super.getTokenizer(element);

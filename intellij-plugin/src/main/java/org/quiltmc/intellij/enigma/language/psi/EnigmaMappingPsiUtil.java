@@ -45,21 +45,16 @@ public final class EnigmaMappingPsiUtil {
 	@Nullable
 	public static String getName(@NotNull ASTNode node) {
 		IElementType type = node.getElementType();
-		List<? extends PsiElement> names;
+		PsiElement name;
 		if (type == EnigmaMappingTypes.CLAZZ) {
-			names = node.getPsi(EnigmaMappingClazz.class).getBinaryNameList();
-		} else if (type == EnigmaMappingTypes.FIELD) {
-			names = node.getPsi(EnigmaMappingField.class).getIdentifierNameList();
-		} else if (type == EnigmaMappingTypes.METHOD) {
-			names = node.getPsi(EnigmaMappingMethod.class).getIdentifierNameList();
-		} else if (type == EnigmaMappingTypes.ARG) {
-			EnigmaMappingIdentifierName name = node.getPsi(EnigmaMappingArg.class).getIdentifierName();
-			return name != null ? name.getText() : null;
+			name = node.getPsi(EnigmaMappingClazz.class).getNamedBinary();
+		} else if (type == EnigmaMappingTypes.FIELD || type == EnigmaMappingTypes.METHOD || type == EnigmaMappingTypes.ARG) {
+			name = node.getPsi(EnigmaMappingEntry.class).getNamed();
 		} else {
 			return null;
 		}
 
-		return !names.isEmpty() ? names.get(names.size() - 1).getText() : null;
+		return name != null ? name.getText() : null;
 	}
 
 	@Nullable
@@ -109,21 +104,14 @@ public final class EnigmaMappingPsiUtil {
 
 	@Nullable
 	public static String getName(@NotNull EnigmaMappingEntry entry) {
-		List<? extends PsiElement> names;
+		PsiElement name;
 		if (entry instanceof EnigmaMappingClazz) {
-			names = ((EnigmaMappingClazz) entry).getBinaryNameList();
-		} else if (entry instanceof EnigmaMappingField) {
-			names = ((EnigmaMappingField) entry).getIdentifierNameList();
-		} else if (entry instanceof EnigmaMappingMethod) {
-			names = ((EnigmaMappingMethod) entry).getIdentifierNameList();
-		} else if (entry instanceof EnigmaMappingArg) {
-			EnigmaMappingIdentifierName name = ((EnigmaMappingArg) entry).getIdentifierName();
-			return name != null ? name.getText() : null;
+			name = entry.getNamedBinary();
 		} else {
-			return null;
+			name = entry.getNamed();
 		}
 
-		return !names.isEmpty() ? names.get(names.size() - 1).getText() : null;
+		return name != null ? name.getText() : null;
 	}
 
 	@Nullable
