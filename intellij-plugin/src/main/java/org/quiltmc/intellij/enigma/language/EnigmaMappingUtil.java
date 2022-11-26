@@ -24,6 +24,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingComment;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingEntry;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingFile;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
@@ -103,5 +105,15 @@ public final class EnigmaMappingUtil {
 		}
 
 		return result;
+	}
+
+	public static String getComment(EnigmaMappingEntry entry) {
+		List<EnigmaMappingComment> comments = entry.getCommentList();
+		List<String> lines = new ArrayList<>();
+		for (EnigmaMappingComment comment : comments) {
+			lines.add(comment.getContent());
+		}
+
+		return String.join("\n", lines);
 	}
 }

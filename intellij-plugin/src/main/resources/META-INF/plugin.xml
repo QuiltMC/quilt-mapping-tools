@@ -42,6 +42,9 @@
 		<lang.psiStructureViewFactory
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.structureview.EnigmaMappingStructureViewFactory"/>
+		<lang.documentationProvider
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.EnigmaMappingDocumentationProvider"/>
 		<colorSettingsPage
 				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingColorSettingsPage"/>
 		<spellchecker.support

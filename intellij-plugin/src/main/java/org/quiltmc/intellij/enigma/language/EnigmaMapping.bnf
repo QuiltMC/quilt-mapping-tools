@@ -49,10 +49,14 @@ method ::= 'METHOD' identifier-name [ identifier-name ] method-descriptor (ln in
 
 arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* { pin=1 extends=entry }
 
-comment ::= 'COMMENT' comment-text* { pin=1 }
+comment ::= 'COMMENT' comment-text* {
+  pin=1
+  implements="org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingComment"
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingCommentImplMixin"
+}
 private comment-text ::= 'regexp:[^\r\n\t]+'
 
-fake entry ::= class-name+ | identifier-name+ {
+fake entry ::= class-name+ | identifier-name+ | comment+ {
   implements="com.intellij.psi.PsiNameIdentifierOwner"
   mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
   methods=[
