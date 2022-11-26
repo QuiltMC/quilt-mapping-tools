@@ -28,7 +28,7 @@ intellij {
 	type.set("IC") // Target IDE Platform
 
 	plugins.set([/* Plugin Dependencies */])
-	plugins.addAll(findProperty("platformPlugins").split(","))
+	plugins.addAll(findProperty("platformPlugins")?.split(",") ?: [])
 }
 
 grammarKit {
