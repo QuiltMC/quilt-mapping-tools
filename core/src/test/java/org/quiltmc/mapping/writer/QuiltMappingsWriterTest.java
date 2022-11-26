@@ -32,11 +32,10 @@ import org.quiltmc.mapping.entry.transitive.TransitiveEntry;
 import org.quiltmc.mapping.entry.unpick.UnpickEntry;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.parser.QuiltMappingParserTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class QuiltMappingsWriterTest {
+class QuiltMappingsWriterTest {
 	public static final List<MappingType<?>> TYPES = List.of(
 			ClassEntry.CLASS_MAPPING_TYPE,
 			MethodEntry.METHOD_MAPPING_TYPE,
@@ -50,7 +49,7 @@ public class QuiltMappingsWriterTest {
 
 	@Test
 	void write() throws IOException {
-		String input = new String(QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
+		String input = new String(QuiltMappingsWriterTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
 		QuiltMappingFile parsed = new QuiltMappingParser(input, TYPES).parse();
 		QuiltMappingsWriter writer = new QuiltMappingsWriter(parsed, TYPES);
 		StringWriter stringWriter = new StringWriter();

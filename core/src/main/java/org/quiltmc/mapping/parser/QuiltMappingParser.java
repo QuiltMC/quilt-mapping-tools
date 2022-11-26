@@ -53,30 +53,43 @@ public class QuiltMappingParser {
 	}
 
 	public QuiltMappingFile parse() {
-		JsonReader reader = JsonReader.json5(input);
-		this.reader.set(reader);
+		JsonReader jsonReader = JsonReader.json5(input);
+		this.reader.set(jsonReader);
 
-		return this.object(() -> {
-			String from = null;
-			String to = "";
-			Set<String> extensions = Set.of();
+		try {
+			return this.object(() -> {
+				String from = null;
+				String to = "";
+				Set<String> extensions = Set.of();
 
-			List<MappingEntry<?>> entries = new ArrayList<>();
+				List<MappingEntry<?>> entries = new ArrayList<>();
 
-			while (this.hasValues()) {
-				String name = this.valueName();
-				switch (name) {
-					case "from" -> from = this.string();
-					case "to" -> to = this.string();
-					case "extensions" -> extensions = Set.copyOf(this.array(this::string));
-					default -> parseChildToken(entries, name);
+				while (this.hasValues()) {
+					String name = this.valueName();
+					switch (name) {
+						case "from" -> from = this.string();
+						case "to" -> to = this.string();
+						case "extensions" -> {
+							// validation: extensions must be defined
+							List<String> parsedExtensions = this.array(this::string);
+							for (String extension : parsedExtensions) {
+								if (!this.types.containsKey(extension)) {
+									throw new InvalidValueException(this, "unknown extension: " + extension);
+								}
+							}
+							extensions = Set.copyOf(extensions);
+						}
+						default -> parseChildToken(entries, name);
+					}
 				}
-			}
 
-			this.checkValuePresent("from", from);
+				this.checkValuePresent("from", from);
 
-			return new QuiltMappingFile(new MappingHeader(from, to, extensions), entries);
-		});
+				return new QuiltMappingFile(new MappingHeader(from, to, extensions), entries);
+			});
+		} finally {
+			this.reader.remove();
+		}
 	}
 
 	public void parseChildToken(List<MappingEntry<?>> children, String name) {
@@ -232,21 +245,21 @@ public class QuiltMappingParser {
 	}
 
 	public <T> List<T> array(Supplier<T> generator) {
-		JsonReader reader = this.reader.get();
+		JsonReader jsonReader = this.reader.get();
 		List<T> list = new ArrayList<>();
-		this.wrapSyntaxError(reader::beginArray);
+		this.wrapSyntaxError(jsonReader::beginArray);
 		while (this.hasValues()) {
 			list.add(generator.get());
 		}
-		this.wrapSyntaxError(reader::endArray);
+		this.wrapSyntaxError(jsonReader::endArray);
 		return List.copyOf(list);
 	}
 
 	public <T> T object(Supplier<T> generator) {
-		JsonReader reader = this.reader.get();
-		this.wrapSyntaxError(reader::beginObject);
+		JsonReader jsonReader = this.reader.get();
+		this.wrapSyntaxError(jsonReader::beginObject);
 		T t = generator.get();
-		this.wrapSyntaxError(reader::endObject);
+		this.wrapSyntaxError(jsonReader::endObject);
 		return t;
 	}
 

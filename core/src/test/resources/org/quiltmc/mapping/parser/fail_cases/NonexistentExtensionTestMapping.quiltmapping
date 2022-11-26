@@ -1,0 +1,22 @@
+{
+  from: "<from_namespace>",
+  to: "[to_namespace]",
+  extensions: [
+    "comment",
+    "nonexistent extension that should throw an error!"
+  ],
+  classes: [
+    {
+      from_name: "<from_name>",
+      methods: [
+        {
+          from_name: "<from_name>",
+          descriptor: "<from_descriptor>",
+          return: {
+            comment: "Return value"
+          }
+        }
+      ]
+    }
+  ]
+}
