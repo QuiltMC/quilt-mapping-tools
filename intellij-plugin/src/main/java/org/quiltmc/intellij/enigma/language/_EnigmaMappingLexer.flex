@@ -59,6 +59,8 @@ COMMENT_TEXT=[^\r\n\t]+
   "ARG"              { yypushstate(ARG_DEF); return ARG_KEYWORD; }
   "COMMENT"          { yypushstate(IN_COMMENT); return COMMENT_KEYWORD; }
 
+  \S+                { return BAD_CHARACTER; }
+
   {NEW_LINE}         { return NEW_LINE; }
   {WHITE_SPACE}      { return WHITE_SPACE; }
   {TAB}              { return TAB; }
