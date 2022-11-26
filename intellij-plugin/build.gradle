@@ -43,7 +43,7 @@ java {
 }
 
 task generateCode {
-	finalizedBy generateLexer, generateParser
+	dependsOn generateLexer, generateParser
 }
 
 tasks {
@@ -78,5 +78,9 @@ tasks {
 	// TODO: Find a way to exclude a source directory
 	checkLicenseMain {
 		enabled false
+	}
+
+	compileJava {
+		dependsOn generateCode
 	}
 }
