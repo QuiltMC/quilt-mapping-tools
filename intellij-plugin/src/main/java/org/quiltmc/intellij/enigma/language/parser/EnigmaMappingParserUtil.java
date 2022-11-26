@@ -33,6 +33,9 @@ public class EnigmaMappingParserUtil extends GeneratedParserUtilBase {
 		return indent;
 	}
 
+	/**
+	 * Parses a specific number of indentation tabs given by the number of parent elements for the current state.
+	 */
 	public static boolean parseIndent(PsiBuilder builder, int level) {
 		if (!recursion_guard_(builder, level, "parseIndent")) return false;
 		if (!nextTokenIs(builder, TAB)) return false;

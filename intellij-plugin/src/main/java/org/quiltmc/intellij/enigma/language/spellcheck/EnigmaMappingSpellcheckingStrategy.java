@@ -51,8 +51,8 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 	private final Tokenizer<EnigmaMappingClazz> classTokenizer = new Tokenizer<>() {
 		@Override
 		public void tokenize(@NotNull EnigmaMappingClazz element, TokenConsumer consumer) {
-			EnigmaMappingBinaryName name = element.getNamedBinary();
-			if (name != null && name != element.getObfBinary()) {
+			EnigmaMappingClassName name = element.getNamedCls();
+			if (name != null && name != element.getObfCls()) {
 				name.getIdentifierNameList().forEach(n -> identifierTokenizer.tokenize(n, consumer));
 			}
 		}

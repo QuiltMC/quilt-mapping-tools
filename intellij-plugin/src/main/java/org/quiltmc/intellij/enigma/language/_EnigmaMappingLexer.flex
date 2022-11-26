@@ -78,7 +78,7 @@ COMMENT_TEXT=[^\r\n\t]+
 <ENTRY_DEF> {
   {WHITE_SPACE}          { return WHITE_SPACE; }
 
-  [^ ]/[^\r\n\t ]*\r?\n  { return DESCRIPTOR; }
+  [^ ]/[^\r\n\t ]*\r?\n  { return DESCRIPTOR_TOKEN; }
   {NEW_LINE}             { yypopstate(); return NEW_LINE; }
   {IDENTIFIER}           { return IDENTIFIER; }
 }

@@ -29,23 +29,21 @@
     IDENTIFIER = "regexp:[^\r\n\t /]+"
 
     // Match by character
-    DESCRIPTOR = "regexp:[^ ](?=[^\r\n\t ]*\r?\n)" // [^ ]/[^\r\n\t ]*\r?\n in JFlex
+    DESCRIPTOR_TOKEN = "regexp:[^ ](?=[^\r\n\t ]*\r?\n)" // [^ ]/[^\r\n\t ]*\r?\n in JFlex
 
     NUMBER = "regexp:\d+"
 
     COMMENT_TEXT = "regexp:[^\r\n\t]+"
   ]
-
-  extends(".*descriptor")="descriptor"
 }
 
 root ::= clazz ln* // validate any amount of trailing new lines
 
-clazz ::= 'CLASS' binary-name [ binary-name ] class-children { pin=1 extends=entry }
+clazz ::= 'CLASS' class-name [ class-name ] class-children { pin=1 extends=entry }
 private class-children ::= (ln ind comment)* (ln ind class-member)*
 private class-member ::= field | method | clazz
 
-field ::= 'FIELD' identifier-name [ identifier-name ] field-descriptor (ln ind comment)* { pin=1 extends=entry }
+field ::= 'FIELD' identifier-name [ identifier-name ] descriptor (ln ind comment)* { pin=1 extends=entry }
 
 method ::= 'METHOD' identifier-name [ identifier-name ] method-descriptor (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
@@ -54,41 +52,30 @@ arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* { pin=1 extends
 comment ::= 'COMMENT' comment-text* { pin=1 }
 private comment-text ::= 'regexp:[^\r\n\t]+'
 
-fake entry ::= binary-name+ | identifier-name+ {
+fake entry ::= class-name+ | identifier-name+ {
   mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
   methods=[
-    obfBinary="/binary-name[0]"
-    namedBinary="/binary-name[last]"
+    obfCls="/class-name[0]"
+    namedCls="/class-name[last]"
     obf="/identifier-name[0]"
     named="/identifier-name[last]"
   ]
 }
 
-binary-name ::= (identifier-name '/')* identifier-name { pin(".*")=2 }
+class-name ::= (identifier-name '/')* identifier-name
+  | !';' DESCRIPTOR_TOKEN (!';' DESCRIPTOR_TOKEN)* { pin(".*")=2 }
 identifier-name ::= 'regexp:[^\r\n\t /]+'
 
-fake descriptor ::=
+descriptor ::= desc // prevent recursion by delegating it to a private rule
+private desc ::= base-descriptor | object-descriptor | array-descriptor
 
-// JVMS§4.3.2
-field-descriptor ::= field-type
-private field-type ::= base-type | object-type | array-type
+method-descriptor ::= '(' parameter-descriptor* ')' return-descriptor { pin=1 }
+private parameter-descriptor ::= descriptor
+return-descriptor ::= desc | 'V'
 
-// JVMS§4.3.3
-method-descriptor ::= '(' parameter-descriptor* ')' return-descriptor
-parameter-descriptor ::= field-type
-return-descriptor ::= field-type | void-type
-
-fake abstract-type ::=
-
-void-type ::= 'V' { extends=abstract-type }
-
-// JVMS§4.3.2
-base-type ::= 'B' | 'C' | 'D' | 'F' | 'I' | 'J' | 'S' | 'Z' { extends=abstract-type }
-object-type ::= 'L' class-name ';' { pin=1 extends=abstract-type }
-array-type ::= '[' component-type { pin=1 extends=abstract-type }
-private component-type ::= field-type
-
-class-name ::= !';' DESCRIPTOR (!';' DESCRIPTOR)* { pin=2 }
+private base-descriptor ::= 'B' | 'C' | 'D' | 'F' | 'I' | 'J' | 'S' | 'Z'
+private object-descriptor ::= 'L' class-name ';' { pin=1 }
+private array-descriptor ::= '[' desc { pin=1 }
 
 private ln ::= 'regexp:\r?\n'
 external ind ::= parseIndent

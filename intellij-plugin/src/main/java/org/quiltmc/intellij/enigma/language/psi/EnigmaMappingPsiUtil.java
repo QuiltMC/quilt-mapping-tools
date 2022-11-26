@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
-import java.util.List;
 
 public final class EnigmaMappingPsiUtil {
 	@Nullable
@@ -47,7 +46,7 @@ public final class EnigmaMappingPsiUtil {
 		IElementType type = node.getElementType();
 		PsiElement name;
 		if (type == EnigmaMappingTypes.CLAZZ) {
-			name = node.getPsi(EnigmaMappingClazz.class).getNamedBinary();
+			name = node.getPsi(EnigmaMappingClazz.class).getNamedCls();
 		} else if (type == EnigmaMappingTypes.FIELD || type == EnigmaMappingTypes.METHOD || type == EnigmaMappingTypes.ARG) {
 			name = node.getPsi(EnigmaMappingEntry.class).getNamed();
 		} else {
@@ -62,7 +61,7 @@ public final class EnigmaMappingPsiUtil {
 		IElementType type = node.getElementType();
 		PsiElement element;
 		if (type == EnigmaMappingTypes.FIELD) {
-			element = node.getPsi(EnigmaMappingField.class).getFieldDescriptor();
+			element = node.getPsi(EnigmaMappingField.class).getDescriptor();
 		} else if (type == EnigmaMappingTypes.METHOD) {
 			element = node.getPsi(EnigmaMappingMethod.class).getMethodDescriptor();
 		} else {
@@ -106,7 +105,7 @@ public final class EnigmaMappingPsiUtil {
 	public static String getName(@NotNull EnigmaMappingEntry entry) {
 		PsiElement name;
 		if (entry instanceof EnigmaMappingClazz) {
-			name = entry.getNamedBinary();
+			name = entry.getNamedCls();
 		} else {
 			name = entry.getNamed();
 		}
@@ -118,7 +117,7 @@ public final class EnigmaMappingPsiUtil {
 	public static String getDescriptor(@NotNull EnigmaMappingEntry entry) {
 		PsiElement element;
 		if (entry instanceof EnigmaMappingField) {
-			element = ((EnigmaMappingField) entry).getFieldDescriptor();
+			element = ((EnigmaMappingField) entry).getDescriptor();
 		} else if (entry instanceof EnigmaMappingMethod) {
 			element = ((EnigmaMappingMethod) entry).getMethodDescriptor();
 		} else {
