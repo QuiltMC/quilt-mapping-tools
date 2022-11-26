@@ -27,7 +27,9 @@ import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingFile;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public final class EnigmaMappingUtil {
 	@Nullable
@@ -61,4 +63,45 @@ public final class EnigmaMappingUtil {
 		return null;
 	}
 
+	public static List<EnigmaMappingClazz> findClasses(Project project) {
+		List<EnigmaMappingClazz> result = new ArrayList<>();
+		Collection<VirtualFile> virtualFiles = FileTypeIndex.getFiles(EnigmaMappingFileType.INSTANCE, GlobalSearchScope.allScope(project));
+
+		for (VirtualFile virtualFile : virtualFiles) {
+			EnigmaMappingFile file = (EnigmaMappingFile) PsiManager.getInstance(project).findFile(virtualFile);
+
+			if (file != null) {
+				Collection<EnigmaMappingClazz> classes = PsiTreeUtil.findChildrenOfType(file, EnigmaMappingClazz.class);
+				result.addAll(classes);
+			}
+		}
+
+		return result;
+	}
+
+	public static List<EnigmaMappingClazz> findClasses(Project project, String name, boolean obfName) {
+		List<EnigmaMappingClazz> result = new ArrayList<>();
+		Collection<VirtualFile> virtualFiles = FileTypeIndex.getFiles(EnigmaMappingFileType.INSTANCE, GlobalSearchScope.allScope(project));
+
+		for (VirtualFile virtualFile : virtualFiles) {
+			EnigmaMappingFile file = (EnigmaMappingFile) PsiManager.getInstance(project).findFile(virtualFile);
+
+			if (file != null) {
+				Collection<EnigmaMappingClazz> classes = PsiTreeUtil.findChildrenOfType(file, EnigmaMappingClazz.class);
+
+				for (EnigmaMappingClazz clazz : classes) {
+					if (!obfName && clazz.getObfCls() == clazz.getNamedCls()) {
+						continue;
+					}
+
+					String className = EnigmaMappingPsiUtil.getFullClassName(clazz, obfName);
+					if (className != null && className.equals(name)) {
+						result.add(clazz);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
 }

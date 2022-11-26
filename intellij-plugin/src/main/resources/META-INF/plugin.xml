@@ -48,6 +48,8 @@
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.spellcheck.EnigmaMappingSpellcheckingStrategy"/>
 		<navbar implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingStructureAwareNavbar"/>
+		<gotoSymbolContributor
+				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingChooseByNameContributor"/>
 
 		<fileType
 				name="Quilt Mappings"

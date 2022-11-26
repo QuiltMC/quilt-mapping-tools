@@ -19,6 +19,7 @@ package org.quiltmc.intellij.enigma.language.psi.impl;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +36,12 @@ public final class EnigmaMappingPsiImplUtil {
 			@Override
 			public @NlsSafe @Nullable String getPresentableText() {
 				return EnigmaMappingPsiUtil.toString(entry);
+			}
+
+			@Override
+			public @NlsSafe @Nullable String getLocationString() {
+				PsiFile file = entry.getContainingFile();
+				return file != null ? file.getName() : null;
 			}
 
 			@Override
