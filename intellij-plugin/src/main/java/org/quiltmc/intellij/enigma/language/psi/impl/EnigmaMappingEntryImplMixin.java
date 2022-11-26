@@ -19,10 +19,17 @@ package org.quiltmc.intellij.enigma.language.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.NlsSafe;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingEntry;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
-public class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement {
+public class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
 	public EnigmaMappingEntryImplMixin(@NotNull ASTNode node) {
 		super(node);
 	}
@@ -30,5 +37,30 @@ public class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement {
 	@Override
 	public ItemPresentation getPresentation() {
 		return EnigmaMappingPsiImplUtil.getPresentation((EnigmaMappingEntry) this);
+	}
+
+	@Override
+	public @Nullable PsiElement getNameIdentifier() {
+		return EnigmaMappingPsiImplUtil.getNameIdentifier((EnigmaMappingEntry) this);
+	}
+
+	@Override
+	public String getName() {
+		if (this instanceof EnigmaMappingClazz) {
+			return EnigmaMappingPsiUtil.getFullClassName((EnigmaMappingClazz) this, false);
+		}
+
+		return getNameIdentifier() != null ? getNameIdentifier().getText() : super.getName();
+	}
+
+	@Override
+	public PsiElement setName(@NlsSafe @NotNull String name) throws IncorrectOperationException {
+		return EnigmaMappingPsiImplUtil.setName((EnigmaMappingEntry) this, name);
+	}
+
+	@Override
+	public @NotNull PsiElement getNavigationElement() {
+		PsiElement e = getNameIdentifier();
+		return e != null ? e : super.getNavigationElement();
 	}
 }

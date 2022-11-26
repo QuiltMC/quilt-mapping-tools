@@ -20,6 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -129,5 +130,25 @@ public final class EnigmaMappingPsiUtil {
 
 	public static String toString(@NotNull EnigmaMappingEntry entry) {
 		return toString(entry.getNode().getElementType(), getName(entry), getDescriptor(entry));
+	}
+
+	@Nullable
+	public static String getFullClassName(@NotNull EnigmaMappingClazz clazz, boolean obf) {
+		EnigmaMappingClassName className = obf ? clazz.getObfCls() : clazz.getNamedCls();
+		if (className == null) {
+			return null;
+		}
+
+		EnigmaMappingClazz parent = PsiTreeUtil.getParentOfType(clazz, EnigmaMappingClazz.class);
+		String parentName = null;
+		if (parent != null) {
+			parentName = getFullClassName(parent, obf);
+		}
+
+		if (parentName != null) {
+			return parentName + "$" + className.getText();
+		} else {
+			return className.getText();
+		}
 	}
 }

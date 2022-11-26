@@ -39,7 +39,7 @@
 
 root ::= clazz ln* // validate any amount of trailing new lines
 
-clazz ::= 'CLASS' class-name [ class-name ] class-children { pin=1 extends=entry }
+clazz ::= 'CLASS' class-name [ class-name ] class-children { pin=1 extends=entry name="class" }
 private class-children ::= (ln ind comment)* (ln ind class-member)*
 private class-member ::= field | method | clazz
 
@@ -53,6 +53,7 @@ comment ::= 'COMMENT' comment-text* { pin=1 }
 private comment-text ::= 'regexp:[^\r\n\t]+'
 
 fake entry ::= class-name+ | identifier-name+ {
+  implements="com.intellij.psi.PsiNameIdentifierOwner"
   mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
   methods=[
     obfCls="/class-name[0]"
@@ -63,7 +64,10 @@ fake entry ::= class-name+ | identifier-name+ {
 }
 
 class-name ::= (identifier-name '/')* identifier-name
-  | !';' DESCRIPTOR_TOKEN (!';' DESCRIPTOR_TOKEN)* { pin(".*")=2 }
+  | !';' DESCRIPTOR_TOKEN (!';' DESCRIPTOR_TOKEN)* {
+    pin(".*")=2
+    mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClassNameImplMixin"
+  }
 identifier-name ::= 'regexp:[^\r\n\t /]+'
 
 descriptor ::= desc // prevent recursion by delegating it to a private rule

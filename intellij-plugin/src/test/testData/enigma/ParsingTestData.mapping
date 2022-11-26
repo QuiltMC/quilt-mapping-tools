@@ -3,6 +3,7 @@ CLASS a/a com/example/Foo
 	COMMENT sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 	FIELD a x I
 	FIELD b INSTANCE La/a;
+	FIELD c bar La/a$b;
 	METHOD a foo ()V
 	CLASS b Bar
 		COMMENT foo

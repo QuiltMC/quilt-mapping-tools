@@ -18,8 +18,12 @@ package org.quiltmc.intellij.enigma.language.psi.impl;
 
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.NlsSafe;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
+import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingElementFactory;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingEntry;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
@@ -38,5 +42,24 @@ public final class EnigmaMappingPsiImplUtil {
 				return EnigmaMappingPsiUtil.getIcon(entry);
 			}
 		};
+	}
+
+	/**
+	 * @see PsiNameIdentifierOwner#getNameIdentifier()
+	 */
+	@Nullable
+	public static PsiElement getNameIdentifier(@NotNull EnigmaMappingEntry entry) {
+		return entry.getNamedCls() != null ? entry.getNamedCls() : entry.getNamed();
+	}
+
+	/**
+	 * @see PsiNameIdentifierOwner#setName(String)
+	 */
+	public static PsiElement setName(@NotNull EnigmaMappingEntry entry, String name) {
+		if (entry instanceof EnigmaMappingClazz) {
+			return EnigmaMappingElementFactory.createClassName(entry.getProject(), name);
+		} else {
+			return EnigmaMappingElementFactory.createIdentifierName(entry.getProject(), name);
+		}
 	}
 }
