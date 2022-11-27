@@ -31,7 +31,6 @@ import org.quiltmc.mapping.entry.naming.FieldEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.entry.transitive.TransitiveEntry;
 import org.quiltmc.mapping.entry.unpick.UnpickEntry;
-import org.quiltmc.mapping.parser.exception.InvalidSyntaxException;
 
 class QuiltMappingParserTest {
 	public static final List<MappingType<?>> TYPES = List.of(
@@ -48,18 +47,15 @@ class QuiltMappingParserTest {
 	void main() throws IOException {
 		// test: test mapping file
 		// this test should parse as normal with no issues
-		InputStream testMappingResource = QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping");
-		assert testMappingResource != null;
-		String testMappingInput = new String(testMappingResource.readAllBytes());
+		String testMapping = getInput("org/quiltmc/mapping/parser/TestMapping.quiltmapping");
 
-		System.out.println(testMappingInput);
-		System.out.println(new QuiltMappingParser(testMappingInput, TYPES).parse());
+		System.out.println(testMapping);
+		System.out.println(new QuiltMappingParser(testMapping, TYPES).parse());
 
 		// test: test mapping file with negative argument index
 		// this test should throw an exception
-		InputStream negativeArgIndexTestResource = QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/fail_cases/NegativeArgumentIndexTestMapping.quiltmapping");
-		assert negativeArgIndexTestResource != null;
-		String negativeArgIndexTest = new String(negativeArgIndexTestResource.readAllBytes());
+		String negativeArgIndexTest = getInput("org/quiltmc/mapping/parser/fail_cases/NegativeArgumentIndexTestMapping.quiltmapping");
+
 		try {
 			new QuiltMappingParser(negativeArgIndexTest, TYPES).parse();
 			Assertions.fail("expected a parsing exception in negative arg index test");
@@ -69,12 +65,22 @@ class QuiltMappingParserTest {
 
 		// test: test mapping file with negative argument index
 		// this test should throw an exception
-		InputStream nonexistentExtensionTestResource = QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/fail_cases/NonexistentExtensionTestMapping.quiltmapping");
-		assert nonexistentExtensionTestResource != null;
-		String nonexistentExtensionInput = new String(nonexistentExtensionTestResource.readAllBytes());
+		String nonexistentExtensionTest = getInput("org/quiltmc/mapping/parser/fail_cases/NonexistentExtensionTestMapping.quiltmapping");
+
 		try {
-			new QuiltMappingParser(nonexistentExtensionInput, TYPES).parse();
+			new QuiltMappingParser(nonexistentExtensionTest, TYPES).parse();
 			Assertions.fail("expected a parsing exception in nonexistent extension test");
+		} catch (Exception ignored) {
+			// this is what we want!
+		}
+
+		// test: test mapping file with an incorrect value type
+		// this test should throw an InvalidSyntaxException
+		String incorrectValueTypeTest = getInput("org/quiltmc/mapping/parser/fail_cases/ExpectedIntegerTestMapping.quiltmapping");
+
+		try {
+			new QuiltMappingParser(incorrectValueTypeTest, TYPES).parse();
+			Assertions.fail("expected a parsing exception in incorrect value type test");
 		} catch (Exception ignored) {
 			// this is what we want!
 		}
@@ -88,5 +94,11 @@ class QuiltMappingParserTest {
 
 		System.out.println(badTestMappingInput);
 		System.out.println(new QuiltMappingParser(badTestMappingInput, TYPES).parse());
+	}
+
+	private String getInput(String name) throws IOException {
+		InputStream testMappingResource = QuiltMappingParserTest.class.getClassLoader().getResourceAsStream(name);
+		assert testMappingResource != null;
+		return new String(testMappingResource.readAllBytes());
 	}
 }

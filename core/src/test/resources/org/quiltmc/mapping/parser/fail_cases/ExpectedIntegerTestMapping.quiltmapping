@@ -1,0 +1,32 @@
+{
+  from: "<from_namespace>",
+  to: "[to_namespace]",
+  extensions: [
+    "comment"
+  ],
+  classes: [
+    {
+      from_name: "<from_name>",
+      methods: [
+        {
+          from_name: "<from_name>",
+          descriptor: "<from_descriptor>",
+          args: [
+            {
+              // very bad
+              // this should error
+              index: "haha this is a string and not an integer get crashed :D",
+              name: "[name]",
+              unpick: {
+                group: "<test_group>"
+              }
+            }
+          ],
+          return: {
+            comment: "Return value"
+          }
+        }
+      ]
+    }
+  ]
+}
