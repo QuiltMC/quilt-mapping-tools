@@ -151,4 +151,15 @@ public final class EnigmaMappingPsiUtil {
 			return className.getText();
 		}
 	}
+
+	@Nullable
+	public static String getReadableClassName(@NotNull EnigmaMappingClazz clazz) {
+		String fullName = getFullClassName(clazz, false);
+
+		if (fullName != null) {
+			return fullName.substring(fullName.lastIndexOf('/') + 1).replace('$', '.');
+		}
+
+		return null;
+	}
 }

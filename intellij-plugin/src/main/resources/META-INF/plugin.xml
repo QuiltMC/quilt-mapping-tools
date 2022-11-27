@@ -50,6 +50,9 @@
 		<spellchecker.support
 				language="EnigmaMapping"
 				implementationClass="org.quiltmc.intellij.enigma.language.spellcheck.EnigmaMappingSpellcheckingStrategy"/>
+		<codeInsight.inlayProvider
+				language="EnigmaMapping"
+				implementationClass="org.quiltmc.intellij.enigma.language.hints.EnigmaMappingDescriptorHintsProvider"/>
 		<navbar implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingStructureAwareNavbar"/>
 		<gotoSymbolContributor
 				implementation="org.quiltmc.intellij.enigma.language.EnigmaMappingChooseByNameContributor"/>

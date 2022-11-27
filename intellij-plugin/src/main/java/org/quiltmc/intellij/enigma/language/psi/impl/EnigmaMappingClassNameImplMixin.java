@@ -19,25 +19,22 @@ package org.quiltmc.intellij.enigma.language.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClassName;
 import org.quiltmc.intellij.enigma.language.reference.EnigmaMappingClassReference;
 
 public abstract class EnigmaMappingClassNameImplMixin extends ASTWrapperPsiElement implements EnigmaMappingClassName {
-	private final EnigmaMappingClassReference reference = new EnigmaMappingClassReference(this, new TextRange(0, getTextLength()));
-
 	public EnigmaMappingClassNameImplMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 
 	@Override
-	public PsiReference getReference() {
+	public EnigmaMappingClassReference getReference() {
 		if (getIdentifierNameList().size() > 0) {
 			// It's a declaration
 			return null;
 		}
 
-		return reference;
+		return new EnigmaMappingClassReference(this, new TextRange(0, getTextLength()));
 	}
 }
