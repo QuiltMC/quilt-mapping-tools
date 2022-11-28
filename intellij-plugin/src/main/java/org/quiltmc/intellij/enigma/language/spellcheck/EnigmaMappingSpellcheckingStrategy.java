@@ -62,7 +62,7 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 		@Override
 		public void tokenize(@NotNull EnigmaMappingEntry element, TokenConsumer consumer) {
 			EnigmaMappingIdentifierName name = element.getNamed();
-			if (name != null && name != element.getObf()) {
+			if (name != null && (name != element.getObf() || element instanceof EnigmaMappingArg)) {
 				identifierTokenizer.tokenize(name, consumer);
 			}
 		}
