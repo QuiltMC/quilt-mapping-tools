@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.entry;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -47,15 +48,23 @@ class MergeTest {
 
 	@Test
 	void testMergeFromFile() throws IOException {
-		String testMapping = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
-		QuiltMappingFile testMappingFile = new QuiltMappingParser(testMapping, TYPES).parse();
+		QuiltMappingParser parser = new QuiltMappingParser(TYPES);
 
-		String testMappingSmall = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingSmall.quiltmapping").readAllBytes());
-		QuiltMappingFile testMappingSmallFile = new QuiltMappingParser(testMappingSmall, TYPES).parse();
+		String testMapping = getInput("org/quiltmc/mapping/parser/TestMapping.quiltmapping");
+		QuiltMappingFile testMappingFile = parser.parse(testMapping);
 
-		String testMappingMerged = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingMerged.quiltmapping").readAllBytes());
-		QuiltMappingFile testMappingMergedFile = new QuiltMappingParser(testMappingMerged, TYPES).parse();
+		String testMappingSmall = getInput("org/quiltmc/mapping/parser/TestMappingSmall.quiltmapping");
+		QuiltMappingFile testMappingSmallFile = parser.parse(testMappingSmall);
+
+		String testMappingMerged = getInput("org/quiltmc/mapping/parser/TestMappingMerged.quiltmapping");
+		QuiltMappingFile testMappingMergedFile = parser.parse(testMappingMerged);
 
 		assertEquals(testMappingMergedFile, testMappingFile.merge(testMappingSmallFile), "Merged correctly");
+	}
+
+	private String getInput(String name) throws IOException {
+		InputStream testMappingResource = MergeTest.class.getClassLoader().getResourceAsStream(name);
+		assert testMappingResource != null;
+		return new String(testMappingResource.readAllBytes());
 	}
 }

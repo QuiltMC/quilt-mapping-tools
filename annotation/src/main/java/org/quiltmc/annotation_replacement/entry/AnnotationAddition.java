@@ -30,7 +30,7 @@ import org.quiltmc.annotation_replacement.entry.value.LiteralAnnotationValue;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
 import org.quiltmc.mapping.parser.exception.IncorrectValueNameException;
 import org.quiltmc.mapping.parser.exception.IncorrectValueOrderException;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record AnnotationAddition(String descriptor, List<AnnotationValue> values)
 		implements MappingEntry<AnnotationAddition>, AnnotationInformation {
@@ -137,12 +137,12 @@ public record AnnotationAddition(String descriptor, List<AnnotationValue> values
 		return value;
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString("descriptor", this.descriptor);
 		writeValues(this.values, writer);
 	}
 
-	private void writeValues(List<AnnotationValue> values, QuiltMappingsWriter writer) {
+	private void writeValues(List<AnnotationValue> values, QuiltMappingWriter writer) {
 		writer.name("values");
 		writer.array(values, value -> writer.object(() -> {
 			writer.writeString("name", value.name());

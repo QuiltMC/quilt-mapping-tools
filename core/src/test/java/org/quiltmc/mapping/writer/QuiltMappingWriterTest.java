@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.writer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import org.quiltmc.mapping.parser.QuiltMappingParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class QuiltMappingsWriterTest {
+class QuiltMappingWriterTest {
 	public static final List<MappingType<?>> TYPES = List.of(
 			ClassEntry.CLASS_MAPPING_TYPE,
 			MethodEntry.METHOD_MAPPING_TYPE,
@@ -49,13 +50,22 @@ class QuiltMappingsWriterTest {
 
 	@Test
 	void write() throws IOException {
-		String input = new String(QuiltMappingsWriterTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
-		QuiltMappingFile parsed = new QuiltMappingParser(input, TYPES).parse();
-		QuiltMappingsWriter writer = new QuiltMappingsWriter(parsed, TYPES);
-		StringWriter stringWriter = new StringWriter();
-		writer.write(stringWriter);
+		QuiltMappingParser parser = new QuiltMappingParser(TYPES);
 
-		QuiltMappingFile actual = new QuiltMappingParser(stringWriter.toString(), TYPES).parse();
+		String input = getInput("org/quiltmc/mapping/parser/TestMapping.quiltmapping");
+		QuiltMappingFile parsed = parser.parse(input);
+		QuiltMappingWriter writer = new QuiltMappingWriter(TYPES);
+		StringWriter stringWriter = new StringWriter();
+		writer.write(parsed, stringWriter);
+
+		QuiltMappingFile actual = parser.parse(stringWriter.toString());
 		assertEquals(parsed, actual, "Parses correctly");
+	}
+
+
+	private String getInput(String name) throws IOException {
+		InputStream testMappingResource = QuiltMappingWriterTest.class.getClassLoader().getResourceAsStream(name);
+		assert testMappingResource != null;
+		return new String(testMappingResource.readAllBytes());
 	}
 }

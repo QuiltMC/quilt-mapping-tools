@@ -24,7 +24,7 @@ import org.quiltmc.mapping.entry.naming.ClassEntry;
 import org.quiltmc.mapping.entry.naming.FieldEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record CommentEntry(String comment) implements MappingEntry<CommentEntry> {
 	public static final MappingType<CommentEntry> COMMENT_MAPPING_TYPE = new MappingType<>("comment", MappingType.TokenType.LITERAL, CommentEntry.class, CommentEntry::parse, CommentEntry::write);
@@ -33,7 +33,7 @@ public record CommentEntry(String comment) implements MappingEntry<CommentEntry>
 		return new CommentEntry(parser.string());
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString(this.comment);
 	}
 

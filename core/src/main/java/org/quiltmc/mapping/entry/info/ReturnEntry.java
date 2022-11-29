@@ -24,7 +24,7 @@ import org.quiltmc.mapping.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record ReturnEntry(List<MappingEntry<?>> children) implements MappingEntry<ReturnEntry> {
 	public static final MappingType<ReturnEntry> RETURN_MAPPING_TYPE = new MappingType<>("return", MappingType.TokenType.OBJECT, ReturnEntry.class, ReturnEntry::parse, ReturnEntry::write);
@@ -40,7 +40,7 @@ public record ReturnEntry(List<MappingEntry<?>> children) implements MappingEntr
 		return new ReturnEntry(List.copyOf(children));
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeChildren(this.children);
 	}
 

@@ -24,7 +24,7 @@ import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.entry.AbstractParentDescriptorMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public class FieldEntry extends AbstractParentDescriptorMappingEntry<FieldEntry> {
 	public static final MappingType<FieldEntry> FIELD_MAPPING_TYPE = new MappingType<>("fields", MappingType.TokenType.OBJECT_ARRAY, FieldEntry.class, FieldEntry::parse, FieldEntry::write);
@@ -56,7 +56,7 @@ public class FieldEntry extends AbstractParentDescriptorMappingEntry<FieldEntry>
 		return new FieldEntry(fromName, toName, descriptor, children);
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString("from_name", fromName);
 		if (this.toName != null && !this.toName.isEmpty()) {
 			writer.writeString("to_name", this.toName);

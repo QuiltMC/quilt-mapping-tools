@@ -24,7 +24,7 @@ import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.entry.AbstractParentDescriptorMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public class MethodEntry extends AbstractParentDescriptorMappingEntry<MethodEntry> {
 	public static final MappingType<MethodEntry> METHOD_MAPPING_TYPE = new MappingType<>("methods", MappingType.TokenType.OBJECT_ARRAY, MethodEntry.class, MethodEntry::parse, MethodEntry::write);
@@ -56,7 +56,7 @@ public class MethodEntry extends AbstractParentDescriptorMappingEntry<MethodEntr
 		return new MethodEntry(fromName, toName, descriptor, children);
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString("from_name", fromName);
 		if (this.toName != null && !this.toName.isEmpty()) {
 			writer.writeString("to_name", this.toName);

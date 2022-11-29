@@ -25,7 +25,7 @@ import org.quiltmc.mapping.entry.info.ArgEntry;
 import org.quiltmc.mapping.entry.info.ReturnEntry;
 import org.quiltmc.mapping.entry.naming.FieldEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record UnpickEntry(String group, @Nullable UnpickType type) implements MappingEntry<UnpickEntry> {
 	public static final MappingType<UnpickEntry> UNPICK_MAPPING_TYPE = new MappingType<>("unpick", MappingType.TokenType.OBJECT, UnpickEntry.class, UnpickEntry::parse, UnpickEntry::write);
@@ -48,7 +48,7 @@ public record UnpickEntry(String group, @Nullable UnpickType type) implements Ma
 		return new UnpickEntry(group, type);
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString("group", this.group);
 		if (this.type != null) {
 			writer.writeEnum("type", this.type);

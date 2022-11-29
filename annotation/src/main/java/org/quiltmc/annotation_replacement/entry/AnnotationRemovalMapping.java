@@ -21,7 +21,7 @@ import java.util.List;
 import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record AnnotationRemovalMapping(
 		String descriptor) implements MappingEntry<AnnotationRemovalMapping> {
@@ -31,7 +31,7 @@ public record AnnotationRemovalMapping(
 		return new AnnotationRemovalMapping(parser.string());
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString(this.descriptor);
 	}
 

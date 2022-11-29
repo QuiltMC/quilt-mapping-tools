@@ -31,38 +31,38 @@ import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 
-public class QuiltMappingsWriter {
+public class QuiltMappingWriter {
 	public final Map<String, MappingType<?>> types;
-	private final QuiltMappingFile mappingFile;
 	private final ThreadLocal<JsonWriter> writer = new ThreadLocal<>();
 
-	public QuiltMappingsWriter(QuiltMappingFile mappingFile, Collection<MappingType<?>> types) {
-		this.mappingFile = mappingFile;
+	public QuiltMappingWriter(Collection<MappingType<?>> types) {
 		this.types = types.stream().collect(Collectors.toMap(
 				MappingType::key,
 				Function.identity()
 		));
 	}
 
-	public void write(Writer writer) throws IOException {
+	public void write(QuiltMappingFile file, Writer writer) throws IOException {
 		JsonWriter jsonWriter = JsonWriter.json5(writer);
 		this.writer.set(jsonWriter);
-		this.write();
+		this.write(file);
+		this.writer.remove();
 	}
 
-	public void write(Path output) throws IOException {
-		JsonWriter writer = JsonWriter.json5(output);
-		this.writer.set(writer);
-		this.write();
+	public void write(QuiltMappingFile file, Path output) throws IOException {
+		JsonWriter jsonWriter = JsonWriter.json5(output);
+		this.writer.set(jsonWriter);
+		this.write(file);
+		this.writer.remove();
 	}
 
-	private void write() throws IOException {
+	private void write(QuiltMappingFile file) throws IOException {
 		this.wrapSyntaxError(this.writer.get()::beginObject);
-		this.writeString("from", this.mappingFile.header().fromNamespace());
-		this.writeString("to", this.mappingFile.header().toNamespace());
+		this.writeString("from", file.header().fromNamespace());
+		this.writeString("to", file.header().toNamespace());
 		this.name("extensions");
-		this.array(this.mappingFile.header().extensions(), this::writeString);
-		this.writeChildren(this.mappingFile.entries());
+		this.array(file.header().extensions(), this::writeString);
+		this.writeChildren(file.entries());
 		this.wrapSyntaxError(this.writer.get()::endObject);
 
 		this.writer.get().flush();
@@ -161,10 +161,6 @@ public class QuiltMappingsWriter {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex); // TODO: change this exception?
 		}
-	}
-
-	private interface ThrowableSupplier<V, T extends Throwable> {
-		V get() throws T;
 	}
 
 	private interface ThrowableRunnable<T extends Throwable> {

@@ -46,33 +46,32 @@ class QuiltMappingParserTest {
 
 	@Test
 	void main() throws IOException {
+		QuiltMappingParser parser = new QuiltMappingParser(TYPES);
+
 		// test: test mapping file
 		// this test should parse as normal with no issues
 		String testMapping = getInput("org/quiltmc/mapping/parser/TestMapping.quiltmapping");
 		System.out.println("TestMapping.quiltmapping parsed output:");
-		System.out.println(new QuiltMappingParser(testMapping, TYPES).parse());
+		System.out.println(parser.parse(testMapping));
 
 		// test: test mapping file with negative argument index
 		String negativeArgIndexTest = getInput("org/quiltmc/mapping/parser/fail_cases/NegativeArgumentIndexTestMapping.quiltmapping");
-		QuiltMappingParser negativeArgParser = new QuiltMappingParser(negativeArgIndexTest, TYPES);
-		Assertions.assertThrows(ParsingException.class, negativeArgParser::parse);
+		Assertions.assertThrows(ParsingException.class, () -> parser.parse(negativeArgIndexTest));
 
 		// test: test mapping file with negative argument index
 		String nonexistentExtensionTest = getInput("org/quiltmc/mapping/parser/fail_cases/NonexistentExtensionTestMapping.quiltmapping");
-		QuiltMappingParser nonexistentExtensionParser = new QuiltMappingParser(nonexistentExtensionTest, TYPES);
-		Assertions.assertThrows(ParsingException.class, nonexistentExtensionParser::parse);
+		Assertions.assertThrows(ParsingException.class, () -> parser.parse(nonexistentExtensionTest));
 
 		// test: test mapping file with an incorrect value type
 		String incorrectValueTypeTest = getInput("org/quiltmc/mapping/parser/fail_cases/ExpectedIntegerTestMapping.quiltmapping");
-		QuiltMappingParser incorrectValueTypeParser = new QuiltMappingParser(incorrectValueTypeTest, TYPES);
-		Assertions.assertThrows(ParsingException.class, incorrectValueTypeParser::parse);
+		Assertions.assertThrows(ParsingException.class, () -> parser.parse(incorrectValueTypeTest));
 
 		// test: test mapping file with extra nonsense in it
 		// this test should pass and ignore the all the nonsense
 		// it should only print warnings
 		String badFormattingTestMapping = getInput("org/quiltmc/mapping/parser/BadlyFormattedTestMapping.quiltmapping");
 		System.out.println("BadlyFormattedTestMapping.quiltmapping parsed output:");
-		System.out.println(new QuiltMappingParser(badFormattingTestMapping, TYPES).parse());
+		System.out.println(parser.parse(badFormattingTestMapping));
 	}
 
 	private String getInput(String name) throws IOException {
