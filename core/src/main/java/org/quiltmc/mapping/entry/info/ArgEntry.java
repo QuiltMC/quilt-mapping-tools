@@ -25,7 +25,6 @@ import org.quiltmc.mapping.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.parser.exception.InvalidValueException;
 import org.quiltmc.mapping.writer.QuiltMappingsWriter;
 
 public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> children) implements MappingEntry<ArgEntry> {
@@ -39,21 +38,13 @@ public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> c
 		while (parser.hasValues()) {
 			String name = parser.valueName();
 			switch (name) {
-				case "index" -> {
-					// validation: index cannot be negative
-					int value = parser.integerValue();
-					if (value < 0) {
-						throw new InvalidValueException(parser, "argument index cannot be negative");
-					}
-
-					index = value;
-				}
+				case "index" -> index = parser.integerValue();
 				case "name" -> argName = parser.string();
 				default -> parser.parseChildToken(children, name);
 			}
 		}
 
-		parser.checkValue("index", index, i -> i > 0);
+		parser.checkValue("index", index, i -> i < 0);
 
 		return new ArgEntry(index, argName, List.copyOf(children));
 	}

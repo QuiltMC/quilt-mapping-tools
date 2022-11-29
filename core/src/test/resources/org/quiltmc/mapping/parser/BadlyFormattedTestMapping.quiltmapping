@@ -46,6 +46,13 @@
                 group: "<test_group>"
               }
             },
+            {
+              index: 1,
+              name: "[name]",
+              unpick: {
+                group: "<test_group>"
+              }
+            },
           ],
           return: {
             unpick: {
