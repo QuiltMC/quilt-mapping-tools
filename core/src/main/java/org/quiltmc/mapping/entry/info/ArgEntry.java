@@ -25,7 +25,7 @@ import org.quiltmc.mapping.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> children) implements MappingEntry<ArgEntry> {
 	public static final MappingType<ArgEntry> ARG_MAPPING_TYPE = new MappingType<>("args", MappingType.TokenType.OBJECT_ARRAY, ArgEntry.class, ArgEntry::parse, ArgEntry::write);
@@ -50,7 +50,7 @@ public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> c
 		return new ArgEntry(index, argName, List.copyOf(children));
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeInt("index", this.index);
 		if (this.name != null && !this.name.isEmpty()) {
 			writer.writeString("name", this.name);

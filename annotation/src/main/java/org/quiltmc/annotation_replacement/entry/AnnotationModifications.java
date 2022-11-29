@@ -22,7 +22,7 @@ import java.util.List;
 import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.entry.MappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 public record AnnotationModifications(List<AnnotationRemovalMapping> removals, List<AnnotationAddition> additions) implements MappingEntry<AnnotationModifications> {
 	public static final MappingType<AnnotationModifications> ANNOTATION_MODIFICATIONS_MAPPING_TYPE = new MappingType<>("annotation_modifications", MappingType.TokenType.OBJECT, AnnotationModifications.class, AnnotationModifications::parse, AnnotationModifications::write);
@@ -45,7 +45,7 @@ public record AnnotationModifications(List<AnnotationRemovalMapping> removals, L
 		return new AnnotationModifications(removals, additions);
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		List<MappingEntry<?>> children = new ArrayList<>();
 		children.addAll(this.additions);
 		children.addAll(this.removals);

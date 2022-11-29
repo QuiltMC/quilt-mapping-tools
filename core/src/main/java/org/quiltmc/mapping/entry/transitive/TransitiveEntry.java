@@ -24,7 +24,7 @@ import org.quiltmc.mapping.entry.naming.ClassEntry;
 import org.quiltmc.mapping.entry.naming.FieldEntry;
 import org.quiltmc.mapping.entry.naming.MethodEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.writer.QuiltMappingsWriter;
+import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
 // TODO: Make this be able to select the transitive entries
 public record TransitiveEntry(String name) implements MappingEntry<TransitiveEntry> {
@@ -34,7 +34,7 @@ public record TransitiveEntry(String name) implements MappingEntry<TransitiveEnt
 		return new TransitiveEntry(parser.string());
 	}
 
-	public void write(QuiltMappingsWriter writer) {
+	public void write(QuiltMappingWriter writer) {
 		writer.writeString(this.name);
 	}
 

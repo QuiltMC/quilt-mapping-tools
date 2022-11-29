@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Contract;
@@ -39,20 +40,19 @@ import org.quiltmc.mapping.parser.exception.MissingValueException;
 
 
 public class QuiltMappingParser {
-	public final Map<String, MappingType<?>> types;
-	private final String input;
+	private static final Logger LOGGER = Logger.getLogger("quilt mapping parser");
+	private final Map<String, MappingType<?>> types;
 
 	private final ThreadLocal<JsonReader> reader = new ThreadLocal<>();
 
-	public QuiltMappingParser(String input, Collection<MappingType<?>> types) {
-		this.input = input;
+	public QuiltMappingParser(Collection<MappingType<?>> types) {
 		this.types = types.stream().collect(Collectors.toMap(
 				MappingType::key,
 				Function.identity()
 		));
 	}
 
-	public QuiltMappingFile parse() {
+	public QuiltMappingFile parse(String input) {
 		JsonReader jsonReader = JsonReader.json5(input);
 		this.reader.set(jsonReader);
 
@@ -103,7 +103,7 @@ public class QuiltMappingParser {
 				children.add(parseMappingEntry(type));
 			}
 		} else {
-			System.out.println("unknown token: " + name);
+			LOGGER.warning("unknown token: " + name);
 			this.skip();
 		}
 	}
