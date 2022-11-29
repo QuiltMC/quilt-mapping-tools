@@ -31,11 +31,10 @@ import org.quiltmc.mapping.entry.transitive.TransitiveEntry;
 import org.quiltmc.mapping.entry.unpick.UnpickEntry;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
-import org.quiltmc.mapping.parser.QuiltMappingParserTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MergeTest {
+class MergeTest {
 	public static final List<MappingType<?>> TYPES = List.of(
 			ClassEntry.CLASS_MAPPING_TYPE,
 			MethodEntry.METHOD_MAPPING_TYPE,
@@ -47,14 +46,14 @@ public class MergeTest {
 			TransitiveEntry.TRANSITIVE_MAPPING_TYPE);
 
 	@Test
-	public void testMergeFromFile() throws IOException {
-		String testMapping = new String(QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
+	void testMergeFromFile() throws IOException {
+		String testMapping = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMapping.quiltmapping").readAllBytes());
 		QuiltMappingFile testMappingFile = new QuiltMappingParser(testMapping, TYPES).parse();
 
-		String testMappingSmall = new String(QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingSmall.quiltmapping").readAllBytes());
+		String testMappingSmall = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingSmall.quiltmapping").readAllBytes());
 		QuiltMappingFile testMappingSmallFile = new QuiltMappingParser(testMappingSmall, TYPES).parse();
 
-		String testMappingMerged = new String(QuiltMappingParserTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingMerged.quiltmapping").readAllBytes());
+		String testMappingMerged = new String(MergeTest.class.getClassLoader().getResourceAsStream("org/quiltmc/mapping/parser/TestMappingMerged.quiltmapping").readAllBytes());
 		QuiltMappingFile testMappingMergedFile = new QuiltMappingParser(testMappingMerged, TYPES).parse();
 
 		assertEquals(testMappingMergedFile, testMappingFile.merge(testMappingSmallFile), "Merged correctly");

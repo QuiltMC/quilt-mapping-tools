@@ -10,11 +10,13 @@
     {
       from_name: "<from_name>",
       to_name: "[to_name]",
+      unknown_token: "abc",
       comment: "This is a test comment!",
       fields: [
         {
           from_name: "<from_name>",
           to_name: "[to_name]",
+          unknown_token_2: "abc",
           descriptor: "<from_descriptor>",
           unpick: {
             group: "<test_group>",
@@ -26,6 +28,7 @@
         {
           from_name: "<nested_from_name>",
           to_name: "[nested_to_name]",
+          unknown_token_3: "abc",
         }
       ],
       methods: [
@@ -47,7 +50,7 @@
               unpick: {
                 group: "<test_group>"
               }
-            }
+            },
           ],
           return: {
             unpick: {
