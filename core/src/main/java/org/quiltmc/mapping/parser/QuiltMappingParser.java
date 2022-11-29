@@ -69,20 +69,22 @@ public class QuiltMappingParser {
 					switch (name) {
 						case "from" -> from = this.string();
 						case "to" -> to = this.string();
-						case "extensions" -> {
-							// validation: extensions must be defined
-							List<String> parsedExtensions = this.array(this::string);
-							for (String extension : parsedExtensions) {
-								if (!this.types.containsKey(extension)) {
-									throw new InvalidValueException(this, "unknown extension: " + extension);
-								}
-							}
-							extensions = Set.copyOf(extensions);
-						}
+						case "extensions" -> extensions = Set.copyOf(this.array(this::string));
 						default -> parseChildToken(entries, name);
 					}
 				}
 
+				// validation: extensions must be defined
+				this.checkValue("extensions", extensions, extensionSet -> {
+					for (String extension : extensionSet) {
+						if (!this.types.containsKey(extension)) {
+							return true;
+						}
+					}
+
+					return false;
+				});
+				// validation: from value must exist
 				this.checkValuePresent("from", from);
 
 				return new QuiltMappingFile(new MappingHeader(from, to, extensions), entries);

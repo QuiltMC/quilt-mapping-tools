@@ -44,6 +44,7 @@ public record ArgEntry(int index, @Nullable String name, List<MappingEntry<?>> c
 			}
 		}
 
+		// index must be larger than 0
 		parser.checkValue("index", index, i -> i < 0);
 
 		return new ArgEntry(index, argName, List.copyOf(children));
