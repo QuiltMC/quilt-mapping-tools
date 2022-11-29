@@ -10,10 +10,8 @@
     {
       from_name: "<from_name>",
       to_name: "[to_name]",
-      to_name: "[to_name_again]",
       unknown_token: "abc",
       comment: "This is a test comment!",
-      comment: "This is another test comment!",
       fields: [
         {
           from_name: "<from_name>",
