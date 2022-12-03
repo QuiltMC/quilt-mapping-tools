@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.Icon;
 
 public final class EnigmaMappingPsiUtil {
+	private EnigmaMappingPsiUtil() {}
+
 	@Nullable
 	public static Icon getIcon(@NotNull EnigmaMappingEntry entry) {
 		if (entry instanceof EnigmaMappingClazz) {
@@ -105,7 +107,7 @@ public final class EnigmaMappingPsiUtil {
 	@Nullable
 	public static String getName(@NotNull EnigmaMappingEntry entry) {
 		PsiElement name;
-		if (entry instanceof EnigmaMappingClazz) {
+		if (entry.usesClassName()) {
 			name = entry.getNamedCls();
 		} else {
 			name = entry.getNamed();

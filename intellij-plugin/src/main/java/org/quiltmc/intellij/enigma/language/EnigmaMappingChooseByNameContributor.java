@@ -26,7 +26,6 @@ import org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClazzImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EnigmaMappingChooseByNameContributor implements ChooseByNameContributor {
 	@Override
@@ -42,13 +41,12 @@ public class EnigmaMappingChooseByNameContributor implements ChooseByNameContrib
 			}
 		}
 
-		return names.toArray(new String[names.size()]);
+		return names.toArray(new String[0]);
 	}
 
 	@Override
 	public NavigationItem @NotNull [] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
 		List<EnigmaMappingClazz> classes = EnigmaMappingUtil.findClasses(project, name, false);
-		List<NavigationItem> items = classes.stream().map(c -> (EnigmaMappingClazzImpl) c).collect(Collectors.toList());
-		return items.toArray(new NavigationItem[0]);
+		return classes.stream().map(c -> (EnigmaMappingClazzImpl) c).toArray(NavigationItem[]::new);
 	}
 }

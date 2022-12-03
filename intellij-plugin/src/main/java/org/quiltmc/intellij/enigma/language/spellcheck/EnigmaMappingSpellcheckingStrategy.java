@@ -48,22 +48,16 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 		}
 	};
 
-	private final Tokenizer<EnigmaMappingClazz> classTokenizer = new Tokenizer<>() {
-		@Override
-		public void tokenize(@NotNull EnigmaMappingClazz element, TokenConsumer consumer) {
-			EnigmaMappingClassName name = element.getNamedCls();
-			if (name != null && name != element.getObfCls()) {
-				name.getIdentifierNameList().forEach(n -> identifierTokenizer.tokenize(n, consumer));
-			}
-		}
-	};
-
 	private final Tokenizer<EnigmaMappingEntry> entryTokenizer = new Tokenizer<>() {
 		@Override
 		public void tokenize(@NotNull EnigmaMappingEntry element, TokenConsumer consumer) {
-			EnigmaMappingIdentifierName name = element.getNamed();
-			if (name != null && (name != element.getObf() || element instanceof EnigmaMappingArg)) {
-				identifierTokenizer.tokenize(name, consumer);
+			if (element.isNamed()) {
+				if (element.usesClassName()) {
+					if (element.getNamedCls() != null)
+						element.getNamedCls().getIdentifierNameList().forEach(n -> identifierTokenizer.tokenize(n, consumer));
+				} else if (element.getNamed() != null) {
+					identifierTokenizer.tokenize(element.getNamed(), consumer);
+				}
 			}
 		}
 	};
@@ -72,10 +66,6 @@ public class EnigmaMappingSpellcheckingStrategy extends SpellcheckingStrategy {
 	public @NotNull Tokenizer<?> getTokenizer(PsiElement element) {
 		if (element instanceof EnigmaMappingComment) {
 			return commentTokenizer;
-		}
-
-		if (element instanceof EnigmaMappingClazz) {
-			return classTokenizer;
 		}
 
 		if (element instanceof EnigmaMappingEntry) {

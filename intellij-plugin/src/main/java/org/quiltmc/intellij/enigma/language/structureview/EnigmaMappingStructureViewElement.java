@@ -23,7 +23,6 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingArg;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
@@ -85,7 +84,7 @@ public class EnigmaMappingStructureViewElement implements StructureViewTreeEleme
 	@Override
 	public TreeElement @NotNull [] getChildren() {
 		if (element instanceof EnigmaMappingFile) {
-			EnigmaMappingClazz clazz = PsiTreeUtil.findChildOfType(element, EnigmaMappingClazz.class);
+			EnigmaMappingClazz clazz = ((EnigmaMappingFile) element).getTopLevelClass();
 			if (clazz != null) {
 				return new TreeElement[] {new EnigmaMappingStructureViewElement((EnigmaMappingClazzImpl) clazz)};
 			}

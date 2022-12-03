@@ -21,7 +21,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,19 +28,19 @@ import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingEntry;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 
-public class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
+public abstract class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement implements EnigmaMappingEntry {
 	public EnigmaMappingEntryImplMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 
 	@Override
 	public ItemPresentation getPresentation() {
-		return EnigmaMappingPsiImplUtil.getPresentation((EnigmaMappingEntry) this);
+		return EnigmaMappingPsiImplUtil.getPresentation(this);
 	}
 
 	@Override
 	public @Nullable PsiElement getNameIdentifier() {
-		return EnigmaMappingPsiImplUtil.getNameIdentifier((EnigmaMappingEntry) this);
+		return EnigmaMappingPsiImplUtil.getNameIdentifier(this);
 	}
 
 	@Override
@@ -55,12 +54,29 @@ public class EnigmaMappingEntryImplMixin extends ASTWrapperPsiElement implements
 
 	@Override
 	public PsiElement setName(@NlsSafe @NotNull String name) throws IncorrectOperationException {
-		return EnigmaMappingPsiImplUtil.setName((EnigmaMappingEntry) this, name);
+		return EnigmaMappingPsiImplUtil.setName(this, name);
 	}
 
 	@Override
 	public @NotNull PsiElement getNavigationElement() {
 		PsiElement e = getNameIdentifier();
 		return e != null ? e : super.getNavigationElement();
+	}
+
+	@Override
+	public boolean usesClassName() {
+		return false;
+	}
+
+	@Override
+	public boolean hasName() {
+		if (usesClassName()) return getNamedCls() != null;
+		return getNamed() != null;
+	}
+
+	@Override
+	public boolean isNamed() {
+		if (usesClassName()) return hasName() && getNamedCls() != getObfCls();
+		return hasName() && getNamed() != getObf();
 	}
 }

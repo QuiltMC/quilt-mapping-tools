@@ -39,7 +39,12 @@
 
 root ::= clazz ln* // validate any amount of trailing new lines
 
-clazz ::= 'CLASS' class-name [ class-name ] class-children { pin=1 extends=entry name="class" }
+clazz ::= 'CLASS' class-name [ class-name ] class-children {
+  pin=1
+  extends=entry
+  name="class"
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClazzImplMixin"
+}
 private class-children ::= (ln ind comment)* (ln ind class-member)*
 private class-member ::= field | method | clazz
 
@@ -47,7 +52,11 @@ field ::= 'FIELD' identifier-name [ identifier-name ] descriptor (ln ind comment
 
 method ::= 'METHOD' identifier-name [ identifier-name ] method-descriptor (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
 
-arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* { pin=1 extends=entry }
+arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* {
+  pin=1
+  extends=entry
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingArgImplMixin"
+}
 
 comment ::= 'COMMENT' comment-text* {
   pin=1
@@ -57,7 +66,7 @@ comment ::= 'COMMENT' comment-text* {
 private comment-text ::= 'regexp:[^\r\n\t]+'
 
 fake entry ::= class-name+ | identifier-name+ | comment+ {
-  implements="com.intellij.psi.PsiNameIdentifierOwner"
+  implements=["com.intellij.psi.PsiNameIdentifierOwner" "org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingEntry"]
   mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
   methods=[
     obfCls="/class-name[0]"

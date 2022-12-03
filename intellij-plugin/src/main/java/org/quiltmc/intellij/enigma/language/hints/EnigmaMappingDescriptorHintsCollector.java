@@ -21,6 +21,7 @@ import com.intellij.codeInsight.hints.InlayHintsSink;
 import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,9 +35,25 @@ import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingReturnDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("UnstableApiUsage")
 public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsCollector {
+	private static final String DEFAULT_VALUE = "<unknown>";
+	private static final Map<Character, String> DESCRIPTORS = Map.of(
+			'B', "byte",
+			'C', "char",
+			'D', "double",
+			'F', "float",
+			'I', "int",
+			'J', "long",
+			'S', "short",
+			'Z', "boolean",
+
+			'V', "void",
+			'L', "<class>"
+	);
+
 	public EnigmaMappingDescriptorHintsCollector(@NotNull Editor editor) {
 		super(editor);
 	}
@@ -48,6 +65,10 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 
 	@Override
 	public boolean collect(@NotNull PsiElement element, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+		if (DumbService.isDumb(element.getProject()) || element.getProject().isDefault()) {
+			return false;
+		}
+
 		collect(element, inlayHintsSink);
 		return true;
 	}
@@ -88,8 +109,9 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 	}
 
 	private static String getHintText(@Nullable PsiElement element) {
+		// TODO: Cache?
 		if (element == null) {
-			return "<unknown>";
+			return DEFAULT_VALUE;
 		} else if (!(element instanceof EnigmaMappingDescriptor) && !(element instanceof EnigmaMappingReturnDescriptor)) {
 			return "";
 		}
@@ -117,40 +139,7 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 		}
 
 		if (name.isEmpty()) {
-			switch (descriptor.charAt(0)) {
-				case 'B':
-					name = "byte";
-					break;
-				case 'C':
-					name = "char";
-					break;
-				case 'D':
-					name = "double";
-					break;
-				case 'F':
-					name = "float";
-					break;
-				case 'I':
-					name = "int";
-					break;
-				case 'J':
-					name = "long";
-					break;
-				case 'S':
-					name = "short";
-					break;
-				case 'Z':
-					name = "boolean";
-					break;
-				case 'V':
-					name = "void";
-					break;
-				case 'L':
-					name = "<class>";
-					break;
-				default:
-					name = "<unknown>";
-			}
+			name = DESCRIPTORS.getOrDefault(descriptor.charAt(0), DEFAULT_VALUE);
 		}
 
 		return name + "[]".repeat(arrayDim);

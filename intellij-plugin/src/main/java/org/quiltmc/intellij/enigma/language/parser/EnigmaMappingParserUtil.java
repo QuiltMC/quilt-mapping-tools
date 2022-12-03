@@ -21,7 +21,9 @@ import com.intellij.lang.parser.GeneratedParserUtilBase;
 
 import static org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes.*;
 
-public class EnigmaMappingParserUtil extends GeneratedParserUtilBase {
+public final class EnigmaMappingParserUtil extends GeneratedParserUtilBase {
+	private EnigmaMappingParserUtil() {}
+
 	private static int getIndent(PsiBuilder builder) {
 		ErrorState state = ErrorState.get(builder);
 		int indent = 0;

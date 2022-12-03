@@ -19,13 +19,20 @@ package org.quiltmc.intellij.enigma.language.psi;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.intellij.enigma.language.EnigmaMappingFileType;
 import org.quiltmc.intellij.enigma.language.EnigmaMappingLanguage;
 
 public class EnigmaMappingFile extends PsiFileBase {
 	public EnigmaMappingFile(@NotNull FileViewProvider viewProvider) {
 		super(viewProvider, EnigmaMappingLanguage.INSTANCE);
+	}
+
+	@Nullable
+	public EnigmaMappingClazz getTopLevelClass() {
+		return PsiTreeUtil.getChildOfType(this, EnigmaMappingClazz.class);
 	}
 
 	@Override

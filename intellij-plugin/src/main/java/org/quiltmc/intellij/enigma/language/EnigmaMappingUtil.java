@@ -34,6 +34,9 @@ import java.util.Collection;
 import java.util.List;
 
 public final class EnigmaMappingUtil {
+	private EnigmaMappingUtil() {}
+
+	// TODO: Cache?
 	@Nullable
 	public static EnigmaMappingClazz findClass(Project project, String name) {
 		return findClass(project, name, true);
