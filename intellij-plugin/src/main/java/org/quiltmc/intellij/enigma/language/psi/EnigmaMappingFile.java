@@ -25,6 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.intellij.enigma.language.EnigmaMappingFileType;
 import org.quiltmc.intellij.enigma.language.EnigmaMappingLanguage;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class EnigmaMappingFile extends PsiFileBase {
 	public EnigmaMappingFile(@NotNull FileViewProvider viewProvider) {
 		super(viewProvider, EnigmaMappingLanguage.INSTANCE);
@@ -33,6 +37,17 @@ public class EnigmaMappingFile extends PsiFileBase {
 	@Nullable
 	public EnigmaMappingClazz getTopLevelClass() {
 		return PsiTreeUtil.getChildOfType(this, EnigmaMappingClazz.class);
+	}
+
+	public List<EnigmaMappingClazz> getClasses() {
+		EnigmaMappingClazz top = getTopLevelClass();
+		if (top != null) {
+			List<EnigmaMappingClazz> classes = new ArrayList<>(top.getChildrenClasses());
+			classes.add(0, top);
+			return classes;
+		}
+
+		return Collections.emptyList();
 	}
 
 	@Override

@@ -43,6 +43,7 @@ clazz ::= 'CLASS' class-name [ class-name ] class-children {
   pin=1
   extends=entry
   name="class"
+  implements="org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingClass"
   mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClazzImplMixin"
 }
 private class-children ::= (ln ind comment)* (ln ind class-member)*

@@ -21,7 +21,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingComment;
@@ -32,6 +31,7 @@ import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class EnigmaMappingUtil {
 	private EnigmaMappingUtil() {}
@@ -50,10 +50,10 @@ public final class EnigmaMappingUtil {
 			EnigmaMappingFile file = (EnigmaMappingFile) PsiManager.getInstance(project).findFile(virtualFile);
 
 			if (file != null) {
-				Collection<EnigmaMappingClazz> classes = PsiTreeUtil.findChildrenOfType(file, EnigmaMappingClazz.class);
+				Collection<EnigmaMappingClazz> classes = file.getClasses();
 
 				for (EnigmaMappingClazz clazz : classes) {
-					if (!obfName && clazz.getObfCls() == clazz.getNamedCls()) {
+					if (!clazz.hasName() || !obfName && !clazz.isNamed()) {
 						continue;
 					}
 
@@ -69,22 +69,21 @@ public final class EnigmaMappingUtil {
 	}
 
 	public static List<EnigmaMappingClazz> findClasses(Project project) {
-		List<EnigmaMappingClazz> result = new ArrayList<>();
-		Collection<VirtualFile> virtualFiles = FileTypeIndex.getFiles(EnigmaMappingFileType.INSTANCE, GlobalSearchScope.allScope(project));
-
-		for (VirtualFile virtualFile : virtualFiles) {
-			EnigmaMappingFile file = (EnigmaMappingFile) PsiManager.getInstance(project).findFile(virtualFile);
-
-			if (file != null) {
-				Collection<EnigmaMappingClazz> classes = PsiTreeUtil.findChildrenOfType(file, EnigmaMappingClazz.class);
-				result.addAll(classes);
-			}
-		}
-
-		return result;
+		return findClasses(project, c -> true);
 	}
 
 	public static List<EnigmaMappingClazz> findClasses(Project project, String name, boolean obfName) {
+		return findClasses(project, clazz -> {
+			if (!clazz.hasName() || !obfName && !clazz.isNamed()) {
+				return false;
+			}
+
+			String className = EnigmaMappingPsiUtil.getFullClassName(clazz, obfName);
+			return name.equals(className);
+		});
+	}
+
+	private static List<EnigmaMappingClazz> findClasses(Project project, Predicate<EnigmaMappingClazz> predicate) {
 		List<EnigmaMappingClazz> result = new ArrayList<>();
 		Collection<VirtualFile> virtualFiles = FileTypeIndex.getFiles(EnigmaMappingFileType.INSTANCE, GlobalSearchScope.allScope(project));
 
@@ -92,15 +91,8 @@ public final class EnigmaMappingUtil {
 			EnigmaMappingFile file = (EnigmaMappingFile) PsiManager.getInstance(project).findFile(virtualFile);
 
 			if (file != null) {
-				Collection<EnigmaMappingClazz> classes = PsiTreeUtil.findChildrenOfType(file, EnigmaMappingClazz.class);
-
-				for (EnigmaMappingClazz clazz : classes) {
-					if (!obfName && clazz.getObfCls() == clazz.getNamedCls()) {
-						continue;
-					}
-
-					String className = EnigmaMappingPsiUtil.getFullClassName(clazz, obfName);
-					if (className != null && className.equals(name)) {
+				for (EnigmaMappingClazz clazz : file.getClasses()) {
+					if (predicate.test(clazz)) {
 						result.add(clazz);
 					}
 				}
