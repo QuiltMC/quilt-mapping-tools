@@ -22,6 +22,7 @@ import com.intellij.codeInsight.hints.presentation.InlayPresentation;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,7 @@ import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingPsiUtil;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingReturnDescriptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +55,8 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 			'V', "void",
 			'L', "<class>"
 	);
+
+	private final Map<String, String> classNameCache = new HashMap<>();
 
 	public EnigmaMappingDescriptorHintsCollector(@NotNull Editor editor) {
 		super(editor);
@@ -108,8 +112,7 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 		return false;
 	}
 
-	private static String getHintText(@Nullable PsiElement element) {
-		// TODO: Cache?
+	private String getHintText(@Nullable PsiElement element) {
 		if (element == null) {
 			return DEFAULT_VALUE;
 		} else if (!(element instanceof EnigmaMappingDescriptor) && !(element instanceof EnigmaMappingReturnDescriptor)) {
@@ -128,13 +131,22 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 				? ((EnigmaMappingDescriptor) element).getClassName()
 				: ((EnigmaMappingReturnDescriptor) element).getClassName();
 		if (className != null) {
-			EnigmaMappingClazz clazz = EnigmaMappingUtil.findClass(element.getProject(), className.getText());
-			if (clazz != null) {
-				name = EnigmaMappingPsiUtil.getReadableClassName(clazz);
-			}
+			TextRange range = className.getTextRangeInParent();
+			String text = descriptor.substring(range.getStartOffset(), range.getEndOffset());
 
-			if (name == null || name.isEmpty()) {
-				name = className.getText().replace('/', '.').replace('$', '.');
+			if (classNameCache.containsKey(text)) {
+				name = classNameCache.get(text);
+			} else {
+				EnigmaMappingClazz clazz = EnigmaMappingUtil.findClass(element.getProject(), text);
+				if (clazz != null) {
+					name = EnigmaMappingPsiUtil.getReadableClassName(clazz);
+				}
+
+				if (name == null || name.isEmpty()) {
+					name = binaryToReadableName(text);
+				}
+
+				classNameCache.put(text, name);
 			}
 		}
 
@@ -143,5 +155,14 @@ public class EnigmaMappingDescriptorHintsCollector extends FactoryInlayHintsColl
 		}
 
 		return name + "[]".repeat(arrayDim);
+	}
+
+	private static String binaryToReadableName(String name) {
+		String pkg = name.substring(0, name.lastIndexOf('/'));
+		if (pkg.equals("java/lang")) {
+			return name.substring(pkg.length() + 1).replace('$', '.');
+		}
+
+		return name.replace('/', '.').replace('$', '.');
 	}
 }
