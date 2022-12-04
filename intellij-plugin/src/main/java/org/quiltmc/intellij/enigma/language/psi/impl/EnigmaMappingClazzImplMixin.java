@@ -17,10 +17,6 @@
 package org.quiltmc.intellij.enigma.language.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.quiltmc.intellij.enigma.language.psi.EnigmaMappingClazz;
 import org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingClass;
@@ -30,21 +26,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class EnigmaMappingClazzImplMixin extends EnigmaMappingEntryImpl implements IEnigmaMappingClass {
-	private final CachedValue<List<EnigmaMappingClazz>> parentCache;
-	private final CachedValue<List<EnigmaMappingClazz>> childrenCache;
+	private List<EnigmaMappingClazz> parents;
+	private List<EnigmaMappingClazz> childrenClasses;
 
 	public EnigmaMappingClazzImplMixin(ASTNode node) {
 		super(node);
-
-		parentCache = CachedValuesManager.getManager(getProject()).createCachedValue(() -> {
-			List<EnigmaMappingClazz> parents = createParentsList();
-			List<Object> dependencies = new ArrayList<>(parents);
-			dependencies.add(PsiModificationTracker.MODIFICATION_COUNT);
-			dependencies.add(this);
-			return CachedValueProvider.Result.create(parents, dependencies);
-		});
-		childrenCache = CachedValuesManager.getManager(getProject()).createCachedValue(() ->
-				CachedValueProvider.Result.create(findChildrenClasses(), PsiModificationTracker.MODIFICATION_COUNT, this));
 	}
 
 	private List<EnigmaMappingClazz> createParentsList() {
@@ -68,16 +54,27 @@ public class EnigmaMappingClazzImplMixin extends EnigmaMappingEntryImpl implemen
 	}
 
 	@Override
-	public List<? extends EnigmaMappingClazz> getParentClasses() {
-		List<EnigmaMappingClazz> cached = parentCache.getValue();
+	public void subtreeChanged() {
+		super.subtreeChanged();
+		childrenClasses = null;
+		parents = null; // invalidate just in case
+	}
 
-		return parentCache.hasUpToDateValue() ? cached : createParentsList();
+	@Override
+	public List<? extends EnigmaMappingClazz> getParentClasses() {
+		if (parents == null) {
+			parents = createParentsList();
+		}
+
+		return parents;
 	}
 
 	@Override
 	public List<? extends EnigmaMappingClazz> getChildrenClasses() {
-		List<EnigmaMappingClazz> cached = childrenCache.getValue();
+		if (childrenClasses == null) {
+			childrenClasses = findChildrenClasses();
+		}
 
-		return childrenCache.hasUpToDateValue() ? cached : findChildrenClasses();
+		return childrenClasses;
 	}
 }
