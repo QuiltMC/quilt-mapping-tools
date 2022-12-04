@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 913.53 913.53" width="40" height="40">
-    <!-- https://github.com/QuiltMC/art/blob/4bceaea67151dc55240b9aefaa90e67bc5c431ac/brand/svg/quilt_logo_mono_dark.svg -->
+    <!-- https://github.com/QuiltMC/art/blob/4bceaea67151dc55240b9aefaa90e67bc5c431ac/brand/svg/quilt_logo_mono_dark_rounded%20copy%202.svg -->
     <defs>
         <style>.cls-1{fill:#161616;}.cls-2{fill:#fff;}</style>
     </defs>
-    <rect class="cls-1" width="913.53" height="913.53"/>
+    <rect class="cls-1" width="913.53" height="913.53" rx="227.13"/>
     <path class="cls-2"
           d="M324.9,243.13a10.36,10.36,0,0,0,10.35,10.35h17.6v39.34h-17.6a10.35,10.35,0,0,0,0,20.7h17.6v30.17a9.17,9.17,0,0,1-9.17,9.17H313.51v-17.6a10.35,10.35,0,0,0-20.7,0v17.6H253.47v-17.6a10.35,10.35,0,0,0-20.7,0v17.6H202.6a9.18,9.18,0,0,1-9.17-9.17V202.61a9.17,9.17,0,0,1,9.17-9.17H343.68a9.16,9.16,0,0,1,9.17,9.17v30.16h-17.6A10.36,10.36,0,0,0,324.9,243.13Z"/>
     <path class="cls-2"
