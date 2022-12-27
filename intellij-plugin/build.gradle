@@ -1,0 +1,86 @@
+plugins {
+	id "org.jetbrains.intellij" version "1.9.0"
+	id "org.jetbrains.grammarkit" version "2021.2.2"
+}
+
+apply plugin: "java"
+apply plugin: "org.jetbrains.grammarkit"
+
+group = "org.quiltmc"
+version = "0.1.0"
+
+repositories {
+	mavenCentral()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs("src/generated")
+		}
+	}
+}
+
+// Configure Gradle IntelliJ Plugin
+// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
+intellij {
+	version.set("2021.3")
+	type.set("IC") // Target IDE Platform
+
+	plugins.set([/* Plugin Dependencies */])
+	plugins.addAll(findProperty("platformPlugins")?.split(",") ?: [])
+}
+
+grammarKit {
+	jflexRelease = "1.7.0-1"
+	grammarKitRelease = "2021.1.2"
+}
+
+// Set the JVM compatibility versions
+java {
+	sourceCompatibility = "11"
+	targetCompatibility = "11"
+}
+
+task generateCode {
+	dependsOn generateLexer, generateParser
+}
+
+tasks {
+	patchPluginXml {
+		sinceBuild.set("213")
+		untilBuild.set("223.*")
+	}
+
+	signPlugin {
+		certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+		privateKey.set(System.getenv("PRIVATE_KEY"))
+		password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+	}
+
+	publishPlugin {
+		token.set(System.getenv("PUBLISH_TOKEN"))
+	}
+
+	generateLexer {
+		source = "src/main/java/org/quiltmc/intellij/enigma/language/_EnigmaMappingLexer.flex"
+		targetDir = "src/generated/org/quiltmc/intellij/enigma/language/"
+		targetClass = "EnigmaMappingLexer.java"
+	}
+
+	generateParser {
+		source = "src/main/java/org/quiltmc/intellij/enigma/language/EnigmaMapping.bnf"
+		targetRoot = "src/generated/"
+		pathToParser = "org/quiltmc/intellij/enigma/language/EnigmaMappingParser.java"
+		pathToPsiRoot = "org/quiltmc/intellij/enigma/language/psi/"
+	}
+
+	// TODO: Find a way to exclude a source directory
+	checkLicenseMain {
+		enabled false
+	}
+
+	compileJava {
+		dependsOn generateCode
+	}
+}

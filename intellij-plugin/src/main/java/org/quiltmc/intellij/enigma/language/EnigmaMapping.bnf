@@ -1,0 +1,99 @@
+{
+  parserClass = 'org.quiltmc.intellij.enigma.language.parser.EnigmaMappingParser'
+
+  extends = 'com.intellij.extapi.psi.ASTWrapperPsiElement'
+
+  psiClassPrefix = 'EnigmaMapping'
+  psiImplClassSuffix = 'Impl'
+  psiPackage = 'org.quiltmc.intellij.enigma.language.psi'
+  psiImplPackage = 'org.quiltmc.intellij.enigma.language.psi.impl'
+
+  elementTypeHolderClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTypes'
+  elementTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingElementType'
+  tokenTypeClass = 'org.quiltmc.intellij.enigma.language.psi.EnigmaMappingTokenType'
+
+  parserUtilClass = 'org.quiltmc.intellij.enigma.language.parser.EnigmaMappingParserUtil'
+
+  tokens = [
+    NEW_LINE = "regexp:\r?\n"
+    WHITE_SPACE = "regexp:[ ]+"
+    TAB = "regexp:\t"
+
+    CLASS_KEYWORD = "CLASS"
+    FIELD_KEYWORD = "FIELD"
+    METHOD_KEYWORD = "METHOD"
+    ARG_KEYWORD = "ARG"
+    COMMENT_KEYWORD = "COMMENT"
+
+    PACKAGE_SEPARATOR = "/"
+    IDENTIFIER = "regexp:[^\r\n\t /]+"
+
+    // Match by character
+    DESCRIPTOR_TOKEN = "regexp:[^ ](?=[^\r\n\t ]*\r?\n)" // [^ ]/[^\r\n\t ]*\r?\n in JFlex
+
+    NUMBER = "regexp:\d+"
+
+    COMMENT_TEXT = "regexp:[^\r\n\t]+"
+  ]
+}
+
+root ::= clazz ln* // validate any amount of trailing new lines
+
+clazz ::= 'CLASS' class-name [ class-name ] class-children {
+  pin=1
+  extends=entry
+  name="class"
+  implements="org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingClass"
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClazzImplMixin"
+}
+private class-children ::= (ln ind comment)* (ln ind class-member)*
+private class-member ::= field | method | clazz
+
+field ::= 'FIELD' identifier-name [ identifier-name ] descriptor (ln ind comment)* { pin=1 extends=entry }
+
+method ::= 'METHOD' identifier-name [ identifier-name ] method-descriptor (ln ind comment)* (ln ind arg)* { pin=1 extends=entry }
+
+arg ::= 'ARG' 'regexp:\d+' [ identifier-name ] (ln ind comment)* {
+  pin=1
+  extends=entry
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingArgImplMixin"
+}
+
+comment ::= 'COMMENT' comment-text* {
+  pin=1
+  implements="org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingComment"
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingCommentImplMixin"
+}
+private comment-text ::= 'regexp:[^\r\n\t]+'
+
+fake entry ::= class-name+ | identifier-name+ | comment+ {
+  implements=["com.intellij.psi.PsiNameIdentifierOwner" "org.quiltmc.intellij.enigma.language.psi.IEnigmaMappingEntry"]
+  mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingEntryImplMixin"
+  methods=[
+    obfCls="/class-name[0]"
+    namedCls="/class-name[last]"
+    obf="/identifier-name[0]"
+    named="/identifier-name[last]"
+  ]
+}
+
+class-name ::= (identifier-name '/')* identifier-name
+  | !';' DESCRIPTOR_TOKEN (!';' DESCRIPTOR_TOKEN)* {
+    pin(".*")=2
+    mixin="org.quiltmc.intellij.enigma.language.psi.impl.EnigmaMappingClassNameImplMixin"
+  }
+identifier-name ::= 'regexp:[^\r\n\t /]+'
+
+descriptor ::= desc // prevent recursion by delegating it to a private rule
+private desc ::= base-descriptor | object-descriptor | array-descriptor
+
+method-descriptor ::= '(' parameter-descriptor* ')' return-descriptor { pin=1 }
+private parameter-descriptor ::= descriptor
+return-descriptor ::= desc | 'V'
+
+private base-descriptor ::= 'B' | 'C' | 'D' | 'F' | 'I' | 'J' | 'S' | 'Z'
+private object-descriptor ::= 'L' class-name ';' { pin=1 }
+private array-descriptor ::= '[' desc { pin=1 }
+
+private ln ::= 'regexp:\r?\n'
+external ind ::= parseIndent
