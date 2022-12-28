@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry.info;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface MutableCommentEntry extends CommentEntry, MutableMappingEntry<CommentEntry> {
+	void setComment(String comment);
 }

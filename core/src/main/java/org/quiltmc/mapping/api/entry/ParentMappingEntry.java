@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import java.util.Collection;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+import org.quiltmc.mapping.MappingType;
+
+public interface ParentMappingEntry<T extends ParentMappingEntry<T>> extends MappingEntry<T> {
+	default <C extends MappingEntry<C>> Collection<C> getChildrenOfType(MappingType<C> type) {
+		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast).toList();
+	}
+
+	Collection<MappingEntry<?>> children();
 }

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.Contract;
 import org.quiltmc.json5.JsonReader;
 import org.quiltmc.mapping.MappingType;
-import org.quiltmc.mapping.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.file.MappingHeader;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.parser.exception.InvalidSyntaxException;
@@ -95,25 +95,26 @@ public class QuiltMappingParser {
 	}
 
 	public void parseChildToken(List<MappingEntry<?>> children, String name) {
-		if (types.containsKey(name)) {
-			MappingType<?> type = types.get(name);
-			if (type.tokenType().isArray()) {
-				children.addAll(parseMappingEntryArray(type));
-			} else {
-				children.add(parseMappingEntry(type));
-			}
-		} else {
-			LOGGER.warning("unknown token: " + name);
-			this.skip();
-		}
+//		if (types.containsKey(name)) {
+//			MappingType<?> type = types.get(name);
+//			if (type.tokenType().isArray()) {
+//				children.addAll(parseMappingEntryArray(type));
+//			} else {
+//				children.add(parseMappingEntry(type));
+//			}
+//		} else {
+//			LOGGER.warning("unknown token: " + name);
+//			this.skip();
+//		}
 	}
 
 	public <T extends MappingEntry<T>> T parseMappingEntry(MappingType<T> mappingType) {
-		if (mappingType.tokenType().isObject()) {
-			return this.object(() -> mappingType.parser().parse(this));
-		}
-
-		return mappingType.parser().parse(this);
+//		if (mappingType.tokenType().isObject()) {
+//			return this.object(() -> mappingType.parser().parse(this));
+//		}
+//
+//		return mappingType.parser().parse(this);
+		return null;
 	}
 
 	public <T extends MappingEntry<T>> List<T> parseMappingEntryArray(MappingType<T> mappingType) {

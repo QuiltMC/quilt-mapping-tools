@@ -16,6 +16,17 @@
 
 package org.quiltmc.mapping.tree;
 
-public interface MappingTree {
+import java.util.Collection;
+import java.util.Optional;
 
+import org.quiltmc.mapping.impl.entry.naming.ClassEntryImpl;
+
+public interface MappingTree {
+	Collection<ClassEntryImpl> getClassEntries();
+	Optional<ClassEntryImpl> getClassEntry(String fromName);
+
+	MappingTree reverse();
+	MappingTree merge(MappingTree with);
+	MappingTree merge(MappingTree with, MappingTree dest);
+	MappingTree copy();
 }

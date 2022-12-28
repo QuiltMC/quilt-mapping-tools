@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import java.util.List;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
+
+public interface MappingEntry<T extends MappingEntry<T>> {
+	T remap();
+
+	MappingType<T> getType();
+
+	default boolean shouldMerge(MappingEntry<?> other) {
+		return this.getType().equals(other.getType());
+	}
+
+	@SuppressWarnings("unchecked")
+	default T merge(MappingEntry<?> other) {
+		return (T) this;
+	}
+
+	MutableMappingEntry<T> makeMutable();
 }

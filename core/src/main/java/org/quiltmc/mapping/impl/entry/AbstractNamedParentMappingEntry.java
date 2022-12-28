@@ -14,68 +14,61 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.entry;
+package org.quiltmc.mapping.impl.entry;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.NamedMappingEntry;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public abstract class AbstractParentMappingEntry<T extends AbstractParentMappingEntry<T>> implements MappingEntry<T> {
+public abstract class AbstractNamedParentMappingEntry<T extends NamedMappingEntry<T> & ParentMappingEntry<T>> extends AbstractParentMappingEntry<T> implements NamedMappingEntry<T> {
 	protected final String fromName;
 	protected final @Nullable String toName;
-	protected final List<MappingEntry<?>> children;
-	protected final MappingType<T> type;
 
-	protected AbstractParentMappingEntry(String fromName, @Nullable String toName, List<MappingEntry<?>> children, MappingType<T> type) {
+	protected AbstractNamedParentMappingEntry(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
+		super(children);
 		this.fromName = fromName;
 		this.toName = toName;
-		this.children = children;
-		this.type = type;
 	}
 
 	@Override
-	public MappingType<T> getType() {
-		return type;
+	public @Nullable String getToName() {
+		return this.toName;
+	}
+
+	@Override
+	public String getFromName() {
+		return this.fromName;
+	}
+
+	@Override
+	public boolean hasToName() {
+		return this.toName != null;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean shouldMerge(MappingEntry<?> other) {
-		return MappingEntry.super.shouldMerge(other) && this.fromName.equals(((T) other).fromName);
+		return super.shouldMerge(other) && this.fromName.equals(((T) other).getFromName());
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AbstractParentMappingEntry<?> that = (AbstractParentMappingEntry<?>) o;
+		AbstractNamedParentMappingEntry<?> that = (AbstractNamedParentMappingEntry<?>) o;
 		return Objects.equals(fromName, that.fromName) && Objects.equals(toName, that.toName) && this.children.containsAll(that.children) && that.children.containsAll(this.children);
-	}
-
-	@NotNull
-	public static List<MappingEntry<?>> mergeChildren(List<MappingEntry<?>> children, List<MappingEntry<?>> otherChildren) {
-		List<MappingEntry<?>> newChildren = new ArrayList<>(children);
-
-		for (MappingEntry<?> newChild : otherChildren) {
-			for (int i = 0; i < newChildren.size(); i++) {
-				MappingEntry<?> child = newChildren.get(i);
-				if (child.shouldMerge(newChild)) {
-					newChild = child.merge(newChild);
-					newChildren.remove(i);
-					break;
-				}
-			}
-			newChildren.add(newChild);
-		}
-		return newChildren;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fromName, toName, children, type);
+		return Objects.hash(fromName, toName, super.hashCode());
 	}
 }

@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry.unpick;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
-
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public enum UnpickType {
+	CONSTANT, FLAG
 }

@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.impl.entry.info;
+
 
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.info.CommentEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public record CommentEntryImpl(String comment) implements CommentEntry {
+	@Override
+	public CommentEntry remap() {
+		return this;
+	}
+
+	@Override
+	public CommentEntry merge(MappingEntry<?> other) {
+		return new CommentEntryImpl(this.comment + "\n" + ((CommentEntry) other).comment());
+	}
+
+	@Override
+	public MutableMappingEntry<CommentEntry> makeMutable() {
+		return new MutableCommentEntryImpl(this.comment);
+	}
 }

@@ -17,5 +17,6 @@ pluginManagement {
 rootProject.name = 'quilt-mapping-tools'
 
 include("core")
-include("annotation")
+// TODO: Rewrite the annotation entries with the new API structure
+// include("annotation")
 

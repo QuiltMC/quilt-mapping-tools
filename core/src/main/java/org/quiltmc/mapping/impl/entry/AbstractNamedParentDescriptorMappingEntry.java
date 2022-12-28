@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.entry;
+package org.quiltmc.mapping.impl.entry;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public abstract class AbstractParentDescriptorMappingEntry<T extends AbstractParentDescriptorMappingEntry<T>> extends AbstractParentMappingEntry<T> {
+public abstract class AbstractNamedParentDescriptorMappingEntry<T extends NamedDescriptorMappingEntry<T> & ParentMappingEntry<T>> extends AbstractNamedParentMappingEntry<T> implements NamedDescriptorMappingEntry<T> {
 	protected final String descriptor;
 
-	protected AbstractParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, List<MappingEntry<?>> children, MappingType<T> type) {
-		super(fromName, toName, children, type);
+	protected AbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
+		super(fromName, toName, children);
 		this.descriptor = descriptor;
+	}
+
+	@Override
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 	@Override
@@ -35,7 +44,7 @@ public abstract class AbstractParentDescriptorMappingEntry<T extends AbstractPar
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		AbstractParentDescriptorMappingEntry<?> that = (AbstractParentDescriptorMappingEntry<?>) o;
+		AbstractNamedParentDescriptorMappingEntry<?> that = (AbstractNamedParentDescriptorMappingEntry<?>) o;
 		return Objects.equals(descriptor, that.descriptor);
 	}
 

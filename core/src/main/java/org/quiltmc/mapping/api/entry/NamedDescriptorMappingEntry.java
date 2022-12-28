@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
-
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface NamedDescriptorMappingEntry<T extends NamedDescriptorMappingEntry<T>> extends NamedMappingEntry<T> {
+	// TODO: add a class wrapper for this?
+	String getDescriptor();
 }

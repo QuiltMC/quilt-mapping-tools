@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.jetbrains.annotations.Nullable;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface NamedMappingEntry<T extends NamedMappingEntry<T>> extends MappingEntry<T> {
+	String getToName();
+	@Nullable
+	String getFromName();
+
+	boolean hasToName();
 }

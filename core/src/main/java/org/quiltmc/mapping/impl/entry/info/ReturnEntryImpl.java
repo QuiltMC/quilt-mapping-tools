@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.file;
+package org.quiltmc.mapping.impl.entry.info;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
+import org.quiltmc.mapping.api.entry.info.ReturnEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 
-public record QuiltMappingFile(MappingHeader header, List<MappingEntry<?>> entries) {
-	public QuiltMappingFile merge(QuiltMappingFile other) {
-		Set<String> extensions = new HashSet<>(this.header.extensions());
-		extensions.addAll(other.header.extensions());
-		MappingHeader header = new MappingHeader(this.header.fromNamespace(), this.header.toNamespace(), extensions);
+public record ReturnEntryImpl(Collection<MappingEntry<?>> children) implements ReturnEntry {
+	@Override
+	public ReturnEntry merge(MappingEntry<?> other) {
+		ReturnEntry ret = (ReturnEntry) other;
+		return new ReturnEntryImpl(AbstractNamedParentMappingEntry.mergeChildren(this.children, ret.children()));
+	}
 
-		return new QuiltMappingFile(header, AbstractNamedParentMappingEntry.mergeChildren(this.entries, other.entries));
+	@Override
+	public MutableMappingEntry<ReturnEntry> makeMutable() {
+		return new MutableReturnEntryImpl(this.children);
+	}
+
+	@Override
+	public ReturnEntry remap() {
+		return this;
 	}
 }

@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.entry;
-
-import java.util.List;
+package org.quiltmc.mapping.api.entry.naming;
 
 import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public interface MappingEntry<T extends MappingEntry<T>> {
-	T remap();
+public interface MethodEntry extends NamedDescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
+	MappingType<MethodEntry> METHOD_MAPPING_TYPE = new MappingType<>("methods", MethodEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
 
-	MappingType<T> getType();
-
-	List<MappingType<?>> getTargetTypes();
-
-	default boolean shouldMerge(MappingEntry<?> other) {
-		return this.getType().equals(other.getType());
-	}
-
-	@SuppressWarnings("unchecked")
-	default T merge(MappingEntry<?> other) {
-		return (T) this;
+	@Override
+	default MappingType<MethodEntry> getType() {
+		return METHOD_MAPPING_TYPE;
 	}
 }

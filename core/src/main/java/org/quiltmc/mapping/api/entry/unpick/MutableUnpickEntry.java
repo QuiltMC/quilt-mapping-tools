@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry.unpick;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface MutableUnpickEntry extends UnpickEntry, MutableMappingEntry<UnpickEntry> {
+	void setGroup(String group);
+	void setType(@Nullable UnpickType type);
 }

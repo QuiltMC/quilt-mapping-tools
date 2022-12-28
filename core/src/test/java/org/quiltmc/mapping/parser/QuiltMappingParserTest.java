@@ -23,14 +23,14 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.mapping.MappingType;
-import org.quiltmc.mapping.entry.info.ArgEntry;
-import org.quiltmc.mapping.entry.info.CommentEntry;
-import org.quiltmc.mapping.entry.info.ReturnEntry;
-import org.quiltmc.mapping.entry.naming.ClassEntry;
-import org.quiltmc.mapping.entry.naming.FieldEntry;
-import org.quiltmc.mapping.entry.naming.MethodEntry;
-import org.quiltmc.mapping.entry.transitive.TransitiveEntry;
-import org.quiltmc.mapping.entry.unpick.UnpickEntry;
+import org.quiltmc.mapping.api.entry.info.ArgEntry;
+import org.quiltmc.mapping.api.entry.info.CommentEntry;
+import org.quiltmc.mapping.api.entry.info.ReturnEntry;
+import org.quiltmc.mapping.api.entry.naming.ClassEntry;
+import org.quiltmc.mapping.api.entry.naming.FieldEntry;
+import org.quiltmc.mapping.api.entry.naming.MethodEntry;
+import org.quiltmc.mapping.impl.entry.transitive.TransitiveEntryImpl;
+import org.quiltmc.mapping.impl.entry.unpick.UnpickEntryImpl;
 import org.quiltmc.mapping.parser.exception.ParsingException;
 
 class QuiltMappingParserTest {
@@ -41,8 +41,8 @@ class QuiltMappingParserTest {
 			CommentEntry.COMMENT_MAPPING_TYPE,
 			ArgEntry.ARG_MAPPING_TYPE,
 			ReturnEntry.RETURN_MAPPING_TYPE,
-			UnpickEntry.UNPICK_MAPPING_TYPE,
-			TransitiveEntry.TRANSITIVE_MAPPING_TYPE);
+			UnpickEntryImpl.UNPICK_MAPPING_TYPE,
+			TransitiveEntryImpl.TRANSITIVE_MAPPING_TYPE);
 
 	@Test
 	void main() throws IOException {

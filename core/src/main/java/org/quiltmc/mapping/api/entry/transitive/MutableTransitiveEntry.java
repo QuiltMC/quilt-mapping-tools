@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry.transitive;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface MutableTransitiveEntry extends TransitiveEntry, MutableMappingEntry<TransitiveEntry> {
+	void setTarget(String target);
+	void addTransitiveType(MappingType<?> type);
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import org.quiltmc.json5.JsonWriter;
 import org.quiltmc.mapping.MappingType;
-import org.quiltmc.mapping.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 
 public class QuiltMappingWriter {
@@ -130,29 +130,29 @@ public class QuiltMappingWriter {
 
 	@SuppressWarnings("unchecked")
 	public <T extends MappingEntry<T>> void writeChildType(MappingType<T> type, List<MappingEntry<T>> values) {
-		if (!type.tokenType().isArray() && values.size() > 1) {
-			throw new RuntimeException("Too many values for " + type.key() + " mapping type");
-		}
-
-		this.wrapSyntaxError(() -> this.writer.get().name(type.key()));
-
-		if (type.tokenType().isArray()) {
-			this.wrapSyntaxError(this.writer.get()::beginArray);
-		}
-
-		for (MappingEntry<T> value : values) {
-			if (type.tokenType().isObject()) {
-				this.wrapSyntaxError(this.writer.get()::beginObject);
-			}
-			type.writer().write((T) value, this);
-			if (type.tokenType().isObject()) {
-				this.wrapSyntaxError(this.writer.get()::endObject);
-			}
-		}
-
-		if (type.tokenType().isArray()) {
-			this.wrapSyntaxError(this.writer.get()::endArray);
-		}
+//		if (!type.tokenType().isArray() && values.size() > 1) {
+//			throw new RuntimeException("Too many values for " + type.key() + " mapping type");
+//		}
+//
+//		this.wrapSyntaxError(() -> this.writer.get().name(type.key()));
+//
+//		if (type.tokenType().isArray()) {
+//			this.wrapSyntaxError(this.writer.get()::beginArray);
+//		}
+//
+//		for (MappingEntry<T> value : values) {
+//			if (type.tokenType().isObject()) {
+//				this.wrapSyntaxError(this.writer.get()::beginObject);
+//			}
+//			type.writer().write((T) value, this);
+//			if (type.tokenType().isObject()) {
+//				this.wrapSyntaxError(this.writer.get()::endObject);
+//			}
+//		}
+//
+//		if (type.tokenType().isArray()) {
+//			this.wrapSyntaxError(this.writer.get()::endArray);
+//		}
 	}
 
 	private void wrapSyntaxError(ThrowableRunnable<IOException> toRun) {

@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.writer;
+package org.quiltmc.mapping.api.entry.naming;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.NamedMappingEntry;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public interface MappingEntryWriter<T extends MappingEntry<T>> {
-	void write(T entry, QuiltMappingWriter writer);
+public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMappingEntry<ClassEntry> {
+	MappingType<ClassEntry> CLASS_MAPPING_TYPE = new MappingType<>("classes", ClassEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
+
+	@Override
+	default MappingType<ClassEntry> getType() {
+		return CLASS_MAPPING_TYPE;
+	}
 }
