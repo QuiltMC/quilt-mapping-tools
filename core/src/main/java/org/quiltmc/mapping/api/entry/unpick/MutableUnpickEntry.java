@@ -21,5 +21,6 @@ import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
 public interface MutableUnpickEntry extends UnpickEntry, MutableMappingEntry<UnpickEntry> {
 	void setGroup(String group);
+
 	void setType(@Nullable UnpickType type);
 }

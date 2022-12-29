@@ -21,16 +21,16 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.CommentEntry;
 import org.quiltmc.mapping.api.entry.info.ReturnEntry;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
+import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.impl.entry.transitive.TransitiveEntryImpl;
 import org.quiltmc.mapping.impl.entry.unpick.UnpickEntryImpl;
-import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

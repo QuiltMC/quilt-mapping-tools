@@ -18,10 +18,10 @@ package org.quiltmc.mapping.impl.entry.info;
 
 import java.util.Collection;
 
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.info.ReturnEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
-import org.quiltmc.mapping.api.entry.MappingEntry;
 
 public record ReturnEntryImpl(Collection<MappingEntry<?>> children) implements ReturnEntry {
 	@Override
@@ -32,7 +32,7 @@ public record ReturnEntryImpl(Collection<MappingEntry<?>> children) implements R
 
 	@Override
 	public MutableMappingEntry<ReturnEntry> makeMutable() {
-		return new MutableReturnEntryImpl(this.children);
+		return new MutableReturnEntryImpl(this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override

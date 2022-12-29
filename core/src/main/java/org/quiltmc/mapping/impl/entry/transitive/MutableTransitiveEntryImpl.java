@@ -20,15 +20,15 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.transitive.MutableTransitiveEntry;
 import org.quiltmc.mapping.api.entry.transitive.TransitiveEntry;
 
 public final class MutableTransitiveEntryImpl implements MutableTransitiveEntry {
 	private String target;
-	private Set<MappingType<?>> transitiveTypes;
+	private final Set<MappingType<?>> transitiveTypes;
 
 	public MutableTransitiveEntryImpl(String target, Set<MappingType<?>> transitiveTypes) {
 		this.target = target;

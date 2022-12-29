@@ -17,7 +17,6 @@
 package org.quiltmc.mapping.impl.entry.naming;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
@@ -31,12 +30,19 @@ public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<Fi
 	}
 
 	@Override
+	public FieldEntry merge(MappingEntry<?> other) {
+		FieldEntry field = ((FieldEntry) other);
+		Collection<MappingEntry<?>> children = mergeChildren(this.children, field.children());
+		return new FieldEntryImpl(this.fromName, this.toName != null ? this.toName : field.getToName(), this.descriptor, children);
+	}
+
+	@Override
 	public FieldEntry remap() {
 		return null;
 	}
 
 	@Override
 	public MutableMappingEntry<FieldEntry> makeMutable() {
-		return new MutableFieldEntryImpl(this.fromName, this.toName, this.descriptor, this.children);
+		return new MutableFieldEntryImpl(this.fromName, this.toName, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 }

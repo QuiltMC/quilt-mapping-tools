@@ -16,14 +16,10 @@
 
 package org.quiltmc.mapping.impl.entry;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
@@ -56,7 +52,7 @@ public abstract class AbstractNamedParentMappingEntry<T extends NamedMappingEntr
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean shouldMerge(MappingEntry<?> other) {
-		return super.shouldMerge(other) && this.fromName.equals(((T) other).getFromName());
+		return super.shouldMerge(other) && this.fromName.equals(((NamedMappingEntry<T>) other).getFromName());
 	}
 
 	@Override
@@ -69,6 +65,6 @@ public abstract class AbstractNamedParentMappingEntry<T extends NamedMappingEntr
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fromName, toName, super.hashCode());
+		return Objects.hash(super.hashCode(), fromName, toName);
 	}
 }

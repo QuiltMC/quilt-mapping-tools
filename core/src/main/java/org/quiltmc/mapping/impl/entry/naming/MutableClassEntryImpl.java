@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.impl.entry.naming;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +28,7 @@ import org.quiltmc.mapping.api.entry.naming.MutableClassEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentMappingEntry;
 
 public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntry<ClassEntry> implements MutableClassEntry {
-	protected MutableClassEntryImpl(String fromName, @Nullable String toName, List<MappingEntry<?>> children) {
+	protected MutableClassEntryImpl(String fromName, @Nullable String toName, Collection<? extends MutableMappingEntry<?>> children) {
 		super(fromName, toName, new ArrayList<>(children));
 	}
 
@@ -37,9 +38,9 @@ public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntr
 	}
 
 	@Override
-	public MutableClassEntryImpl merge(MappingEntry<?> other) {
+	public ClassEntry merge(MappingEntry<?> other) {
 		ClassEntry clazz = ((ClassEntry) other);
-		List<MappingEntry<?>> children = mergeChildren(this.children, clazz.children());
+		Collection<MutableMappingEntry<?>> children = mergeChildren(this.children, clazz.children());
 		return new MutableClassEntryImpl(this.fromName, this.toName != null ? this.toName : clazz.getToName(), children);
 	}
 

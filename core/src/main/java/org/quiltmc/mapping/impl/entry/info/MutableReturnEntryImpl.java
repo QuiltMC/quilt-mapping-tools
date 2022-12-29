@@ -29,7 +29,7 @@ import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractParentMappingEntry;
 
 public final class MutableReturnEntryImpl extends MutableAbstractParentMappingEntry<ReturnEntry> implements MutableReturnEntry {
-	public MutableReturnEntryImpl(Collection<MappingEntry<?>> children) {
+	public MutableReturnEntryImpl(Collection<? extends MutableMappingEntry<?>> children) {
 		super(new ArrayList<>(children));
 	}
 

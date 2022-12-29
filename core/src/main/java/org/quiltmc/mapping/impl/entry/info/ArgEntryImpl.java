@@ -16,9 +16,7 @@
 
 package org.quiltmc.mapping.impl.entry.info;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +30,7 @@ public final class ArgEntryImpl extends AbstractParentMappingEntry<ArgEntry> imp
 	private final int index;
 	private final @Nullable String name;
 
-	public ArgEntryImpl(int index, @Nullable String name, List<MappingEntry<?>> children) {
+	public ArgEntryImpl(int index, @Nullable String name, Collection<MappingEntry<?>> children) {
 		super(children);
 		this.index = index;
 		this.name = name;
@@ -46,7 +44,7 @@ public final class ArgEntryImpl extends AbstractParentMappingEntry<ArgEntry> imp
 
 	@Override
 	public MutableMappingEntry<ArgEntry> makeMutable() {
-		return new MutableArgEntryImpl(this.index, this.name, new ArrayList<>(this.children));
+		return new MutableArgEntryImpl(this.index, this.name, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override

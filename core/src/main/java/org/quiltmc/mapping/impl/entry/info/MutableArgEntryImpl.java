@@ -33,7 +33,7 @@ public class MutableArgEntryImpl extends MutableAbstractParentMappingEntry<ArgEn
 	protected int index;
 	protected @Nullable String name;
 
-	public MutableArgEntryImpl(int index, @Nullable String name, Collection<MappingEntry<?>> children) {
+	public MutableArgEntryImpl(int index, @Nullable String name, Collection<? extends MutableMappingEntry<?>> children) {
 		super(new ArrayList<>(children));
 		this.index = index;
 		this.name = name;

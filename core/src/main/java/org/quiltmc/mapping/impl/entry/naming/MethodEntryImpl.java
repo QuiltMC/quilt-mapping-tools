@@ -21,7 +21,6 @@ import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
-import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentDescriptorMappingEntry;
 
@@ -36,7 +35,14 @@ public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<M
 	}
 
 	@Override
+	public MethodEntry merge(MappingEntry<?> other) {
+		MethodEntry method = ((MethodEntry) other);
+		Collection<MappingEntry<?>> children = mergeChildren(this.children, method.children());
+		return new MethodEntryImpl(this.fromName, this.toName != null ? this.toName : method.getToName(), this.descriptor, children);
+	}
+
+	@Override
 	public MutableMappingEntry<MethodEntry> makeMutable() {
-		return new MutableMethodEntryImpl(this.fromName, this.toName, this.descriptor, this.children);
+		return new MutableMethodEntryImpl(this.fromName, this.toName, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 }

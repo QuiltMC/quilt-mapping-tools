@@ -16,34 +16,34 @@
 
 package org.quiltmc.mapping.impl.entry.naming;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
-import org.quiltmc.mapping.api.entry.MappingEntry;
 
 public class ClassEntryImpl extends AbstractNamedParentMappingEntry<ClassEntry> implements ClassEntry {
-	protected ClassEntryImpl(String fromName, @Nullable String toName, List<MappingEntry<?>> children) {
+	protected ClassEntryImpl(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
 		super(fromName, toName, children);
 	}
 
 	@Override
-	public ClassEntryImpl remap() {
+	public ClassEntry remap() {
 		return null;
 	}
 
 	@Override
-	public ClassEntryImpl merge(MappingEntry<?> other) {
-		ClassEntryImpl clazz = ((ClassEntryImpl) other);
-		List<MappingEntry<?>> children = mergeChildren(this.children, clazz.children);
-		return new ClassEntryImpl(this.fromName, this.toName != null ? this.toName : clazz.toName, children);
+	public ClassEntry merge(MappingEntry<?> other) {
+		ClassEntry clazz = ((ClassEntry) other);
+		Collection<MappingEntry<?>> children = mergeChildren(this.children, clazz.children());
+		return new ClassEntryImpl(this.fromName, this.toName != null ? this.toName : clazz.getToName(), children);
 	}
 
 	@Override
 	public MutableMappingEntry<ClassEntry> makeMutable() {
-		return null;
+		return new MutableClassEntryImpl(this.fromName, this.toName, children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override

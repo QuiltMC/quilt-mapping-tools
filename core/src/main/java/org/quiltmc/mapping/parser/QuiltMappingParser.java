@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Contract;
 import org.quiltmc.json5.JsonReader;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.file.MappingHeader;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 import org.quiltmc.mapping.parser.exception.InvalidSyntaxException;

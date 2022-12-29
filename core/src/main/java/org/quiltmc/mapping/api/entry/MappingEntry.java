@@ -16,9 +16,6 @@
 
 package org.quiltmc.mapping.api.entry;
 
-import java.util.List;
-
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
 public interface MappingEntry<T extends MappingEntry<T>> {

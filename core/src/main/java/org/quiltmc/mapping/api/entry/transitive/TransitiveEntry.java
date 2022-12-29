@@ -16,11 +16,10 @@
 
 package org.quiltmc.mapping.api.entry.transitive;
 
-import java.util.List;
 import java.util.Set;
 
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
@@ -29,6 +28,7 @@ public interface TransitiveEntry extends MappingEntry<TransitiveEntry> {
 	MappingType<TransitiveEntry> TRANSITIVE_MAPPING_TYPE = new MappingType<>("transitive", TransitiveEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE) || mappingType.equals(MethodEntry.METHOD_MAPPING_TYPE) || mappingType.equals(FieldEntry.FIELD_MAPPING_TYPE));
 
 	String target();
+
 	Set<MappingType<?>> transitiveTypes();
 
 	@Override

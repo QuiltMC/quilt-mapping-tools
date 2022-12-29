@@ -16,9 +16,16 @@
 
 package org.quiltmc.mapping.api.entry.naming;
 
-import org.quiltmc.mapping.MappingType;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.entry.info.ArgEntry;
 
 public interface MethodEntry extends NamedDescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
 	MappingType<MethodEntry> METHOD_MAPPING_TYPE = new MappingType<>("methods", MethodEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
@@ -27,4 +34,16 @@ public interface MethodEntry extends NamedDescriptorMappingEntry<MethodEntry>, P
 	default MappingType<MethodEntry> getType() {
 		return METHOD_MAPPING_TYPE;
 	}
+
+	default Collection<? extends ArgEntry> getArgs() {
+		return this.getChildrenOfType(ArgEntry.ARG_MAPPING_TYPE);
+	}
+
+	default Map<Integer, ? extends ArgEntry> getArgsByIndex() {
+		return this.streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, Function.identity()));
+	}
+
+	Optional<? extends ArgEntry> getArgMapping(int index);
+
+	boolean hasArgMapping(int index);
 }

@@ -17,7 +17,6 @@
 package org.quiltmc.mapping.impl.entry;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +38,11 @@ public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMapp
 	@Override
 	public @Nullable String getToName() {
 		return this.toName;
+	}
+
+	@Override
+	public void setToName(@Nullable String name) {
+		this.toName = name;
 	}
 
 	@Override
@@ -67,11 +71,6 @@ public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMapp
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fromName, toName, super.hashCode());
-	}
-
-	@Override
-	public void setToName(@Nullable String name) {
-		this.toName = name;
+		return Objects.hash(super.hashCode(), fromName, toName);
 	}
 }

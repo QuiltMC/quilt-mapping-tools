@@ -16,7 +16,7 @@
 
 package org.quiltmc.mapping.api.entry.naming;
 
-import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 

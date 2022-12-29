@@ -17,8 +17,8 @@
 package org.quiltmc.mapping.api.entry.unpick;
 
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.ReturnEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
@@ -27,6 +27,7 @@ public interface UnpickEntry extends MappingEntry<UnpickEntry> {
 	MappingType<UnpickEntry> UNPICK_MAPPING_TYPE = new MappingType<>("unpick", UnpickEntry.class, mappingType -> mappingType.equals(FieldEntry.FIELD_MAPPING_TYPE) || mappingType.equals(ArgEntry.ARG_MAPPING_TYPE) || mappingType.equals(ReturnEntry.RETURN_MAPPING_TYPE));
 
 	String group();
+
 	@Nullable UnpickType type();
 
 	@Override

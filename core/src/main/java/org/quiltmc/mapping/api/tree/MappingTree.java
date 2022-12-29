@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.tree;
+package org.quiltmc.mapping.api.tree;
 
 import java.util.Collection;
 import java.util.Optional;
 
-import org.quiltmc.mapping.impl.entry.naming.ClassEntryImpl;
+import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 
 public interface MappingTree {
-	Collection<ClassEntryImpl> getClassEntries();
-	Optional<ClassEntryImpl> getClassEntry(String fromName);
+	Collection<ClassEntry> getClassEntries();
+
+	Optional<ClassEntry> getClassEntry(String fromName);
+
+	boolean hasClassMapping(String fromName);
+
+	MutableMappingTree makeMutable();
 
 	MappingTree reverse();
+
 	MappingTree merge(MappingTree with);
+
 	MappingTree merge(MappingTree with, MappingTree dest);
+
 	MappingTree copy();
 }

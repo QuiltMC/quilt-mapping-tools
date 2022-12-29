@@ -23,14 +23,12 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
-import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
-import org.quiltmc.mapping.api.entry.naming.MutableFieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableMethodEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentDescriptorMappingEntry;
 
 public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptorMappingEntry<MethodEntry> implements MutableMethodEntry {
-	protected MutableMethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
+	protected MutableMethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<? extends MutableMappingEntry<?>> children) {
 		super(fromName, toName, descriptor, new ArrayList<>(children));
 	}
 
@@ -40,8 +38,15 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 	}
 
 	@Override
+	public MethodEntry merge(MappingEntry<?> other) {
+		MethodEntry method = ((MethodEntry) other);
+		Collection<MutableMappingEntry<?>> children = mergeChildren(this.children, method.children());
+		return new MutableMethodEntryImpl(this.fromName, this.toName != null ? this.toName : method.getToName(), this.descriptor, children);
+	}
+
+	@Override
 	public MutableMappingEntry<MethodEntry> makeMutable() {
-		return null;
+		return this;
 	}
 
 	@Override

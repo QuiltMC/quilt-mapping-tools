@@ -18,8 +18,8 @@ package org.quiltmc.mapping.impl.entry.transitive;
 
 import java.util.Set;
 
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.transitive.TransitiveEntry;
 

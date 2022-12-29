@@ -16,10 +16,11 @@
 
 package org.quiltmc.mapping.api.entry.transitive;
 
-import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
 public interface MutableTransitiveEntry extends TransitiveEntry, MutableMappingEntry<TransitiveEntry> {
 	void setTarget(String target);
+
 	void addTransitiveType(MappingType<?> type);
 }

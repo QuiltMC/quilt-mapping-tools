@@ -17,12 +17,15 @@
 package org.quiltmc.mapping.api.entry;
 
 import java.util.Collection;
-
-import org.quiltmc.mapping.MappingType;
+import java.util.stream.Stream;
 
 public interface ParentMappingEntry<T extends ParentMappingEntry<T>> extends MappingEntry<T> {
 	default <C extends MappingEntry<C>> Collection<C> getChildrenOfType(MappingType<C> type) {
 		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast).toList();
+	}
+
+	default <C extends MappingEntry<C>> Stream<C> streamChildrenOfType(MappingType<C> type) {
+		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast);
 	}
 
 	Collection<MappingEntry<?>> children();

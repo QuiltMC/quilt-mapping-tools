@@ -17,8 +17,8 @@
 package org.quiltmc.mapping.api.entry.info;
 
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 
@@ -31,6 +31,7 @@ public interface ArgEntry extends ParentMappingEntry<ArgEntry> {
 	}
 
 	int index();
+
 	@Nullable String name();
 
 	@Override

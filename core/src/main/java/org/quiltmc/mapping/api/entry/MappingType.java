@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping;
+package org.quiltmc.mapping.api.entry;
 
 import java.util.function.Predicate;
-
-import org.quiltmc.mapping.api.entry.MappingEntry;
 
 public record MappingType<T extends MappingEntry<T>>(String key, Class<T> targetEntry, Predicate<MappingType<?>> targets) {
 }

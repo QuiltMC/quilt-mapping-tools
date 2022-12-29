@@ -16,7 +16,7 @@
 
 package org.quiltmc.mapping.api.entry.info;
 
-import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 

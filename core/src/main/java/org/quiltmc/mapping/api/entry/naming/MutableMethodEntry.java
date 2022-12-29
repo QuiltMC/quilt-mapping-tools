@@ -16,7 +16,33 @@
 
 package org.quiltmc.mapping.api.entry.naming;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.mapping.api.entry.info.ArgEntry;
+import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 
 public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry> {
+	@Override
+	default Collection<? extends MutableArgEntry> getArgs() {
+		return streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).map(arg -> (MutableArgEntry) arg.makeMutable()).toList();
+	}
+
+	@Override
+	default Map<Integer, ? extends MutableArgEntry> getArgsByIndex() {
+		return streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, arg -> (MutableArgEntry) arg.makeMutable()));
+	}
+
+	@Override
+	Optional<? extends MutableArgEntry> getArgMapping(int index);
+
+	MutableArgEntry createArgEntry(int index, @Nullable String name);
+
+	default MutableArgEntry getOrCreateArgEntry(int index, @Nullable String name) {
+		return this.hasArgMapping(index) ? this.getArgMapping(index).get() : this.createArgEntry(index, name);
+	}
 }

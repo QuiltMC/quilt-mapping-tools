@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.quiltmc.mapping.MappingType;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.CommentEntry;
 import org.quiltmc.mapping.api.entry.info.ReturnEntry;

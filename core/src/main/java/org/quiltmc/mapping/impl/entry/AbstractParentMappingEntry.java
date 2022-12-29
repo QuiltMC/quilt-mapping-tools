@@ -22,10 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
-import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
 public abstract class AbstractParentMappingEntry<T extends ParentMappingEntry<T>> implements ParentMappingEntry<T> {
@@ -33,6 +30,28 @@ public abstract class AbstractParentMappingEntry<T extends ParentMappingEntry<T>
 
 	protected AbstractParentMappingEntry(Collection<MappingEntry<?>> children) {
 		this.children = children;
+	}
+
+	@NotNull
+	public static <T extends MappingEntry<?>> Collection<T> mergeChildren(Collection<MappingEntry<?>> children, Collection<MappingEntry<?>> otherChildren) {
+		List<T> newChildren = new ArrayList<>();
+		mergeChildrenIntoList(children, newChildren);
+		mergeChildrenIntoList(otherChildren, newChildren);
+		return newChildren;
+	}
+
+	private static <T extends MappingEntry<?>> void mergeChildrenIntoList(Collection<MappingEntry<?>> otherChildren, List<T> newChildren) {
+		for (MappingEntry<?> newChild : otherChildren) {
+			for (int i = 0; i < newChildren.size(); i++) {
+				MappingEntry<?> child = newChildren.get(i);
+				if (child.shouldMerge(newChild)) {
+					newChild = child.merge(newChild);
+					newChildren.remove(i);
+					break;
+				}
+			}
+			newChildren.add((T) newChild);
+		}
 	}
 
 	@Override
@@ -51,24 +70,6 @@ public abstract class AbstractParentMappingEntry<T extends ParentMappingEntry<T>
 		if (o == null || getClass() != o.getClass()) return false;
 		AbstractParentMappingEntry<?> that = (AbstractParentMappingEntry<?>) o;
 		return this.children.containsAll(that.children) && that.children.containsAll(this.children);
-	}
-
-	@NotNull
-	public static List<MappingEntry<?>> mergeChildren(Collection<MappingEntry<?>> children, Collection<MappingEntry<?>> otherChildren) {
-		List<MappingEntry<?>> newChildren = new ArrayList<>(children);
-
-		for (MappingEntry<?> newChild : otherChildren) {
-			for (int i = 0; i < newChildren.size(); i++) {
-				MappingEntry<?> child = newChildren.get(i);
-				if (child.shouldMerge(newChild)) {
-					newChild = child.merge(newChild);
-					newChildren.remove(i);
-					break;
-				}
-			}
-			newChildren.add(newChild);
-		}
-		return newChildren;
 	}
 
 	@Override

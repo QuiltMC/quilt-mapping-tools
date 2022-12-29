@@ -27,8 +27,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.quiltmc.json5.JsonWriter;
-import org.quiltmc.mapping.MappingType;
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.file.QuiltMappingFile;
 
 public class QuiltMappingWriter {

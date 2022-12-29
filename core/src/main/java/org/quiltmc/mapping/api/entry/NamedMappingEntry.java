@@ -19,9 +19,10 @@ package org.quiltmc.mapping.api.entry;
 import org.jetbrains.annotations.Nullable;
 
 public interface NamedMappingEntry<T extends NamedMappingEntry<T>> extends MappingEntry<T> {
-	String getToName();
-	@Nullable
 	String getFromName();
+
+	@Nullable
+	String getToName();
 
 	boolean hasToName();
 }

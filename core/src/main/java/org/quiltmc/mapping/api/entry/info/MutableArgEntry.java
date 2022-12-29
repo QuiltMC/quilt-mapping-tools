@@ -21,5 +21,6 @@ import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
 public interface MutableArgEntry extends ArgEntry, MutableParentMappingEntry<ArgEntry> {
 	void setIndex(int index);
+
 	void setName(@Nullable String name);
 }
