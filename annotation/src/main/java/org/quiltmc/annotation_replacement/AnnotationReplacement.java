@@ -49,7 +49,7 @@ public class AnnotationReplacement {
 		@Override
 		public void visitEnd() {
 			for (AnnotationAddition addition : modifications.additions()) {
-				addition.visit(this.visitAnnotation(addition.descriptor(), true));
+				addition.visit(this.visitAnnotation(addition.getDescriptor(), true));
 			}
 			super.visitEnd();
 		}

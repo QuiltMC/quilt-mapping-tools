@@ -18,5 +18,5 @@ rootProject.name = 'quilt-mapping-tools'
 
 include("core")
 // TODO: Rewrite the annotation entries with the new API structure
-// include("annotation")
+include("annotation")
 

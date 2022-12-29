@@ -21,19 +21,19 @@ import java.util.List;
 import java.util.Objects;
 
 import org.objectweb.asm.Type;
-import org.quiltmc.mapping.MappingType;
-import org.quiltmc.mapping.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.annotation_replacement.entry.value.AnnotationAnnotationValue;
 import org.quiltmc.annotation_replacement.entry.value.AnnotationValue;
 import org.quiltmc.annotation_replacement.entry.value.EnumAnnotationValue;
 import org.quiltmc.annotation_replacement.entry.value.LiteralAnnotationValue;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
 import org.quiltmc.mapping.parser.exception.IncorrectValueNameException;
 import org.quiltmc.mapping.parser.exception.IncorrectValueOrderException;
 import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
-public record AnnotationAddition(String descriptor, List<AnnotationValue> values)
-		implements MappingEntry<AnnotationAddition>, AnnotationInformation {
+public record AnnotationAddition(String descriptor, List<AnnotationValue> values) implements MappingEntry<AnnotationAddition>, AnnotationInformation {
 
 	public static final MappingType<AnnotationAddition> ANNOTATION_ADDITION_MAPPING_TYPE = new MappingType<>("additions", MappingType.TokenType.OBJECT_ARRAY, AnnotationAddition.class, AnnotationAddition::parse, AnnotationAddition::write);
 
@@ -189,6 +189,10 @@ public record AnnotationAddition(String descriptor, List<AnnotationValue> values
 	}
 
 	@Override
+	public MutableMappingEntry<AnnotationAddition> makeMutable() {
+		return null;
+	}
+
 	public List<MappingType<?>> getTargetTypes() {
 		return List.of(AnnotationModifications.ANNOTATION_MODIFICATIONS_MAPPING_TYPE);
 	}

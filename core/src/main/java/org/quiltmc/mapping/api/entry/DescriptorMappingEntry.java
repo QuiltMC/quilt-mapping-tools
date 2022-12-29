@@ -16,7 +16,7 @@
 
 package org.quiltmc.mapping.api.entry;
 
-public interface NamedDescriptorMappingEntry<T extends NamedDescriptorMappingEntry<T>> extends NamedMappingEntry<T> {
+public interface DescriptorMappingEntry<T extends DescriptorMappingEntry<T>> extends MappingEntry<T> {
 	// TODO: add a class wrapper for this?
 	String getDescriptor();
 }

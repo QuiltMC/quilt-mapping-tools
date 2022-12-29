@@ -21,10 +21,10 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
-import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends NamedDescriptorMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements NamedDescriptorMappingEntry<T> {
+public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements DescriptorMappingEntry<T> {
 	protected final String descriptor;
 
 	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
