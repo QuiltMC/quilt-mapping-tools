@@ -17,10 +17,10 @@
 package org.quiltmc.mapping.api.entry.naming;
 
 import org.quiltmc.mapping.api.entry.MappingType;
-import org.quiltmc.mapping.api.entry.NamedDescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public interface FieldEntry extends NamedDescriptorMappingEntry<FieldEntry>, ParentMappingEntry<FieldEntry> {
+public interface FieldEntry extends DescriptorMappingEntry<FieldEntry>, ParentMappingEntry<FieldEntry> {
 	MappingType<FieldEntry> FIELD_MAPPING_TYPE = new MappingType<>("fields", FieldEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
 
 	@Override

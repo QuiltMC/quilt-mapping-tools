@@ -25,7 +25,7 @@ import org.quiltmc.annotation_replacement.entry.value.EnumAnnotationValue;
 import org.quiltmc.annotation_replacement.entry.value.LiteralAnnotationValue;
 
 public interface AnnotationInformation {
-	String descriptor();
+	String getDescriptor();
 
 	List<AnnotationValue> values();
 
@@ -46,7 +46,7 @@ public interface AnnotationInformation {
 					visitor.visit(literal.name(), literal.value());
 				}
 			} else if (value instanceof AnnotationAnnotationValue annotation) {
-				AnnotationVisitor annotationVisitor = visitor.visitAnnotation(annotation.name(), annotation.descriptor());
+				AnnotationVisitor annotationVisitor = visitor.visitAnnotation(annotation.name(), annotation.getDescriptor());
 				annotation.visit(annotationVisitor);
 				annotationVisitor.visitEnd();
 			} else if (value instanceof EnumAnnotationValue enumValue) {

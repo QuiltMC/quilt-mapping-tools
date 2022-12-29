@@ -18,8 +18,9 @@ package org.quiltmc.annotation_replacement.entry;
 
 import java.util.List;
 
-import org.quiltmc.mapping.MappingType;
-import org.quiltmc.mapping.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.parser.QuiltMappingParser;
 import org.quiltmc.mapping.writer.QuiltMappingWriter;
 
@@ -46,6 +47,10 @@ public record AnnotationRemovalMapping(
 	}
 
 	@Override
+	public MutableMappingEntry<AnnotationRemovalMapping> makeMutable() {
+		return null;
+	}
+
 	public List<MappingType<?>> getTargetTypes() {
 		return List.of(AnnotationModifications.ANNOTATION_MODIFICATIONS_MAPPING_TYPE);
 	}
