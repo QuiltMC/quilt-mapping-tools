@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package quiltmc.annotation_replacement.test;
+package org.quiltmc.annotation_replacement.test;
 
-public class TestClassExpected {
-	@TestAnnotation(
-			value = 1,
-			extra = "test string",
-			array = {true, false, true},
-			enumValue = TestEnum.VALUE,
-			clazz = TestClass.class,
-			nestedAnnotation = @NestedAnnotation(1.0f)
-	)
+
+public class TestClass {
+	@Deprecated
+	@NestedAnnotation(2.0f)
 	public void nothing() {
 
 	}

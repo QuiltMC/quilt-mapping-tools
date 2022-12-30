@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package org.quiltmc.annotation_replacement.entry.value;
+package org.quiltmc.annotation_replacement.test;
 
-public record EnumAnnotationValue(String name, String value, String descriptor) implements AnnotationValue {
-	@Override
-	public AnnotationValue remap() {
-		return null;
-	}
+public @interface TestAnnotation {
+	int value();
+
+	String extra();
+
+	boolean[] array();
+
+	TestEnum enumValue();
+
+	Class<?> clazz();
+
+	NestedAnnotation nestedAnnotation();
 }

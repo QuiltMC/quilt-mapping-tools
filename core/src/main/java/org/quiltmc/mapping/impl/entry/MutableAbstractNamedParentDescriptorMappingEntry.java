@@ -22,9 +22,10 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
-public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements DescriptorMappingEntry<T> {
+public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements DescriptorMappingEntry<T> {
 	protected final String descriptor;
 
 	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
@@ -33,7 +34,7 @@ public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends
 	}
 
 	@Override
-	public String getDescriptor() {
+	public String descriptor() {
 		return descriptor;
 	}
 

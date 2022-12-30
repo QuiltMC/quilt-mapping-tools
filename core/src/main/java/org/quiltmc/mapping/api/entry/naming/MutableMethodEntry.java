@@ -24,9 +24,11 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
-public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry> {
+public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry>, MutableDescriptorMappingEntry<MethodEntry>, MutableParentMappingEntry<MethodEntry> {
 	@Override
 	default Collection<? extends MutableArgEntry> getArgs() {
 		return streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).map(arg -> (MutableArgEntry) arg.makeMutable()).toList();

@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package quiltmc.annotation_replacement.test;
+package org.quiltmc.annotation_replacement.api.entry.value;
 
-public @interface NestedAnnotation {
-	float value();
+import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
+
+public interface MutableAnnotationValue<O, T extends AnnotationValue<O, T>> extends AnnotationValue<O, T>, MutableDescriptorMappingEntry<T> {
+	void setName(String name);
+	void setValue(O value);
 }

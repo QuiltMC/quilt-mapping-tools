@@ -3,14 +3,16 @@ package org.quiltmc.annotation_replacement.api.entry;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface AnnotationModificationEntry extends MappingEntry<AnnotationModificationEntry> {
 	MappingType<AnnotationModificationEntry> ANNOTATION_MODIFICATION_MAPPING_TYPE = new MappingType<>("annotation_modifications", AnnotationModificationEntry.class, mappingType -> true);
 
-	List<? extends AnnotationRemovalEntry> removals();
+	Set<String> removals();
 
-	List<? extends AnnotationAdditionEntry> additions();
+	Collection<? extends AnnotationAdditionEntry> additions();
 
 	@Override
 	default MappingType<AnnotationModificationEntry> getType() {

@@ -16,7 +16,9 @@
 
 package org.quiltmc.mapping.api.entry.naming;
 
+import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
-public interface MutableFieldEntry extends FieldEntry, MutableNamedMappingEntry<FieldEntry> {
+public interface MutableFieldEntry extends FieldEntry, MutableNamedMappingEntry<FieldEntry>, MutableDescriptorMappingEntry<FieldEntry>, MutableParentMappingEntry<FieldEntry> {
 }

@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package quiltmc.annotation_replacement.test;
+package org.quiltmc.annotation_replacement.api.entry.value;
 
+import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 
-public class TestClass {
-	@Deprecated
-	@NestedAnnotation(2.0f)
-	public void nothing() {
-
-	}
+public interface AnnotationValue<O, T extends AnnotationValue<O, T>> extends DescriptorMappingEntry<T> {
+	String name();
+	O value();
 }

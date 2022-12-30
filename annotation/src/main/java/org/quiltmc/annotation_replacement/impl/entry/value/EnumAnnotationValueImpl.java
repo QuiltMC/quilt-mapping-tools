@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package quiltmc.annotation_replacement.test;
+package org.quiltmc.annotation_replacement.impl.entry.value;
 
-public @interface TestAnnotation {
-	int value();
+import org.quiltmc.annotation_replacement.api.entry.value.EnumAnnotationValue;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-	String extra();
+public record EnumAnnotationValueImpl(String name, String value, String descriptor) implements EnumAnnotationValue {
+	@Override
+	public EnumAnnotationValue remap() {
+		return null;
+	}
 
-	boolean[] array();
-
-	TestEnum enumValue();
-
-	Class<?> clazz();
-
-	NestedAnnotation nestedAnnotation();
+	@Override
+	public MutableMappingEntry<EnumAnnotationValue> makeMutable() {
+		return new MutableEnumAnnotationValueImpl(this.name, this.value, this.descriptor);
+	}
 }

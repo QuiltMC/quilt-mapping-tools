@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package org.quiltmc.annotation_replacement.entry.value;
+package org.quiltmc.annotation_replacement.test;
 
-public interface AnnotationValue {
-	String descriptor();
-
-	String name();
-
-	AnnotationValue remap();
+public enum TestEnum {
+	VALUE
 }

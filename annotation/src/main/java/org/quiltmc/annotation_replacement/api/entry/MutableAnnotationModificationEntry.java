@@ -2,16 +2,14 @@ package org.quiltmc.annotation_replacement.api.entry;
 
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface MutableAnnotationModificationEntry extends AnnotationModificationEntry, MutableMappingEntry<AnnotationModificationEntry> {
 	@Override
-	List<? extends MutableAnnotationRemovalEntry> removals();
+	Collection<? extends MutableAnnotationAdditionEntry> additions();
 
-	@Override
-	List<? extends MutableAnnotationAdditionEntry> additions();
+	void addRemoval(String removal);
 
-	void addRemoval(MutableAnnotationRemovalEntry mapping);
-
-	void addAddition(MutableAnnotationAdditionEntry mapping);
+	<T extends MutableAnnotationAdditionEntry> void addAddition(T addition);
 }

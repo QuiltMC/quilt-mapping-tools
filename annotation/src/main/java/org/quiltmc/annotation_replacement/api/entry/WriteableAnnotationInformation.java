@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.quiltmc.annotation_replacement.entry;
+package org.quiltmc.annotation_replacement.api.entry;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.objectweb.asm.AnnotationVisitor;
-import org.quiltmc.annotation_replacement.entry.value.AnnotationAnnotationValue;
-import org.quiltmc.annotation_replacement.entry.value.AnnotationValue;
-import org.quiltmc.annotation_replacement.entry.value.EnumAnnotationValue;
-import org.quiltmc.annotation_replacement.entry.value.LiteralAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.EnumAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.LiteralAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.NestedAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.AnnotationValue;
 
-public interface AnnotationInformation {
-	String getDescriptor();
+public interface WriteableAnnotationInformation {
+	String descriptor();
 
-	List<AnnotationValue> values();
+	Collection<? extends AnnotationValue<?, ?>> values();
 
 	default void visit(AnnotationVisitor visitor) {
-		for (AnnotationValue value : values()) {
+		for (AnnotationValue<?, ?> value : values()) {
 			// TODO: Support classes
 			if (value instanceof LiteralAnnotationValue literal) {
 				if (literal.descriptor().startsWith("[")) {
@@ -45,8 +45,8 @@ public interface AnnotationInformation {
 				} else {
 					visitor.visit(literal.name(), literal.value());
 				}
-			} else if (value instanceof AnnotationAnnotationValue annotation) {
-				AnnotationVisitor annotationVisitor = visitor.visitAnnotation(annotation.name(), annotation.getDescriptor());
+			} else if (value instanceof NestedAnnotationValue annotation) {
+				AnnotationVisitor annotationVisitor = visitor.visitAnnotation(annotation.name(), annotation.descriptor());
 				annotation.visit(annotationVisitor);
 				annotationVisitor.visitEnd();
 			} else if (value instanceof EnumAnnotationValue enumValue) {

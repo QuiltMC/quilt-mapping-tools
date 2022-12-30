@@ -16,6 +16,7 @@
 
 package org.quiltmc.mapping.file;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ import java.util.Set;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 
-public record QuiltMappingFile(MappingHeader header, List<MappingEntry<?>> entries) {
+public record QuiltMappingFile(MappingHeader header, Collection<MappingEntry<?>> entries) {
 	public QuiltMappingFile merge(QuiltMappingFile other) {
 		Set<String> extensions = new HashSet<>(this.header.extensions());
 		extensions.addAll(other.header.extensions());

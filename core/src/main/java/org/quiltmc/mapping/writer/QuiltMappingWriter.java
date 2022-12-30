@@ -100,7 +100,7 @@ public class QuiltMappingWriter {
 		wrapSyntaxError(() -> this.writer.get().comment(comment));
 	}
 
-	public void writeChildren(List<MappingEntry<?>> children) {
+	public void writeChildren(Collection<MappingEntry<?>> children) {
 		Map<MappingType<?>, List<MappingEntry<?>>> types = children.stream().collect(Collectors.groupingBy(MappingEntry::getType));
 		for (Map.Entry<MappingType<?>, List<MappingEntry<?>>> entry : types.entrySet()) {
 			writeChildTypeAnon(entry.getKey(), entry.getValue());

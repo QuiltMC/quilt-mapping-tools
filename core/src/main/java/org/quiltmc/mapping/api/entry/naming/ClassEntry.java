@@ -67,6 +67,4 @@ public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMapping
 	Optional<? extends ClassEntry> getClassMapping(String fromName);
 
 	boolean hasClassMapping(String fromName);
-
-
 }

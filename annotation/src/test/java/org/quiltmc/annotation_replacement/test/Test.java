@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package quiltmc.annotation_replacement.test;
+package org.quiltmc.annotation_replacement.test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -29,35 +30,38 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.quiltmc.annotation_replacement.AnnotationReplacement;
-import org.quiltmc.annotation_replacement.entry.AnnotationAddition;
-import org.quiltmc.annotation_replacement.entry.AnnotationModifications;
-import org.quiltmc.annotation_replacement.entry.AnnotationRemovalMapping;
-import org.quiltmc.annotation_replacement.entry.value.AnnotationAnnotationValue;
-import org.quiltmc.annotation_replacement.entry.value.EnumAnnotationValue;
-import org.quiltmc.annotation_replacement.entry.value.LiteralAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.MutableAnnotationAdditionEntry;
+import org.quiltmc.annotation_replacement.api.entry.MutableAnnotationModificationEntry;
+import org.quiltmc.annotation_replacement.impl.entry.MutableAnnotationAdditionEntryImpl;
+import org.quiltmc.annotation_replacement.impl.entry.MutableAnnotationModificationEntryImpl;
+import org.quiltmc.annotation_replacement.impl.entry.value.MutableEnumAnnotationValueImpl;
+import org.quiltmc.annotation_replacement.impl.entry.value.MutableLiteralAnnotationValueImpl;
+import org.quiltmc.annotation_replacement.impl.entry.value.MutableNestedAnnotationValueImpl;
+import org.quiltmc.annotation_replacement.impl.entry.value.LiteralAnnotationValueImpl;
 
 public class Test {
 	public static void main(String[] args) throws IOException {
-		AnnotationModifications modifications = new AnnotationModifications(
-				List.of(new AnnotationRemovalMapping("Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;"), new AnnotationRemovalMapping("Ljava/lang/Deprecated;")),
-				List.of(new AnnotationAddition("Lorg/quiltmc/annotation_replacement/test/TestAnnotation;",
-						List.of(
-								new LiteralAnnotationValue("value", 1, "I"),
-								new LiteralAnnotationValue("extra", "test string", "Ljava/lang/String;"),
-								new LiteralAnnotationValue("array", new boolean[]{true, false, true}, "[Z"),
-								new EnumAnnotationValue("enumValue", "VALUE", "Lorg/quiltmc/annotation_replacement/test/TestEnum;"),
-								new LiteralAnnotationValue("clazz", Type.getType("Lorg/quiltmc/annotation_replacement/test/TestClass;"), "Ljava/lang/Class;"),
-								new AnnotationAnnotationValue("nestedAnnotation", List.of(
-										new LiteralAnnotationValue("value", 1.0f, "F")
-								), "Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;")
-						))));
+		MutableAnnotationAdditionEntry addition = new MutableAnnotationAdditionEntryImpl("Lorg/quiltmc/annotation_replacement/test/TestAnnotation;", List.of());
+		addition.addValue(new MutableLiteralAnnotationValueImpl("value", 1, "I"));
+		addition.addValue(new MutableLiteralAnnotationValueImpl("extra", "test string", "Ljava/lang/String;"));
+		addition.addValue(new MutableLiteralAnnotationValueImpl("array", new boolean[]{true, false, true}, "[Z"));
+		addition.addValue(new MutableEnumAnnotationValueImpl("enumValue", "VALUE", "Lorg/quiltmc/annotation_replacement/test/TestEnum;"));
+		addition.addValue(new MutableLiteralAnnotationValueImpl("clazz", Type.getType("Lorg/quiltmc/annotation_replacement/test/TestClass;"), "Ljava/lang/Class;"));
+		addition.addValue(new MutableNestedAnnotationValueImpl("nestedAnnotation", List.of(new LiteralAnnotationValueImpl("value", 1.0f, "F")), "Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;"));
+
+		MutableAnnotationModificationEntry modifications = new MutableAnnotationModificationEntryImpl(
+				Set.of("Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;", "Ljava/lang/Deprecated;"),
+				List.of(addition));
+
+
+
 		byte[] bytes = Test.class.getClassLoader().getResourceAsStream("org/quiltmc/annotation_replacement/test/TestClass.class").readAllBytes();
 		ClassReader reader = new ClassReader(bytes);
 		ClassWriter writer = new ClassWriter(reader, 0);
 		reader.accept(new ClassVisitor(Opcodes.ASM9, writer) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-				if (modifications.removals().stream().anyMatch(removal -> removal.descriptor().equals("Ljava/lang/Deprecated;"))) {
+				if (modifications.removals().contains("Ljava/lang/Deprecated;")) {
 					access &= ~Opcodes.ACC_DEPRECATED;
 				}
 				return new AnnotationReplacement.AnnotationReplacementMethodVisitor(super.visitMethod(access, name, descriptor, signature, exceptions), modifications);
@@ -88,6 +92,6 @@ public class Test {
 				}
 			}, ClassReader.EXPAND_FRAMES);
 		}
-		System.out.println(modifications);
+		System.out.println(modifications.makeFinal());
 	}
 }

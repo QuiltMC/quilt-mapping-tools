@@ -14,15 +14,38 @@
  * limitations under the License.
  */
 
-package org.quiltmc.annotation_replacement.entry.value;
+package org.quiltmc.annotation_replacement.impl.entry.value;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public record LiteralAnnotationValue(String name, Object value, String descriptor) implements AnnotationValue {
+import org.quiltmc.annotation_replacement.api.entry.value.AnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.LiteralAnnotationValue;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
+
+public record LiteralAnnotationValueImpl(String name, Object value, String descriptor) implements LiteralAnnotationValue {
 	@Override
-	public AnnotationValue remap() {
+	public LiteralAnnotationValue remap() {
 		return null;
+	}
+
+	@Override
+	public MutableMappingEntry<LiteralAnnotationValue> makeMutable() {
+		return new MutableLiteralAnnotationValueImpl(this.name, deepCopyValue(value), this.descriptor);
+	}
+
+	private Object deepCopyValue(Object value) {
+		if (value.getClass().isArray()) {
+			Object[] objects = ((Object[]) value);
+			Object[] ret = new Object[objects.length];
+
+			for (int i = 0; i < objects.length; i++) {
+				ret[i] = deepCopyValue(objects[i]);
+			}
+
+			return ret;
+		}
+		return value;
 	}
 
 	@Override
@@ -40,7 +63,7 @@ public record LiteralAnnotationValue(String name, Object value, String descripto
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		LiteralAnnotationValue that = (LiteralAnnotationValue) o;
+		LiteralAnnotationValueImpl that = (LiteralAnnotationValueImpl) o;
 		boolean valuesEqual = this.value.getClass().isArray() && that.value.getClass().isArray() ? Arrays.deepEquals((Object[]) this.value, (Object[]) that.value) : Objects.equals(this.value, that.value);
 		return Objects.equals(name, that.name) && valuesEqual && Objects.equals(descriptor, that.descriptor);
 	}

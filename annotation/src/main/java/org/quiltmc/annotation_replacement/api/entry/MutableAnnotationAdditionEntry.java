@@ -1,9 +1,12 @@
 package org.quiltmc.annotation_replacement.api.entry;
 
-import org.quiltmc.annotation_replacement.entry.AnnotationInformation;
+import java.util.Collection;
+
+import org.quiltmc.annotation_replacement.api.entry.value.MutableAnnotationValue;
 import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
-import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
-public interface MutableAnnotationAdditionEntry extends AnnotationAdditionEntry, MutableParentMappingEntry<AnnotationAdditionEntry>, MutableDescriptorMappingEntry<AnnotationAdditionEntry>, AnnotationInformation {
+public interface MutableAnnotationAdditionEntry extends AnnotationAdditionEntry, MutableDescriptorMappingEntry<AnnotationAdditionEntry>, WriteableAnnotationInformation {
+	Collection<? extends MutableAnnotationValue<?, ?>> values();
 
+	void addValue(MutableAnnotationValue<?, ?> value);
 }

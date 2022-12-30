@@ -24,10 +24,11 @@ import java.util.stream.Collectors;
 
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 
-public interface MethodEntry extends DescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
+public interface MethodEntry extends NamedMappingEntry<MethodEntry>, DescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
 	MappingType<MethodEntry> METHOD_MAPPING_TYPE = new MappingType<>("methods", MethodEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
 
 	@Override

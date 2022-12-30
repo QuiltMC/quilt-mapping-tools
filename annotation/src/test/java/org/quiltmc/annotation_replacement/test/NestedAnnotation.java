@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.api.entry;
+package org.quiltmc.annotation_replacement.test;
 
-public interface DescriptorMappingEntry<T extends DescriptorMappingEntry<T>> extends MappingEntry<T> {
-	// TODO: add a class wrapper for this?
-	String descriptor();
+public @interface NestedAnnotation {
+	float value();
 }
