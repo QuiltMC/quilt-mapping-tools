@@ -17,16 +17,39 @@
 package org.quiltmc.mapping.impl.entry.naming;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
+import org.quiltmc.mapping.api.entry.naming.FieldEntry;
+import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 
 public class ClassEntryImpl extends AbstractNamedParentMappingEntry<ClassEntry> implements ClassEntry {
+	private final Collection<? extends FieldEntry> fields;
+	private final Map<String, ? extends FieldEntry> fieldsByName;
+
+	private final Collection<? extends MethodEntry> methods;
+	private final Map<String, ? extends MethodEntry> methodsByName;
+
+	private final Collection<? extends ClassEntry> classes;
+	private final Map<String, ? extends ClassEntry> classesByName;
+
 	protected ClassEntryImpl(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
 		super(fromName, toName, children);
+		fields = this.getChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE);
+		fieldsByName = this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, Function.identity()));;
+
+		methods = this.getChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE);
+		methodsByName = this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::getFromName, Function.identity()));
+
+		classes = this.getChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE);
+		classesByName = this.streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::getFromName, Function.identity()));
 	}
 
 	@Override
@@ -53,5 +76,59 @@ public class ClassEntryImpl extends AbstractNamedParentMappingEntry<ClassEntry> 
 			   ", toName='" + toName + '\'' +
 			   ", children=" + children +
 			   ']';
+	}
+
+	public Collection<? extends FieldEntry> getFields() {
+		return fields;
+	}
+
+	public Map<String, ? extends FieldEntry> getFieldsByName() {
+		return fieldsByName;
+	}
+
+	@Override
+	public Optional<? extends FieldEntry> getFieldMapping(String fromName) {
+		return hasFieldMapping(fromName) ? Optional.of(fieldsByName.get(fromName)) : Optional.empty();
+	}
+
+	@Override
+	public boolean hasFieldMapping(String fromName) {
+		return fieldsByName.containsKey(fromName);
+	}
+
+	public Collection<? extends MethodEntry> getMethods() {
+		return methods;
+	}
+
+	public Map<String, ? extends MethodEntry> getMethodsByName() {
+		return methodsByName;
+	}
+
+	@Override
+	public Optional<? extends MethodEntry> getMethodMapping(String fromName) {
+		return hasMethodMapping(fromName) ? Optional.of(methodsByName.get(fromName)) : Optional.empty();
+	}
+
+	@Override
+	public boolean hasMethodMapping(String fromName) {
+		return methodsByName.containsKey(fromName);
+	}
+
+	public Collection<? extends ClassEntry> getClasses() {
+		return classes;
+	}
+
+	public Map<String, ? extends ClassEntry> getClassesByName() {
+		return classesByName;
+	}
+
+	@Override
+	public Optional<? extends ClassEntry> getClassMapping(String fromName) {
+		return hasClassMapping(fromName) ? Optional.of(classesByName.get(fromName)) : Optional.empty();
+	}
+
+	@Override
+	public boolean hasClassMapping(String fromName) {
+		return classesByName.containsKey(fromName);
 	}
 }

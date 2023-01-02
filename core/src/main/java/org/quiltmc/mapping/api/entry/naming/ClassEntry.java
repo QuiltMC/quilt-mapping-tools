@@ -19,8 +19,6 @@ package org.quiltmc.mapping.api.entry.naming;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
@@ -32,37 +30,25 @@ public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMapping
 		return CLASS_MAPPING_TYPE;
 	}	MappingType<ClassEntry> CLASS_MAPPING_TYPE = new MappingType<>("classes", ClassEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
 
-	default Collection<? extends FieldEntry> getFields() {
-		return this.getChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE);
-	}
+	Collection<? extends FieldEntry> getFields();
 
-	default Map<String, ? extends FieldEntry> getFieldsByName() {
-		return this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, Function.identity()));
-	}
+	Map<String, ? extends FieldEntry> getFieldsByName();
 
 	Optional<? extends FieldEntry> getFieldMapping(String fromName);
 
 	boolean hasFieldMapping(String fromName);
 
-	default Collection<? extends MethodEntry> getMethods() {
-		return this.getChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE);
-	}
+	Collection<? extends MethodEntry> getMethods();
 
-	default Map<String, ? extends MethodEntry> getMethodsByName() {
-		return this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::getFromName, Function.identity()));
-	}
+	Map<String, ? extends MethodEntry> getMethodsByName();
 
 	Optional<? extends MethodEntry> getMethodMapping(String fromName);
 
 	boolean hasMethodMapping(String fromName);
 
-	default Collection<? extends ClassEntry> getClasses() {
-		return this.getChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE);
-	}
+	Collection<? extends ClassEntry> getClasses();
 
-	default Map<String, ? extends ClassEntry> getClassesByName() {
-		return this.streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::getFromName, Function.identity()));
-	}
+	Map<String, ? extends ClassEntry> getClassesByName();
 
 	Optional<? extends ClassEntry> getClassMapping(String fromName);
 

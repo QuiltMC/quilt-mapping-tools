@@ -24,11 +24,13 @@ import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
-public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements DescriptorMappingEntry<T> {
-	protected final String descriptor;
+public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements MutableDescriptorMappingEntry<T> {
+	protected String descriptor;
 
-	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
+	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MutableMappingEntry<?>> children) {
 		super(fromName, toName, children);
 		this.descriptor = descriptor;
 	}
@@ -50,5 +52,10 @@ public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends
 	@Override
 	public int hashCode() {
 		return Objects.hash(super.hashCode(), descriptor);
+	}
+
+	@Override
+	public void setDescriptor(String descriptor) {
+		this.descriptor = descriptor;
 	}
 }

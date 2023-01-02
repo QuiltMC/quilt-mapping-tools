@@ -21,22 +21,26 @@ import java.util.Objects;
 
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
-public abstract class MutableAbstractParentMappingEntry<T extends ParentMappingEntry<T>> extends AbstractParentMappingEntry<T> implements MutableParentMappingEntry<T> {
-	protected MutableAbstractParentMappingEntry(Collection<MappingEntry<?>> children) {
-		super(children);
+public abstract class MutableAbstractParentMappingEntry<T extends ParentMappingEntry<T>> implements MutableParentMappingEntry<T> {
+	protected final Collection<MutableMappingEntry<?>> children;
+
+	protected MutableAbstractParentMappingEntry(Collection<MutableMappingEntry<?>> children) {
+		this.children = children;
 	}
 
 	@Override
-	public Collection<MappingEntry<?>> children() {
+	public Collection<MutableMappingEntry<?>> children() {
 		return children;
 	}
 
 	@Override
 	public boolean shouldMerge(MappingEntry<?> other) {
-		return super.shouldMerge(other);
+		return MutableParentMappingEntry.super.shouldMerge(other);
 	}
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -52,7 +56,7 @@ public abstract class MutableAbstractParentMappingEntry<T extends ParentMappingE
 	}
 
 	@Override
-	public void addChild(MappingEntry<?> entry) {
+	public void addChild(MutableMappingEntry<?> entry) {
 		if (!entry.getType().targets().test(this.getType())) {
 			System.err.println("Adding entry " + entry + ", which does not target this type: " + this.getType().key());
 		}

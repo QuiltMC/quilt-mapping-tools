@@ -28,5 +28,5 @@ public interface ParentMappingEntry<T extends ParentMappingEntry<T>> extends Map
 		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast);
 	}
 
-	Collection<MappingEntry<?>> children();
+	Collection<? extends MappingEntry<?>> children();
 }

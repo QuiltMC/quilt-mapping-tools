@@ -1,12 +1,3 @@
-// TODO: fix impls for naming entries
-sourceSets {
-	main {
-		java {
-			exclude "org/quiltmc/mapping/impl/entry/naming/**"
-		}
-	}
-}
-
 dependencies {
 	implementation 'org.ow2.asm:asm:9.3'
 	implementation 'org.ow2.asm:asm-tree:9.3'

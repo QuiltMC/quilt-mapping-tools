@@ -23,13 +23,14 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 
 public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractParentMappingEntry<T> implements MutableNamedMappingEntry<T> {
 	protected String fromName;
 	protected @Nullable String toName;
 
-	protected MutableAbstractNamedParentMappingEntry(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
+	protected MutableAbstractNamedParentMappingEntry(String fromName, @Nullable String toName, Collection<MutableMappingEntry<?>> children) {
 		super(children);
 		this.fromName = fromName;
 		this.toName = toName;

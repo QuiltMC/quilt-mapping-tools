@@ -30,14 +30,10 @@ import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
 public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry>, MutableDescriptorMappingEntry<MethodEntry>, MutableParentMappingEntry<MethodEntry> {
 	@Override
-	default Collection<? extends MutableArgEntry> getArgs() {
-		return streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).map(arg -> (MutableArgEntry) arg.makeMutable()).toList();
-	}
+	Collection<? extends MutableArgEntry> getArgs();
 
 	@Override
-	default Map<Integer, ? extends MutableArgEntry> getArgsByIndex() {
-		return streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, arg -> (MutableArgEntry) arg.makeMutable()));
-	}
+	Map<Integer, ? extends MutableArgEntry> getArgsByIndex();
 
 	@Override
 	Optional<? extends MutableArgEntry> getArgMapping(int index);

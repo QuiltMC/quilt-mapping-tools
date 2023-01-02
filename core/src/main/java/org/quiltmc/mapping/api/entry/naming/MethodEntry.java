@@ -36,13 +36,9 @@ public interface MethodEntry extends NamedMappingEntry<MethodEntry>, DescriptorM
 		return METHOD_MAPPING_TYPE;
 	}
 
-	default Collection<? extends ArgEntry> getArgs() {
-		return this.getChildrenOfType(ArgEntry.ARG_MAPPING_TYPE);
-	}
+	Collection<? extends ArgEntry> getArgs();
 
-	default Map<Integer, ? extends ArgEntry> getArgsByIndex() {
-		return this.streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, Function.identity()));
-	}
+	Map<Integer, ? extends ArgEntry> getArgsByIndex();
 
 	Optional<? extends ArgEntry> getArgMapping(int index);
 

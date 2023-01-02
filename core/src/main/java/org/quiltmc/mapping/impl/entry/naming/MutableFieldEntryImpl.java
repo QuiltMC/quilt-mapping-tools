@@ -25,6 +25,7 @@ import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableFieldEntry;
+import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentDescriptorMappingEntry;
 
 public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorMappingEntry<FieldEntry> implements MutableFieldEntry {
@@ -40,7 +41,7 @@ public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorM
 	@Override
 	public FieldEntry merge(MappingEntry<?> other) {
 		FieldEntry field = ((FieldEntry) other);
-		Collection<MutableMappingEntry<?>> children = mergeChildren(this.children, field.children());
+		Collection<MutableMappingEntry<?>> children = AbstractParentMappingEntry.mergeChildren(this.children, field.children());
 		return new MutableFieldEntryImpl(this.fromName, this.toName != null ? this.toName : field.getToName(), this.descriptor, children);
 	}
 

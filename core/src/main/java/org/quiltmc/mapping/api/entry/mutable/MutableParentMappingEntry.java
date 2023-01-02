@@ -16,9 +16,16 @@
 
 package org.quiltmc.mapping.api.entry.mutable;
 
+import java.util.Collection;
+import java.util.stream.Stream;
+
 import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
 public interface MutableParentMappingEntry<T extends ParentMappingEntry<T>> extends ParentMappingEntry<T>, MutableMappingEntry<T> {
-	void addChild(MappingEntry<?> entry);
+	@Override
+	Collection<? extends MutableMappingEntry<?>> children();
+
+	void addChild(MutableMappingEntry<?> entry);
 }

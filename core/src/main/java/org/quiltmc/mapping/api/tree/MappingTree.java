@@ -18,15 +18,31 @@ package org.quiltmc.mapping.api.tree;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.quiltmc.mapping.api.entry.MappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 
 public interface MappingTree {
-	Collection<ClassEntry> getClassEntries();
+	String getFromNamespace();
+	String getToNamespace();
 
-	Optional<ClassEntry> getClassEntry(String fromName);
+	Collection<? extends MappingEntry<?>> getEntries();
 
-	boolean hasClassMapping(String fromName);
+	default <C extends MappingEntry<C>> Collection<C> getEntriesOfType(MappingType<C> type) {
+		return getEntries().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast).toList();
+	}
+
+	default <C extends MappingEntry<C>> Stream<C> streamEntriesOfType(MappingType<C> type) {
+		return getEntries().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast);
+	}
+
+	Collection<? extends ClassEntry> getClassEntries();
+
+	Optional<? extends ClassEntry> getClassEntry(String fromName);
+
+	boolean hasClassEntry(String fromName);
 
 	MutableMappingTree makeMutable();
 

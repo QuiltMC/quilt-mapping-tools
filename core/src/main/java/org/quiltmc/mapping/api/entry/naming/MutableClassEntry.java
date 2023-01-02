@@ -19,57 +19,41 @@ package org.quiltmc.mapping.api.entry.naming;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
 public interface MutableClassEntry extends ClassEntry, MutableParentMappingEntry<ClassEntry>, MutableNamedMappingEntry<ClassEntry> {
-	default Collection<? extends MutableFieldEntry> getFields() {
-		return streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).map(field -> (MutableFieldEntry) field.makeMutable()).toList();
-	}
-
-	default Map<String, ? extends MutableFieldEntry> getFieldsByName() {
-		return this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, field -> (MutableFieldEntry) field.makeMutable()));
-	}
-
+	@Override
+	Collection<? extends MutableFieldEntry> getFields();
+	@Override
+	Map<String, ? extends MutableFieldEntry> getFieldsByName();
+	@Override
 	Optional<? extends MutableFieldEntry> getFieldMapping(String fromName);
-
 	MutableFieldEntry createFieldEntry(String fromName, @Nullable String toName, String descriptor);
-
 	default MutableFieldEntry getOrCreateFieldEntry(String fromName, @Nullable String toName, String descriptor) {
 		return this.hasFieldMapping(fromName) ? this.getFieldMapping(fromName).get() : this.createFieldEntry(fromName, toName, descriptor);
 	}
 
-	default Collection<? extends MutableMethodEntry> getMethods() {
-		return streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).map(method -> (MutableMethodEntry) method.makeMutable()).toList();
-	}
-
-	default Map<String, ? extends MutableMethodEntry> getMethodsByName() {
-		return this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::getFromName, method -> (MutableMethodEntry) method.makeMutable()));
-	}
-
+	@Override
+	Collection<? extends MutableMethodEntry> getMethods();
+	@Override
+	Map<String, ? extends MutableMethodEntry> getMethodsByName();
+	@Override
 	Optional<? extends MutableMethodEntry> getMethodMapping(String fromName);
-
 	MutableMethodEntry createMethodEntry(String fromName, @Nullable String toName, String descriptor);
-
 	default MutableMethodEntry getOrCreateMethodEntry(String fromName, @Nullable String toName, String descriptor) {
 		return this.hasMethodMapping(fromName) ? this.getMethodMapping(fromName).get() : this.createMethodEntry(fromName, toName, descriptor);
 	}
 
-	default Collection<? extends MutableClassEntry> getClasses() {
-		return streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).map(clazz -> (MutableClassEntry) clazz.makeMutable()).toList();
-	}
-
-	default Map<String, ? extends MutableClassEntry> getClassesByName() {
-		return this.streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::getFromName, clazz -> (MutableClassEntry) clazz.makeMutable()));
-	}
-
+	@Override
+	Collection<? extends MutableClassEntry> getClasses();
+	@Override
+	Map<String, ? extends MutableClassEntry> getClassesByName();
+	@Override
 	Optional<? extends MutableClassEntry> getClassMapping(String fromName);
-
 	MutableClassEntry createClassEntry(String fromName, @Nullable String toName);
-
 	default MutableClassEntry getOrCreateClassEntry(String fromName, @Nullable String toName) {
 		return this.hasClassMapping(fromName) ? this.getClassMapping(fromName).get() : this.createClassEntry(fromName, toName);
 	}

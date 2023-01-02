@@ -33,14 +33,14 @@ public abstract class AbstractParentMappingEntry<T extends ParentMappingEntry<T>
 	}
 
 	@NotNull
-	public static <T extends MappingEntry<?>> Collection<T> mergeChildren(Collection<MappingEntry<?>> children, Collection<MappingEntry<?>> otherChildren) {
+	public static <T extends MappingEntry<?>> Collection<T> mergeChildren(Collection<? extends MappingEntry<?>> children, Collection<? extends MappingEntry<?>> otherChildren) {
 		List<T> newChildren = new ArrayList<>();
 		mergeChildrenIntoList(children, newChildren);
 		mergeChildrenIntoList(otherChildren, newChildren);
 		return newChildren;
 	}
 
-	private static <T extends MappingEntry<?>> void mergeChildrenIntoList(Collection<MappingEntry<?>> otherChildren, List<T> newChildren) {
+	private static <T extends MappingEntry<?>> void mergeChildrenIntoList(Collection<? extends MappingEntry<?>> otherChildren, List<T> newChildren) {
 		for (MappingEntry<?> newChild : otherChildren) {
 			for (int i = 0; i < newChildren.size(); i++) {
 				MappingEntry<?> child = newChildren.get(i);
