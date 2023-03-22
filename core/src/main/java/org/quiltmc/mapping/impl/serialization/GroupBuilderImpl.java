@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.parser.exception;
+package org.quiltmc.mapping.impl.serialization;
 
-import org.quiltmc.mapping.parser.QuiltMappingParser;
+import org.quiltmc.mapping.api.serialization.Builder;
 
-public class MissingValueException extends ParsingException {
-	public MissingValueException(QuiltMappingParser parser, String message) {
-		super(parser, message);
-	}
-
-	public MissingValueException(QuiltMappingParser parser, String message, Throwable cause) {
-		super(parser, message, cause);
-	}
-
-	public MissingValueException(QuiltMappingParser parser, Throwable cause) {
-		super(parser, cause);
-	}
+public class GroupBuilderImpl<T> extends BuilderImpl<T, Builder.GroupBuilder<T>> implements Builder.GroupBuilder<T> {
 }

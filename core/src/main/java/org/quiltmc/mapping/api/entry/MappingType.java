@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,5 +18,10 @@ package org.quiltmc.mapping.api.entry;
 
 import java.util.function.Predicate;
 
-public record MappingType<T extends MappingEntry<T>>(String key, Class<T> targetEntry, Predicate<MappingType<?>> targets) {
+import org.quiltmc.mapping.api.serialization.Serializer;
+
+public record MappingType<T extends MappingEntry<T>>(String key, Class<T> targetEntry, Predicate<MappingType<?>> targets, Predicate<MappingType<?>> isSingle, Serializer<T> serializer) {
+	public MappingType(String key, Class<T> targetEntry, Predicate<MappingType<?>> targets, Serializer<T> serializer) {
+		this(key, targetEntry, targets, t -> false, serializer);
+	}
 }

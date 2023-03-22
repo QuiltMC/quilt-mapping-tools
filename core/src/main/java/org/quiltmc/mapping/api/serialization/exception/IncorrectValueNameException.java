@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.api.entry.unpick;
+package org.quiltmc.mapping.api.serialization.exception;
 
-public enum UnpickType {
-	CONSTANT, FLAG
+public class IncorrectValueNameException extends ParsingException {
+//	public IncorrectValueNameException(QuiltMappingParser parser, String message) {
+//		super(parser, message);
+//	}
+//
+//	public IncorrectValueNameException(QuiltMappingParser parser, String message, Throwable cause) {
+//		super(parser, message, cause);
+//	}
+//
+//	public IncorrectValueNameException(QuiltMappingParser parser, Throwable cause) {
+//		super(parser, cause);
+//	}
 }

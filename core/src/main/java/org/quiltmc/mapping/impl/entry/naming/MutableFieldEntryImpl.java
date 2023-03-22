@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,5 +53,15 @@ public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorM
 	@Override
 	public FieldEntry makeFinal() {
 		return new FieldEntryImpl(this.fromName, this.toName, this.descriptor, List.copyOf(children));
+	}
+
+	@Override
+	public String toString() {
+		return "FieldEntry[" +
+			   "descriptor='" + descriptor + '\'' +
+			   ", fromName='" + fromName + '\'' +
+			   ", toName='" + toName + '\'' +
+			   ", children=" + children +
+			   ']';
 	}
 }

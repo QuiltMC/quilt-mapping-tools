@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentDescriptorMappingEntry;
 
 public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<FieldEntry> implements FieldEntry {
-	protected FieldEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
+	public FieldEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
 		super(fromName, toName, descriptor, children);
 	}
 
@@ -44,5 +44,15 @@ public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<Fi
 	@Override
 	public MutableMappingEntry<FieldEntry> makeMutable() {
 		return new MutableFieldEntryImpl(this.fromName, this.toName, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
+	}
+
+	@Override
+	public String toString() {
+		return "FieldEntry[" +
+			   "descriptor='" + descriptor + '\'' +
+			   ", fromName='" + fromName + '\'' +
+			   ", toName='" + toName + '\'' +
+			   ", children=" + children +
+			   ']';
 	}
 }

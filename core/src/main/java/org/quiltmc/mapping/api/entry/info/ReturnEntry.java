@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,20 @@
 package org.quiltmc.mapping.api.entry.info;
 
 import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
+import org.quiltmc.mapping.impl.entry.info.ReturnEntryImpl;
+import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface ReturnEntry extends ParentMappingEntry<ReturnEntry> {
-	MappingType<ReturnEntry> RETURN_MAPPING_TYPE = new MappingType<>("return", ReturnEntry.class, mappingType -> mappingType.equals(MethodEntry.METHOD_MAPPING_TYPE));
+	MappingType<ReturnEntry> RETURN_MAPPING_TYPE = MappingTypes.register(new MappingType<>("return",
+			ReturnEntry.class,
+			type -> type.equals(MethodEntry.METHOD_MAPPING_TYPE),
+			type -> true,
+			Builder.EntryBuilder.<ReturnEntry>entry()
+					.withChildren(() -> ReturnEntry.RETURN_MAPPING_TYPE)
+					.build(inputs -> new ReturnEntryImpl(inputs.get("children")))));
 
 	@Override
 	default MappingType<ReturnEntry> getType() {

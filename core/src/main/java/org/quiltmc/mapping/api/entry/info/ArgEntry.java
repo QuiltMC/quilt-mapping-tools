@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,34 @@
 
 package org.quiltmc.mapping.api.entry.info;
 
+import java.util.Collection;
+
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
+import org.quiltmc.mapping.impl.entry.info.ArgEntryImpl;
+import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface ArgEntry extends ParentMappingEntry<ArgEntry> {
-	MappingType<ArgEntry> ARG_MAPPING_TYPE = new MappingType<>("args", ArgEntry.class, mappingType -> mappingType.equals(MethodEntry.METHOD_MAPPING_TYPE));
+	MappingType<ArgEntry> ARG_MAPPING_TYPE = MappingTypes.register(
+			new MappingType<>(
+					"arg",
+					ArgEntry.class,
+					mappingType -> mappingType.equals(MethodEntry.METHOD_MAPPING_TYPE),
+					Builder.EntryBuilder.<ArgEntry>entry()
+							.integer("index", ArgEntry::index)
+							.nullableString("name", ArgEntry::name)
+							.withChildren(() -> ArgEntry.ARG_MAPPING_TYPE)
+							.build(inputs -> arg(inputs.get("index"), inputs.getNullable("name"), inputs.get("children")))
+			));
+
+
+	static ArgEntry arg(int index, @Nullable String name, Collection<MappingEntry<?>> children) {
+		return new ArgEntryImpl(index, name, children);
+	}
 
 	@Override
 	default boolean shouldMerge(MappingEntry<?> other) {

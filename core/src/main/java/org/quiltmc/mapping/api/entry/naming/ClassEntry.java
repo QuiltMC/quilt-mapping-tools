@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,27 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.impl.entry.naming.ClassEntryImpl;
+import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMappingEntry<ClassEntry> {
+	MappingType<ClassEntry> CLASS_MAPPING_TYPE = MappingTypes.register(
+			new MappingType<>("classes",
+					ClassEntry.class,
+					type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
+					Builder.EntryBuilder.<ClassEntry>entry()
+							.string("from", NamedMappingEntry::getFromName)
+							.nullableString("to", NamedMappingEntry::getToName)
+							.withChildren(() -> ClassEntry.CLASS_MAPPING_TYPE)
+							.build(args -> new ClassEntryImpl(args.get("from"), args.getNullable("to"), args.get("children")))));
+
 	@Override
 	default MappingType<ClassEntry> getType() {
 		return CLASS_MAPPING_TYPE;
-	}	MappingType<ClassEntry> CLASS_MAPPING_TYPE = new MappingType<>("classes", ClassEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE));
+	}
 
 	Collection<? extends FieldEntry> getFields();
 

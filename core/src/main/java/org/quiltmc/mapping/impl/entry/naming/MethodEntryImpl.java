@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<M
 	private final Collection<ArgEntry> args;
 	private final Map<Integer, ArgEntry> indexToArg;
 
-	protected MethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
+	public MethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
 		super(fromName, toName, descriptor, children);
 		args = this.getChildrenOfType(ArgEntry.ARG_MAPPING_TYPE);
 		indexToArg = this.streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, Function.identity()));
@@ -74,5 +74,15 @@ public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<M
 	@Override
 	public boolean hasArgMapping(int index) {
 		return indexToArg.containsKey(index);
+	}
+
+	@Override
+	public String toString() {
+		return "MethodEntry[" +
+			   "descriptor='" + descriptor + '\'' +
+			   ", fromName='" + fromName + '\'' +
+			   ", toName='" + toName + '\'' +
+			   ", children=" + children +
+			   ']';
 	}
 }

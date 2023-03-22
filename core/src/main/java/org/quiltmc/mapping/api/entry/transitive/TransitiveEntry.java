@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,17 @@ import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
+import org.quiltmc.mapping.impl.entry.transitive.TransitiveEntryImpl;
+import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface TransitiveEntry extends MappingEntry<TransitiveEntry> {
-	MappingType<TransitiveEntry> TRANSITIVE_MAPPING_TYPE = new MappingType<>("transitive", TransitiveEntry.class, mappingType -> mappingType.equals(ClassEntry.CLASS_MAPPING_TYPE) || mappingType.equals(MethodEntry.METHOD_MAPPING_TYPE) || mappingType.equals(FieldEntry.FIELD_MAPPING_TYPE));
+	MappingType<TransitiveEntry> TRANSITIVE_MAPPING_TYPE = new MappingType<>("transitive",
+			TransitiveEntry.class,
+			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE) || type.equals(MethodEntry.METHOD_MAPPING_TYPE) || type.equals(FieldEntry.FIELD_MAPPING_TYPE),
+			type -> true,
+			Builder.EntryBuilder.<TransitiveEntry>entry()
+					.string("target", TransitiveEntry::target)
+					.build(args -> new TransitiveEntryImpl(args.get("target"), Set.of())));
 
 	String target();
 

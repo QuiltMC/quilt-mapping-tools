@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.unpick.MutableUnpickEntry;
 import org.quiltmc.mapping.api.entry.unpick.UnpickEntry;
-import org.quiltmc.mapping.api.entry.unpick.UnpickType;
 
 public class MutableUnpickEntryImpl implements MutableUnpickEntry {
 	protected String group;
@@ -40,7 +39,7 @@ public class MutableUnpickEntryImpl implements MutableUnpickEntry {
 
 	@Override
 	public String toString() {
-		return "MutableUnpickEntry[" +
+		return "UnpickEntry[" +
 			   "group='" + group + '\'' +
 			   (type != null ? ", type=" + type : "") +
 			   ']';

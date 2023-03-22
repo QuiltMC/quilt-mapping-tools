@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.quiltmc.mapping.impl.entry.unpick;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.unpick.UnpickEntry;
-import org.quiltmc.mapping.api.entry.unpick.UnpickType;
 
 public record UnpickEntryImpl(String group, @Nullable UnpickType type) implements UnpickEntry {
 	public UnpickEntryImpl(String group, @Nullable UnpickType type) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.parser.exception;
+package org.quiltmc.mapping.api.serialization.exception;
 
-import org.quiltmc.mapping.parser.QuiltMappingParser;
-
-public class ParsingException extends RuntimeException {
-	public ParsingException(QuiltMappingParser parser, String message) {
-		super(message + parser.location());
-	}
-
-	public ParsingException(QuiltMappingParser parser, String message, Throwable cause) {
-		super(message + parser.location(), cause);
-	}
-
-	public ParsingException(QuiltMappingParser parser, Throwable cause) {
-		super("Error " + parser.location(), cause);
-	}
+public class InvalidValueException extends ParsingException {
+//	public InvalidValueException(QuiltMappingParser parser, String message) {
+//		super(parser, message);
+//	}
+//
+//	public InvalidValueException(QuiltMappingParser parser, String message, Throwable cause) {
+//		super(parser, message, cause);
+//	}
+//
+//	public InvalidValueException(QuiltMappingParser parser, Throwable cause) {
+//		super(parser, cause);
+//	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,11 @@ public class ClassEntryImpl extends AbstractNamedParentMappingEntry<ClassEntry> 
 	private final Collection<? extends ClassEntry> classes;
 	private final Map<String, ? extends ClassEntry> classesByName;
 
-	protected ClassEntryImpl(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
+	public ClassEntryImpl(String fromName, @Nullable String toName, Collection<MappingEntry<?>> children) {
 		super(fromName, toName, children);
 		fields = this.getChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE);
-		fieldsByName = this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, Function.identity()));;
+		fieldsByName = this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, Function.identity()));
+		;
 
 		methods = this.getChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE);
 		methodsByName = this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::getFromName, Function.identity()));

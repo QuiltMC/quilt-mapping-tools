@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,5 +35,12 @@ public record CommentEntryImpl(String comment) implements CommentEntry {
 	@Override
 	public MutableMappingEntry<CommentEntry> makeMutable() {
 		return new MutableCommentEntryImpl(this.comment);
+	}
+
+	@Override
+	public String toString() {
+		return "CommentEntry[" +
+			   "comment='" + comment + '\'' +
+			   ']';
 	}
 }
