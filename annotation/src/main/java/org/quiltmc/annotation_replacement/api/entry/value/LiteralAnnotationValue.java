@@ -34,12 +34,11 @@ public interface LiteralAnnotationValue extends AnnotationValue<Object, LiteralA
 				Serializer<Object> computedSerializer;
 
 				if (s.endsWith("Ljava/lang/String;")) { // String
-					computedSerializer = Serializer.STRING
-							.map(_s -> _s, o -> ((String) o));
+					computedSerializer = s.startsWith("[") ? Serializer.STRING.list().map(_s -> _s.toArray(String[]::new), o -> Arrays.asList((String[]) o))
+							: Serializer.STRING.map(_s -> _s, o -> ((String) o));
 				} else if ((s.startsWith("L") || s.startsWith("[L")) && s.endsWith(";")) { // Class
-					computedSerializer = Serializer.STRING
-							.map(Type::getType, Type::getDescriptor)
-							.map(_s -> _s, o -> ((Type) o));
+					computedSerializer = s.startsWith("[") ? Serializer.STRING.map(Type::getType, Type::getDescriptor).list().map(_s -> _s.toArray(Type[]::new), o -> Arrays.asList((Type[]) o))
+							: Serializer.STRING.map(Type::getType, Type::getDescriptor).map(_s -> _s, o -> ((Type) o));
 				} else {
 					computedSerializer = switch (s) { // Primitives
 						case "Z" -> Serializer.BOOLEAN.map(_s -> _s, o -> ((Boolean) o));
@@ -62,8 +61,8 @@ public interface LiteralAnnotationValue extends AnnotationValue<Object, LiteralA
 
 				return Builder.EntryBuilder.<LiteralAnnotationValue>entry()
 						.string("name", AnnotationValue::name)
-						.field("value", computedSerializer, AnnotationValue::value)
 						.string("descriptor", DescriptorMappingEntry::descriptor)
+						.field("value", computedSerializer, AnnotationValue::value)
 						.build(args -> new LiteralAnnotationValueImpl(args.get("name"), args.get("value"), args.get("descriptor")));
 			});
 

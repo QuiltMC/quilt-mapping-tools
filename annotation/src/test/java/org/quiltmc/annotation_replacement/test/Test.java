@@ -49,132 +49,7 @@ import org.quiltmc.mapping.api.serialization.Serializer;
 import org.quiltmc.mapping.api.serialization.WritableParser;
 
 public class Test {
-	public static final ReadableParser<JsonElement> JSON_READER = new ReadableParser<>() {
-		@Override
-		public boolean readBoolean(JsonElement input) {
-			return input.getAsBoolean();
-		}
-
-		@Override
-		public byte readByte(JsonElement input) {
-			return input.getAsByte();
-		}
-
-		@Override
-		public short readShort(JsonElement input) {
-			return input.getAsShort();
-		}
-
-		@Override
-		public int readInteger(JsonElement input) {
-			return input.getAsInt();
-		}
-
-		@Override
-		public long readLong(JsonElement input) {
-			return input.getAsLong();
-		}
-
-		@Override
-		public float readFloat(JsonElement input) {
-			return input.getAsFloat();
-		}
-
-		@Override
-		public double readDouble(JsonElement input) {
-			return input.getAsDouble();
-		}
-
-		@Override
-		public String readString(JsonElement input) {
-			return input.getAsString();
-		}
-
-		@Override
-		public boolean hasField(String name, JsonElement parent) {
-			return parent.isJsonObject() && parent.getAsJsonObject().has(name);
-		}
-
-		@Override
-		public JsonElement field(String name, JsonElement parent) {
-			return parent.getAsJsonObject().get(name);
-		}
-
-		@Override
-		public Iterator<JsonElement> list(JsonElement input) {
-			return input.getAsJsonArray().iterator();
-		}
-
-		@Override
-		public boolean isFieldList(String name, JsonElement parent) {
-			return parent.isJsonObject() && parent.getAsJsonObject().has(name) && parent.getAsJsonObject().get(name).isJsonArray();
-		}
-	};
-	public static final WritableParser<JsonElement> JSON_WRITER = new WritableParser<>() {
-		@Override
-		public JsonElement writeBoolean(boolean value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeByte(byte value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeShort(short value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeInteger(int value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeLong(long value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeFloat(float value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeDouble(double value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement writeString(String value) {
-			return new JsonPrimitive(value);
-		}
-
-		@Override
-		public JsonElement object() {
-			return new JsonObject();
-		}
-
-		@Override
-		public JsonElement field(JsonElement parent, String name, JsonElement field) {
-			if (!parent.isJsonObject()) {
-				throw new IllegalArgumentException();
-			}
-			JsonObject object = parent.deepCopy().getAsJsonObject();
-			object.add(name, field);
-			return object;
-		}
-
-		@Override
-		public JsonElement list(List<JsonElement> list) {
-			JsonArray array = new JsonArray();
-			list.forEach(array::add);
-			return array;
-		}
-	};
-
-	public static void main(String[] args) throws IOException {
+		public static void main(String[] args) throws IOException {
 		MutableAnnotationAdditionEntry addition = new MutableAnnotationAdditionEntryImpl("Lorg/quiltmc/annotation_replacement/test/TestAnnotation;", List.of());
 		addition.addValue(new MutableLiteralAnnotationValueImpl("value",
 				1,
@@ -204,9 +79,9 @@ public class Test {
 
 		Serializer<AnnotationModificationEntry> serializer = modifications.getType().serializer();
 		System.out.println(serializer);
-		JsonElement written = serializer.write(modifications, JSON_WRITER);
+		JsonElement written = serializer.write(modifications, WritableParser.JSON);
 		System.out.println(written);
-		AnnotationModificationEntry read = serializer.read(JSON_READER, written);
+		AnnotationModificationEntry read = serializer.read(ReadableParser.JSON, written);
 		System.out.println(modifications);
 		System.out.println(read);
 		System.out.println(modifications.makeFinal().equals(read));

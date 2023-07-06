@@ -28,8 +28,8 @@ import org.quiltmc.mapping.api.serialization.Serializer;
 public interface EnumAnnotationValue extends AnnotationValue<String, EnumAnnotationValue> {
 	Serializer<EnumAnnotationValue> SERIALIZER = Builder.EntryBuilder.<EnumAnnotationValue>entry()
 			.string("name", AnnotationValue::name)
-			.string("value", AnnotationValue::value)
 			.string("descriptor", DescriptorMappingEntry::descriptor)
+			.string("value", AnnotationValue::value)
 			.build(args -> new EnumAnnotationValueImpl(args.get("name"), args.get("value"), args.get("descriptor")));
 
 	MappingType<EnumAnnotationValue> ENUM_MAPPING_TYPE =

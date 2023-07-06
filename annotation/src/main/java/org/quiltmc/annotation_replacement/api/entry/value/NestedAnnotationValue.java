@@ -32,8 +32,8 @@ import org.quiltmc.mapping.api.serialization.Serializer;
 public interface NestedAnnotationValue extends AnnotationValue<Collection<? extends AnnotationValue<?, ?>>, NestedAnnotationValue>, WriteableAnnotationInformation {
 	Serializer<NestedAnnotationValue> SERIALIZER = Builder.EntryBuilder.<NestedAnnotationValue>entry()
 			.string("name", AnnotationValue::name)
-			.field("values", Serializer.lazy(() -> AnnotationValue.COMBINED_SERIALIZER.list()), value -> List.copyOf(value.value()))
 			.string("descriptor", DescriptorMappingEntry::descriptor)
+			.field("values", Serializer.lazy(() -> AnnotationValue.COMBINED_SERIALIZER.list()), value -> List.copyOf(value.value()))
 			.build(args -> new NestedAnnotationValueImpl(args.get("name"), args.get("values"), args.get("descriptor")));
 
 	MappingType<NestedAnnotationValue> NESTED_MAPPING_TYPE =
