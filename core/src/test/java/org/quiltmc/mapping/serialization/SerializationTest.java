@@ -18,24 +18,23 @@ package org.quiltmc.mapping.serialization;
 
 import java.util.List;
 
-import com.google.gson.JsonElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.CommentEntry;
 import org.quiltmc.mapping.api.entry.unpick.UnpickEntry;
-import org.quiltmc.mapping.api.serialization.ReadableParser;
-import org.quiltmc.mapping.api.serialization.WritableParser;
+import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 
 public class SerializationTest {
 	@Test
 	public void test() {
 		ArgEntry arg = ArgEntry.arg(0, "name", List.of(
-				CommentEntry.comment("This is a comment"),
-				UnpickEntry.unpick("group", null)
+			CommentEntry.comment("This is a comment"),
+			UnpickEntry.unpick("group", null)
 		));
-		JsonElement written = ArgEntry.ARG_MAPPING_TYPE.serializer().write(arg, WritableParser.JSON);
-		ArgEntry read = ArgEntry.ARG_MAPPING_TYPE.serializer().read(ReadableParser.JSON, written);
+
+		TabSeparatedContent written = ArgEntry.ARG_MAPPING_TYPE.parser().serialize(arg);
+		ArgEntry read = ArgEntry.ARG_MAPPING_TYPE.parser().parse(written);
 
 		Assertions.assertEquals(arg, read, "Serialized and Deserialized match");
 	}

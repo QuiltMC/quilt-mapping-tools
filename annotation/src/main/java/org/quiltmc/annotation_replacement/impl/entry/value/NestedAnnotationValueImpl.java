@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,12 @@ package org.quiltmc.annotation_replacement.impl.entry.value;
 import java.util.Collection;
 import java.util.Objects;
 
+import org.quiltmc.annotation_replacement.api.entry.WriteableAnnotationInformation;
 import org.quiltmc.annotation_replacement.api.entry.value.AnnotationValue;
 import org.quiltmc.annotation_replacement.api.entry.value.NestedAnnotationValue;
-import org.quiltmc.annotation_replacement.api.entry.WriteableAnnotationInformation;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+@SuppressWarnings("SuspiciousMethodCalls")
 public record NestedAnnotationValueImpl(String name, Collection<? extends AnnotationValue<?, ?>> value, String descriptor) implements NestedAnnotationValue, WriteableAnnotationInformation {
 	@Override
 	public NestedAnnotationValue remap() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package org.quiltmc.annotation_replacement.test;
 
-
 public class TestClass {
 	@Deprecated
 	@NestedAnnotation(2.0f)
 	public void nothing() {
-
+		System.out.println("Hello");
 	}
 }

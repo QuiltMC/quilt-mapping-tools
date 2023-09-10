@@ -40,4 +40,8 @@ public final class MappingTypes {
 	public static Collection<MappingType<?>> getAllTargeting(MappingType<?> type) {
 		return TYPES.values().stream().filter(mappingType -> mappingType.targets().test(type)).toList();
 	}
+
+	public static Map<String, MappingType<?>> types() {
+		return Map.copyOf(TYPES);
+	}
 }

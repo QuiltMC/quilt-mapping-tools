@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,39 @@
 
 package org.quiltmc.annotation_replacement.api.entry;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.quiltmc.annotation_replacement.api.entry.value.AnnotationValue;
 import org.quiltmc.annotation_replacement.impl.entry.AnnotationAdditionEntryImpl;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
-import org.quiltmc.mapping.api.serialization.Builder;
-import org.quiltmc.mapping.api.serialization.Serializer;
+import org.quiltmc.mapping.api.entry.MappingTypes;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.parse.Parsers;
 
-public interface AnnotationAdditionEntry extends DescriptorMappingEntry<AnnotationAdditionEntry>, WriteableAnnotationInformation {
-	Serializer<AnnotationAdditionEntry> SERIALIZER = Builder.EntryBuilder.<AnnotationAdditionEntry>entry()
-			.string("descriptor", AnnotationAdditionEntry::descriptor)
-			.field("values", AnnotationValue.COMBINED_SERIALIZER.list(), value -> List.copyOf(value.values()))
-			.build(args -> new AnnotationAdditionEntryImpl(args.get("descriptor"), args.get("values")));
+@SuppressWarnings("unchecked")
+public interface AnnotationAdditionEntry extends DescriptorMappingEntry<AnnotationAdditionEntry>, ParentMappingEntry<AnnotationAdditionEntry>, WriteableAnnotationInformation {
 
-	MappingType<AnnotationAdditionEntry> ANNOTATION_ADDITION_MAPPING_TYPE = new MappingType<>(
-			"additions",
-			AnnotationAdditionEntry.class,
-			type -> type.equals(AnnotationModificationEntry.ANNOTATION_MODIFICATION_MAPPING_TYPE),
-			SERIALIZER);
+	MappingType<AnnotationAdditionEntry> ANNOTATION_ADDITION_MAPPING_TYPE = MappingTypes.register(new MappingType<>(
+		"addition",
+		AnnotationAdditionEntry.class,
+		type -> type.equals(AnnotationModificationEntry.ANNOTATION_MODIFICATION_MAPPING_TYPE),
+		Parsers.createParent(
+			Parsers.STRING.field("descriptor", AnnotationAdditionEntry::descriptor),
+			() -> AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE,
+			(descriptor, values) -> {
+				List<AnnotationValue<?, ?>> list = (List<AnnotationValue<?, ?>>) (Object) values.stream().map(AnnotationValue.class::cast).toList();
+				return new AnnotationAdditionEntryImpl(descriptor, list);
+			}
+		)
+	));
+
+	@Override
+	default Collection<? extends MappingEntry<?>> children() {
+		return this.values();
+	}
 
 	@Override
 	default MappingType<AnnotationAdditionEntry> getType() {

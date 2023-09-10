@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.impl.serialization;
+package org.quiltmc.mapping.api.parse;
 
-import org.quiltmc.mapping.api.serialization.Builder;
+import java.util.function.Function;
 
-public class GroupBuilderImpl<T> extends BuilderImpl<T, Builder.GroupBuilder<T>> implements Builder.GroupBuilder<T> {
+public record Field<P, F>(Parser<F, ?> parser, String name, Function<P, F> getter, boolean nullable, boolean inline) {
 }

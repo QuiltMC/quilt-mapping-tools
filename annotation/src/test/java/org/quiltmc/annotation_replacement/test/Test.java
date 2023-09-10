@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,9 @@ package org.quiltmc.annotation_replacement.test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -35,53 +29,63 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.quiltmc.annotation_replacement.AnnotationReplacement;
+import org.quiltmc.annotation_replacement.api.entry.AnnotationAdditionEntry;
 import org.quiltmc.annotation_replacement.api.entry.AnnotationModificationEntry;
 import org.quiltmc.annotation_replacement.api.entry.MutableAnnotationAdditionEntry;
 import org.quiltmc.annotation_replacement.api.entry.MutableAnnotationModificationEntry;
+import org.quiltmc.annotation_replacement.api.entry.value.EnumAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.LiteralAnnotationValue;
+import org.quiltmc.annotation_replacement.api.entry.value.NestedAnnotationValue;
 import org.quiltmc.annotation_replacement.impl.entry.MutableAnnotationAdditionEntryImpl;
 import org.quiltmc.annotation_replacement.impl.entry.MutableAnnotationModificationEntryImpl;
 import org.quiltmc.annotation_replacement.impl.entry.value.LiteralAnnotationValueImpl;
 import org.quiltmc.annotation_replacement.impl.entry.value.MutableEnumAnnotationValueImpl;
 import org.quiltmc.annotation_replacement.impl.entry.value.MutableLiteralAnnotationValueImpl;
 import org.quiltmc.annotation_replacement.impl.entry.value.MutableNestedAnnotationValueImpl;
-import org.quiltmc.mapping.api.serialization.ReadableParser;
-import org.quiltmc.mapping.api.serialization.Serializer;
-import org.quiltmc.mapping.api.serialization.WritableParser;
+import org.quiltmc.mapping.api.entry.MappingType;
+import org.quiltmc.mapping.api.parse.Parser;
+import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 
 public class Test {
-		public static void main(String[] args) throws IOException {
+	public static final List<MappingType<?>> ENTRIES = List.of(
+		AnnotationModificationEntry.ANNOTATION_MODIFICATION_MAPPING_TYPE,
+		AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE,
+		EnumAnnotationValue.ENUM_MAPPING_TYPE,
+		LiteralAnnotationValue.LITERAL_MAPPING_TYPE,
+		NestedAnnotationValue.NESTED_MAPPING_TYPE);
+
+	public static void main(String[] args) throws IOException {
 		MutableAnnotationAdditionEntry addition = new MutableAnnotationAdditionEntryImpl("Lorg/quiltmc/annotation_replacement/test/TestAnnotation;", List.of());
 		addition.addValue(new MutableLiteralAnnotationValueImpl("value",
-				1,
-				"I"));
+			1,
+			"I"));
 		addition.addValue(new MutableLiteralAnnotationValueImpl("extra",
-				"test string",
-				"Ljava/lang/String;"));
+			"test string",
+			"Ljava/lang/String;"));
 		addition.addValue(new MutableLiteralAnnotationValueImpl("array",
-				new Boolean[]{true, false, true},
-				"[Z"));
+			new boolean[]{true, false, true},
+			"[Z"));
 		addition.addValue(new MutableEnumAnnotationValueImpl("enumValue",
-				"VALUE",
-				"Lorg/quiltmc/annotation_replacement/test/TestEnum;"));
+			"VALUE",
+			"Lorg/quiltmc/annotation_replacement/test/TestEnum;"));
 		addition.addValue(new MutableLiteralAnnotationValueImpl("clazz",
-				Type.getType("Lorg/quiltmc/annotation_replacement/test/TestClass;"),
-				"Ljava/lang/Class;"));
+			Type.getType("Lorg/quiltmc/annotation_replacement/test/TestClass;"),
+			"Ljava/lang/Class;"));
 		addition.addValue(new MutableNestedAnnotationValueImpl("nestedAnnotation",
-				List.of(
-						new LiteralAnnotationValueImpl("value",
-								1.0f,
-								"F")),
-				"Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;"));
+			List.of(
+				new LiteralAnnotationValueImpl("value",
+					1.0f,
+					"F")),
+			"Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;"));
 
 		MutableAnnotationModificationEntry modifications = new MutableAnnotationModificationEntryImpl(
-				Set.of("Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;", "Ljava/lang/Deprecated;"),
-				List.of(addition));
+			Set.of("Lorg/quiltmc/annotation_replacement/test/NestedAnnotation;", "Ljava/lang/Deprecated;"),
+			List.of(addition));
 
-		Serializer<AnnotationModificationEntry> serializer = modifications.getType().serializer();
-		System.out.println(serializer);
-		JsonElement written = serializer.write(modifications, WritableParser.JSON);
+		Parser<AnnotationModificationEntry, TabSeparatedContent> serializer = modifications.getType().parser();
+		TabSeparatedContent written = serializer.serialize(modifications);
 		System.out.println(written);
-		AnnotationModificationEntry read = serializer.read(ReadableParser.JSON, written);
+		AnnotationModificationEntry read = serializer.parse(written);
 		System.out.println(modifications);
 		System.out.println(read);
 		System.out.println(modifications.makeFinal().equals(read));
@@ -102,27 +106,6 @@ public class Test {
 		bytes = writer.toByteArray();
 		Files.write(Path.of(".", "OutputClass.class"), bytes);
 
-		{
-			bytes = Test.class.getClassLoader().getResourceAsStream("org/quiltmc/annotation_replacement/test/TestClassExpected.class").readAllBytes();
-			reader = new ClassReader(bytes);
-			writer = new ClassWriter(reader, 0);
-			reader.accept(new ClassVisitor(Opcodes.ASM9, writer) {
-				@Override
-				public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-					return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, name, descriptor, signature, exceptions)) {
-						@Override
-						public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-							return new AnnotationVisitor(Opcodes.ASM9, super.visitAnnotation(descriptor, visible)) {
-								@Override
-								public void visit(String name, Object value) {
-									super.visit(name, value);
-								}
-							};
-						}
-					};
-				}
-			}, ClassReader.EXPAND_FRAMES);
-		}
 		System.out.println(modifications.makeFinal());
 	}
 }

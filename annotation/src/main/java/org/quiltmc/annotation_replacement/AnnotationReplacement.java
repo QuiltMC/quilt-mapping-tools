@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ public class AnnotationReplacement {
 	// TODO: support parameter and return type annotations
 	public static class AnnotationReplacementMethodVisitor extends MethodVisitor {
 		private final AnnotationModificationEntry modifications;
+		boolean visited = false;
 
 		protected AnnotationReplacementMethodVisitor(AnnotationModificationEntry modifications) {
 			super(Opcodes.ASM9);
@@ -40,18 +41,17 @@ public class AnnotationReplacement {
 
 		@Override
 		public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+			if (!visited) {
+				visited = true;
+				for (AnnotationAdditionEntry addition : modifications.additions()) {
+					addition.visit(this.visitAnnotation(addition.descriptor(), true));
+				}
+			}
+
 			if (modifications.removals().contains(descriptor)) {
 				return null;
 			}
 			return super.visitAnnotation(descriptor, visible);
-		}
-
-		@Override
-		public void visitEnd() {
-			for (AnnotationAdditionEntry addition : modifications.additions()) {
-				addition.visit(this.visitAnnotation(addition.descriptor(), true));
-			}
-			super.visitEnd();
 		}
 	}
 }

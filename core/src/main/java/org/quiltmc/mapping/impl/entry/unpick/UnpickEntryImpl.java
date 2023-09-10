@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,6 @@ import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.unpick.UnpickEntry;
 
 public record UnpickEntryImpl(String group, @Nullable UnpickType type) implements UnpickEntry {
-	public UnpickEntryImpl(String group, @Nullable UnpickType type) {
-		this.group = group;
-		this.type = type;
-	}
 
 	@Override
 	public MutableMappingEntry<UnpickEntry> makeMutable() {

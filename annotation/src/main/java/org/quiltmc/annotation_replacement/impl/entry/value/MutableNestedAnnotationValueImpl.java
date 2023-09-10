@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,12 @@
 package org.quiltmc.annotation_replacement.impl.entry.value;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.quiltmc.annotation_replacement.api.entry.value.AnnotationValue;
-import org.quiltmc.annotation_replacement.api.entry.value.LiteralAnnotationValue;
 import org.quiltmc.annotation_replacement.api.entry.value.MutableAnnotationValue;
-import org.quiltmc.annotation_replacement.api.entry.value.MutableLiteralAnnotationValue;
 import org.quiltmc.annotation_replacement.api.entry.value.MutableNestedAnnotationValue;
 import org.quiltmc.annotation_replacement.api.entry.value.NestedAnnotationValue;
-import org.quiltmc.mapping.api.entry.MappingEntry;
-import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
 public class MutableNestedAnnotationValueImpl implements MutableNestedAnnotationValue {
 	private String name;
@@ -37,7 +32,7 @@ public class MutableNestedAnnotationValueImpl implements MutableNestedAnnotation
 	public MutableNestedAnnotationValueImpl(String name, Collection<? extends AnnotationValue<?, ?>> values, String descriptor) {
 		this.name = name;
 		this.value = values.stream().map(value -> ((MutableAnnotationValue<?, ?>) value.makeMutable()))
-				.collect(Collectors.toList());
+			.collect(Collectors.toList());
 		this.descriptor = descriptor;
 	}
 
@@ -59,7 +54,7 @@ public class MutableNestedAnnotationValueImpl implements MutableNestedAnnotation
 	@Override
 	public void setValue(Collection<? extends AnnotationValue<?, ?>> values) {
 		this.value = values.stream().map(value -> ((MutableAnnotationValue<?, ?>) value.makeMutable()))
-				.collect(Collectors.toList());
+			.collect(Collectors.toList());
 	}
 
 	@Override

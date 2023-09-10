@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,33 +18,26 @@ package org.quiltmc.annotation_replacement.api.entry.value;
 
 import org.quiltmc.annotation_replacement.api.entry.AnnotationAdditionEntry;
 import org.quiltmc.annotation_replacement.impl.entry.value.EnumAnnotationValueImpl;
-import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.MappingTypes;
-import org.quiltmc.mapping.api.serialization.Builder;
-import org.quiltmc.mapping.api.serialization.Serializer;
+import org.quiltmc.mapping.api.parse.Parsers;
 
 public interface EnumAnnotationValue extends AnnotationValue<String, EnumAnnotationValue> {
-	Serializer<EnumAnnotationValue> SERIALIZER = Builder.EntryBuilder.<EnumAnnotationValue>entry()
-			.string("name", AnnotationValue::name)
-			.string("descriptor", DescriptorMappingEntry::descriptor)
-			.string("value", AnnotationValue::value)
-			.build(args -> new EnumAnnotationValueImpl(args.get("name"), args.get("value"), args.get("descriptor")));
-
 	MappingType<EnumAnnotationValue> ENUM_MAPPING_TYPE =
-			MappingTypes.register(
-					new MappingType<>(
-							"enum_annotation_value",
-							EnumAnnotationValue.class,
-							type -> type.equals(AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE),
-							SERIALIZER
-					));
-
-	@Override
-	default ValueType type() {
-		return ValueType.ENUM;
-	}
+		MappingTypes.register(
+			new MappingType<>(
+				"enum",
+				EnumAnnotationValue.class,
+				type -> type.equals(AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE) || type.equals(NestedAnnotationValue.NESTED_MAPPING_TYPE),
+				Parsers.create(
+					Parsers.STRING.field("name", EnumAnnotationValue::name),
+					Parsers.STRING.field("value", EnumAnnotationValue::value),
+					Parsers.STRING.field("descriptor", EnumAnnotationValue::descriptor),
+					() -> EnumAnnotationValue.ENUM_MAPPING_TYPE,
+					EnumAnnotationValueImpl::new
+				)
+			));
 
 	@Override
 	default MappingType<EnumAnnotationValue> getType() {

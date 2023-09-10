@@ -14,35 +14,20 @@
  * limitations under the License.
  */
 
-package org.quiltmc.mapping.api.serialization;
+package org.quiltmc.mapping.api.parse;
 
-import java.util.List;
+import java.util.function.Function;
 
-import com.google.gson.JsonElement;
-import org.quiltmc.mapping.impl.serialization.JsonParser;
+public interface Parser<I, O> {
+	I parse(O input);
 
-public interface WritableParser<O> {
-	WritableParser<JsonElement> JSON = JsonParser.INSTANCE;
+	O serialize(I input);
 
-	O writeBoolean(boolean value);
+	default <P> Field<P, I> field(String name, Function<P, I> getter) {
+		return new Field<>(this, name, getter, false, true);
+	}
 
-	O writeByte(byte value);
-
-	O writeShort(short value);
-
-	O writeInteger(int value);
-
-	O writeLong(long value);
-
-	O writeFloat(float value);
-
-	O writeDouble(double value);
-
-	O writeString(String value);
-
-	O object();
-
-	O field(O parent, String name, O field);
-
-	O list(List<O> list);
+	default <P> Field<P, I> nullableField(String name, Function<P, I> getter) {
+		return new Field<>(this, name, getter, true, true);
+	}
 }

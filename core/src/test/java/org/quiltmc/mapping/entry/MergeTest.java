@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,16 @@ import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.impl.entry.transitive.TransitiveEntryImpl;
 import org.quiltmc.mapping.impl.entry.unpick.UnpickEntryImpl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 class MergeTest {
 	public static final List<MappingType<?>> TYPES = List.of(
-			ClassEntry.CLASS_MAPPING_TYPE,
-			MethodEntry.METHOD_MAPPING_TYPE,
-			FieldEntry.FIELD_MAPPING_TYPE,
-			CommentEntry.COMMENT_MAPPING_TYPE,
-			ArgEntry.ARG_MAPPING_TYPE,
-			ReturnEntry.RETURN_MAPPING_TYPE,
-			UnpickEntryImpl.UNPICK_MAPPING_TYPE,
-			TransitiveEntryImpl.TRANSITIVE_MAPPING_TYPE);
+		ClassEntry.CLASS_MAPPING_TYPE,
+		MethodEntry.METHOD_MAPPING_TYPE,
+		FieldEntry.FIELD_MAPPING_TYPE,
+		CommentEntry.COMMENT_MAPPING_TYPE,
+		ArgEntry.ARG_MAPPING_TYPE,
+		ReturnEntry.RETURN_MAPPING_TYPE,
+		UnpickEntryImpl.UNPICK_MAPPING_TYPE,
+		TransitiveEntryImpl.TRANSITIVE_MAPPING_TYPE);
 
 	@Test
 	void testMergeFromFile() throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,20 @@ import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.ReturnEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
+import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.unpick.UnpickEntryImpl;
-import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface UnpickEntry extends MappingEntry<UnpickEntry> {
 	MappingType<UnpickEntry> UNPICK_MAPPING_TYPE = MappingTypes.register(new MappingType<>(
-			"unpick",
-			UnpickEntry.class,
-			type -> type.equals(FieldEntry.FIELD_MAPPING_TYPE) || type.equals(ArgEntry.ARG_MAPPING_TYPE) || type.equals(ReturnEntry.RETURN_MAPPING_TYPE),
-			type -> true,
-			Builder.EntryBuilder.<UnpickEntry>entry()
-					.string("group", UnpickEntry::group)
-					.nullableEnum("type", UnpickEntry::type, UnpickType.class)
-					.build(input -> unpick(input.get("group"), input.getNullable("type")))
-	));
+		"unpick",
+		UnpickEntry.class,
+		type -> type.equals(FieldEntry.FIELD_MAPPING_TYPE) || type.equals(ArgEntry.ARG_MAPPING_TYPE) || type.equals(ReturnEntry.RETURN_MAPPING_TYPE),
+		Parsers.create(
+			Parsers.STRING.field("group", UnpickEntry::group),
+			Parsers.enumParser(UnpickType.class).nullableField("type", UnpickEntry::type),
+			() -> UnpickEntry.UNPICK_MAPPING_TYPE,
+			UnpickEntry::unpick
+		)));
 
 	static UnpickEntry unpick(String group, @Nullable UnpickType type) {
 		return new UnpickEntryImpl(group, type);
@@ -44,7 +44,8 @@ public interface UnpickEntry extends MappingEntry<UnpickEntry> {
 
 	String group();
 
-	@Nullable UnpickType type();
+	@Nullable
+	UnpickType type();
 
 	@Override
 	default MappingType<UnpickEntry> getType() {

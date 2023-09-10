@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,26 +20,27 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
+import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
+import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.naming.MethodEntryImpl;
-import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface MethodEntry extends NamedMappingEntry<MethodEntry>, DescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
 	MappingType<MethodEntry> METHOD_MAPPING_TYPE = MappingTypes.register(
-			new MappingType<>("methods",
-					MethodEntry.class,
-					type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
-					Builder.EntryBuilder.<MethodEntry>entry()
-							.string("from", NamedMappingEntry::getFromName)
-							.nullableString("to", NamedMappingEntry::getToName)
-							.string("descriptor", DescriptorMappingEntry::descriptor)
-							.withChildren(() -> MethodEntry.METHOD_MAPPING_TYPE)
-							.build(args -> new MethodEntryImpl(args.get("from"), args.getNullable("to"), args.get("descriptor"), args.get("children")))));
+		new MappingType<>("method",
+			MethodEntry.class,
+			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
+			Parsers.createParent(
+				Parsers.STRING.field("from", MethodEntry::getFromName),
+				Parsers.STRING.nullableField("to", MethodEntry::getToName),
+				Parsers.STRING.field("descriptor", MethodEntry::descriptor),
+				() -> MethodEntry.METHOD_MAPPING_TYPE,
+				MethodEntryImpl::new
+			)));
 
 	@Override
 	default MappingType<MethodEntry> getType() {

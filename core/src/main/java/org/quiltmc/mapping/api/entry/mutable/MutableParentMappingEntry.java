@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,7 @@
 package org.quiltmc.mapping.api.entry.mutable;
 
 import java.util.Collection;
-import java.util.stream.Stream;
 
-import org.quiltmc.mapping.api.entry.MappingEntry;
-import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
 public interface MutableParentMappingEntry<T extends ParentMappingEntry<T>> extends ParentMappingEntry<T>, MutableMappingEntry<T> {

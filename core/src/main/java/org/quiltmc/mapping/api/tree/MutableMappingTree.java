@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableClassEntry;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public interface MutableMappingTree extends MappingTree {
 	@Override
 	Collection<? extends MutableMappingEntry<?>> getEntries();

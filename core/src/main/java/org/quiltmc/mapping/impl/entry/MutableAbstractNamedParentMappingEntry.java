@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 
 public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractParentMappingEntry<T> implements MutableNamedMappingEntry<T> {
-	protected String fromName;
+	protected final String fromName;
 	protected @Nullable String toName;
 
 	protected MutableAbstractNamedParentMappingEntry(String fromName, @Nullable String toName, Collection<MutableMappingEntry<?>> children) {

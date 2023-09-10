@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,12 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
-import org.quiltmc.mapping.api.entry.naming.*;
+import org.quiltmc.mapping.api.entry.naming.ClassEntry;
+import org.quiltmc.mapping.api.entry.naming.FieldEntry;
+import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableClassEntry;
+import org.quiltmc.mapping.api.entry.naming.MutableFieldEntry;
+import org.quiltmc.mapping.api.entry.naming.MutableMethodEntry;
 import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentMappingEntry;
 

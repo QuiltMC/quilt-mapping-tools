@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,20 @@ import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.naming.ClassEntryImpl;
-import org.quiltmc.mapping.api.serialization.Builder;
 
 public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMappingEntry<ClassEntry> {
 	MappingType<ClassEntry> CLASS_MAPPING_TYPE = MappingTypes.register(
-			new MappingType<>("classes",
-					ClassEntry.class,
-					type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
-					Builder.EntryBuilder.<ClassEntry>entry()
-							.string("from", NamedMappingEntry::getFromName)
-							.nullableString("to", NamedMappingEntry::getToName)
-							.withChildren(() -> ClassEntry.CLASS_MAPPING_TYPE)
-							.build(args -> new ClassEntryImpl(args.get("from"), args.getNullable("to"), args.get("children")))));
+		new MappingType<>("class",
+			ClassEntry.class,
+			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
+			Parsers.createParent(
+				Parsers.STRING.field("from", ClassEntry::getFromName),
+				Parsers.STRING.nullableField("to", ClassEntry::getToName),
+				() -> ClassEntry.CLASS_MAPPING_TYPE,
+				ClassEntryImpl::new
+			)));
 
 	@Override
 	default MappingType<ClassEntry> getType() {

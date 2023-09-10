@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public abstract class AbstractParentMappingEntry<T extends ParentMappingEntry<T>
 		return newChildren;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T extends MappingEntry<?>> void mergeChildrenIntoList(Collection<? extends MappingEntry<?>> otherChildren, List<T> newChildren) {
 		for (MappingEntry<?> newChild : otherChildren) {
 			for (int i = 0; i < newChildren.size(); i++) {

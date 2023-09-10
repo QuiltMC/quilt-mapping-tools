@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;

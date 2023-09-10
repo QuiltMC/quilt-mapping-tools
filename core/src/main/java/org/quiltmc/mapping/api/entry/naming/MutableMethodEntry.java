@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package org.quiltmc.mapping.api.entry.naming;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry>, MutableDescriptorMappingEntry<MethodEntry>, MutableParentMappingEntry<MethodEntry> {
 	@Override
 	Collection<? extends MutableArgEntry> getArgs();

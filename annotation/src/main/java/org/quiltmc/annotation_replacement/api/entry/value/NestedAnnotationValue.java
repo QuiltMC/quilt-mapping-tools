@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,32 +22,34 @@ import java.util.List;
 import org.quiltmc.annotation_replacement.api.entry.AnnotationAdditionEntry;
 import org.quiltmc.annotation_replacement.api.entry.WriteableAnnotationInformation;
 import org.quiltmc.annotation_replacement.impl.entry.value.NestedAnnotationValueImpl;
-import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.MappingTypes;
-import org.quiltmc.mapping.api.serialization.Builder;
-import org.quiltmc.mapping.api.serialization.Serializer;
+import org.quiltmc.mapping.api.entry.ParentMappingEntry;
+import org.quiltmc.mapping.api.parse.Parsers;
 
-public interface NestedAnnotationValue extends AnnotationValue<Collection<? extends AnnotationValue<?, ?>>, NestedAnnotationValue>, WriteableAnnotationInformation {
-	Serializer<NestedAnnotationValue> SERIALIZER = Builder.EntryBuilder.<NestedAnnotationValue>entry()
-			.string("name", AnnotationValue::name)
-			.string("descriptor", DescriptorMappingEntry::descriptor)
-			.field("values", Serializer.lazy(() -> AnnotationValue.COMBINED_SERIALIZER.list()), value -> List.copyOf(value.value()))
-			.build(args -> new NestedAnnotationValueImpl(args.get("name"), args.get("values"), args.get("descriptor")));
-
+@SuppressWarnings("unchecked")
+public interface NestedAnnotationValue extends AnnotationValue<Collection<? extends AnnotationValue<?, ?>>, NestedAnnotationValue>, ParentMappingEntry<NestedAnnotationValue>, WriteableAnnotationInformation {
 	MappingType<NestedAnnotationValue> NESTED_MAPPING_TYPE =
-			MappingTypes.register(
-					new MappingType<>(
-							"nested_annotation_value",
-							NestedAnnotationValue.class,
-							mappingType -> mappingType.equals(AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE),
-							SERIALIZER
-					));
+		MappingTypes.register(
+			new MappingType<>(
+				"nested",
+				NestedAnnotationValue.class,
+				type -> type.equals(AnnotationAdditionEntry.ANNOTATION_ADDITION_MAPPING_TYPE) || type.equals(NestedAnnotationValue.NESTED_MAPPING_TYPE),
+				Parsers.createParent(
+					Parsers.STRING.field("name", NestedAnnotationValue::name),
+					Parsers.STRING.field("descriptor", NestedAnnotationValue::descriptor),
+					() -> NestedAnnotationValue.NESTED_MAPPING_TYPE,
+					(name, descriptor, values) -> {
+						List<AnnotationValue<?, ?>> list = (List<AnnotationValue<?, ?>>) (Object) values.stream().map(AnnotationValue.class::cast).toList();
+						return new NestedAnnotationValueImpl(name, list, descriptor);
+					}
+				)
+			));
 
 	@Override
-	default ValueType type() {
-		return ValueType.ANNOTATION;
+	default Collection<? extends MappingEntry<?>> children() {
+		return this.values();
 	}
 
 	@Override
