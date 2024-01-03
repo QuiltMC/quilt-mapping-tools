@@ -18,6 +18,14 @@ package org.quiltmc.mapping.api.entry.mutable;
 
 import org.quiltmc.mapping.api.entry.MappingEntry;
 
+/**
+ * A mutable representation of a Mapping Entry. Allows for modifications as entries are final by default.
+ *
+ * @param <T> the mapping entry type
+ */
 public interface MutableMappingEntry<T extends MappingEntry<T>> extends MappingEntry<T> {
+	/**
+	 * @return a non-mutable representation of the current mapping entry
+	 */
 	T makeFinal();
 }

@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.api.entry.unpick;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.MappingTypes;
@@ -26,7 +27,13 @@ import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.unpick.UnpickEntryImpl;
 
+/**
+ * Represents an unpick entry on a type. Unpick entries can apply to Fields, Arguments, and the Return Type. Any of these can specify the group, but it should only be serialized on the field.
+ */
 public interface UnpickEntry extends MappingEntry<UnpickEntry> {
+	/**
+	 * The Mapping Type for an Unpick Entry
+	 */
 	MappingType<UnpickEntry> UNPICK_MAPPING_TYPE = MappingTypes.register(new MappingType<>(
 		"unpick",
 		UnpickEntry.class,
@@ -38,12 +45,23 @@ public interface UnpickEntry extends MappingEntry<UnpickEntry> {
 			UnpickEntry::unpick
 		)));
 
+	/**
+	 * @param group the unpick group
+	 * @param type  the unpick type
+	 * @return the new unpick entry
+	 */
 	static UnpickEntry unpick(String group, @Nullable UnpickType type) {
 		return new UnpickEntryImpl(group, type);
 	}
 
+	/**
+	 * @return the group
+	 */
 	String group();
 
+	/**
+	 * @return the unpick type
+	 */
 	@Nullable
 	UnpickType type();
 
@@ -68,6 +86,13 @@ public interface UnpickEntry extends MappingEntry<UnpickEntry> {
 	}
 
 	enum UnpickType {
-		CONSTANT, FLAG
+		/**
+		 * Represents a single value
+		 */
+		CONSTANT,
+		/**
+		 * Represents a bit flag for the value
+		 */
+		FLAG
 	}
 }

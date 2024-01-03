@@ -27,14 +27,20 @@ import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.naming.ClassEntryImpl;
 
+/**
+ * Represents a Mapping Entry for a Class.
+ */
 public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMappingEntry<ClassEntry> {
+	/**
+	 * The Mapping Type for Classes
+	 */
 	MappingType<ClassEntry> CLASS_MAPPING_TYPE = MappingTypes.register(
 		new MappingType<>("class",
 			ClassEntry.class,
 			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
 			Parsers.createParent(
-				Parsers.STRING.field("from", ClassEntry::getFromName),
-				Parsers.STRING.nullableField("to", ClassEntry::getToName),
+				Parsers.STRING.field("from", ClassEntry::fromName),
+				Parsers.STRING.greedyList().field("to", ClassEntry::toNames),
 				() -> ClassEntry.CLASS_MAPPING_TYPE,
 				ClassEntryImpl::new
 			)));
@@ -44,27 +50,69 @@ public interface ClassEntry extends ParentMappingEntry<ClassEntry>, NamedMapping
 		return CLASS_MAPPING_TYPE;
 	}
 
-	Collection<? extends FieldEntry> getFields();
+	/**
+	 * @return the fields on this class
+	 */
+	Collection<? extends FieldEntry> fields();
 
-	Map<String, ? extends FieldEntry> getFieldsByName();
+	/**
+	 * @return a map of the field's fromName to the field
+	 */
+	Map<String, ? extends FieldEntry> fieldsByName();
 
-	Optional<? extends FieldEntry> getFieldMapping(String fromName);
+	/**
+	 * @param fromName the field name
+	 * @return the field wrapped in an optional if it exists, empty otherwise
+	 */
+	Optional<? extends FieldEntry> field(String fromName);
 
-	boolean hasFieldMapping(String fromName);
+	/**
+	 * @param fromName the field name
+	 * @return true if the field exists
+	 */
+	boolean hasField(String fromName);
 
-	Collection<? extends MethodEntry> getMethods();
+	/**
+	 * @return the methods on this class
+	 */
+	Collection<? extends MethodEntry> methods();
 
-	Map<String, ? extends MethodEntry> getMethodsByName();
+	/**
+	 * @return a map of the method's fromName to the method
+	 */
+	Map<String, ? extends MethodEntry> methodsByName();
 
-	Optional<? extends MethodEntry> getMethodMapping(String fromName);
+	/**
+	 * @param fromName the method name
+	 * @return the method wrapped in an optional if it exists, empty otherwise
+	 */
+	Optional<? extends MethodEntry> method(String fromName);
 
-	boolean hasMethodMapping(String fromName);
+	/**
+	 * @param fromName the method name
+	 * @return true if the method exists
+	 */
+	boolean hasMethod(String fromName);
 
-	Collection<? extends ClassEntry> getClasses();
+	/**
+	 * @return the inner classes to this class
+	 */
+	Collection<? extends ClassEntry> classes();
 
-	Map<String, ? extends ClassEntry> getClassesByName();
+	/**
+	 * @return a map of the class's fromName to the class
+	 */
+	Map<String, ? extends ClassEntry> classesByName();
 
-	Optional<? extends ClassEntry> getClassMapping(String fromName);
+	/**
+	 * @param fromName the class name
+	 * @return the class wrapped in an optional if it exists, otherwise empty
+	 */
+	Optional<? extends ClassEntry> classEntry(String fromName);
 
-	boolean hasClassMapping(String fromName);
+	/**
+	 * @param fromName the class name
+	 * @return true if the class exists
+	 */
+	boolean hasClass(String fromName);
 }

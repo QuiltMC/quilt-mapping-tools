@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.impl.entry.unpick;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.unpick.UnpickEntry;
 

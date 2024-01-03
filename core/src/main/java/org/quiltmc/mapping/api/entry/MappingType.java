@@ -21,5 +21,14 @@ import java.util.function.Predicate;
 import org.quiltmc.mapping.api.parse.Parser;
 import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 
+/**
+ * A specification for the type of mapping entry.
+ *
+ * @param key         the name of the entry type
+ * @param targetEntry the target entry class
+ * @param targets     the mapping types this type can target
+ * @param parser      the parser for the type
+ * @param <T>         the mapping entry type
+ */
 public record MappingType<T extends MappingEntry<T>>(String key, Class<T> targetEntry, Predicate<MappingType<?>> targets, Parser<T, TabSeparatedContent> parser) {
 }

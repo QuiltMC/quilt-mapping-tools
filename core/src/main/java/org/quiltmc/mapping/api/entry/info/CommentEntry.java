@@ -25,7 +25,13 @@ import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.info.CommentEntryImpl;
 
+/**
+ * Represents a comment on other entries. Comments can be added to Classes, Methods, Fields, Arguments, and the Return entries.
+ */
 public interface CommentEntry extends MappingEntry<CommentEntry> {
+	/**
+	 * The Mapping Type for Comments.
+	 */
 	MappingType<CommentEntry> COMMENT_MAPPING_TYPE = MappingTypes.register(
 		new MappingType<>(
 			"comment",
@@ -42,8 +48,17 @@ public interface CommentEntry extends MappingEntry<CommentEntry> {
 					CommentEntry::comment
 				)));
 
+	/**
+	 * @return the comment
+	 */
 	String comment();
 
+	/**
+	 * Creates a new comment.
+	 *
+	 * @param comment the content
+	 * @return a new comment entry
+	 */
 	static CommentEntry comment(String comment) {
 		return new CommentEntryImpl(comment);
 	}

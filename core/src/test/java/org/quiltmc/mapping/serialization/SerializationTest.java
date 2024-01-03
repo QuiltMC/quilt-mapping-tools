@@ -28,13 +28,13 @@ import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 public class SerializationTest {
 	@Test
 	public void test() {
-		ArgEntry arg = ArgEntry.arg(0, "name", List.of(
+		ArgEntry arg = ArgEntry.arg(0, List.of("name"), List.of(
 			CommentEntry.comment("This is a comment"),
 			UnpickEntry.unpick("group", null)
 		));
 
 		TabSeparatedContent written = ArgEntry.ARG_MAPPING_TYPE.parser().serialize(arg);
-		ArgEntry read = ArgEntry.ARG_MAPPING_TYPE.parser().parse(written);
+		ArgEntry read = ArgEntry.ARG_MAPPING_TYPE.parser().deserialize(written);
 
 		Assertions.assertEquals(arg, read, "Serialized and Deserialized match");
 	}

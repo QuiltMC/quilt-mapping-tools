@@ -18,6 +18,14 @@ package org.quiltmc.mapping.api.entry.mutable;
 
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 
+/**
+ * A mutable representation of a Descriptor Entry.
+ *
+ * @param <T> The mapping entry class
+ */
 public interface MutableDescriptorMappingEntry<T extends DescriptorMappingEntry<T>> extends DescriptorMappingEntry<T>, MutableMappingEntry<T> {
+	/**
+	 * @param descriptor the new descriptor
+	 */
 	void setDescriptor(String descriptor);
 }

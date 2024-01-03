@@ -24,15 +24,21 @@ import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.naming.FieldEntryImpl;
 
+/**
+ * Represents a mapping entry for a Field.
+ */
 public interface FieldEntry extends NamedMappingEntry<FieldEntry>, DescriptorMappingEntry<FieldEntry>, ParentMappingEntry<FieldEntry> {
+	/**
+	 * The Mapping Type for Fields
+	 */
 	MappingType<FieldEntry> FIELD_MAPPING_TYPE = MappingTypes.register(
 		new MappingType<>("field",
 			FieldEntry.class,
 			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
 			Parsers.createParent(
-				Parsers.STRING.field("from", FieldEntry::getFromName),
-				Parsers.STRING.nullableField("to", FieldEntry::getToName),
+				Parsers.STRING.field("from", FieldEntry::fromName),
 				Parsers.STRING.field("descriptor", FieldEntry::descriptor),
+				Parsers.STRING.greedyList().field("to", FieldEntry::toNames),
 				() -> FieldEntry.FIELD_MAPPING_TYPE,
 				FieldEntryImpl::new
 			)));

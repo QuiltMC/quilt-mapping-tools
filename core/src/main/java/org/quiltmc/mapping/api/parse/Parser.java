@@ -18,16 +18,46 @@ package org.quiltmc.mapping.api.parse;
 
 import java.util.function.Function;
 
+/**
+ * A way to serialize and deserialize a value
+ *
+ * @param <I> The deserialized type
+ * @param <O> The serialized type
+ */
 public interface Parser<I, O> {
-	I parse(O input);
+	/**
+	 * @param input the serialized type
+	 * @return the deserialized type
+	 */
+	I deserialize(O input);
 
+	/**
+	 * @param input the deserialized type
+	 * @return the serialized type
+	 */
 	O serialize(I input);
 
+	/**
+	 * Creates a field for the given parser.
+	 *
+	 * @param name   the name of the field
+	 * @param getter the getter for the field
+	 * @param <P>    the type that has the field
+	 * @return the new field
+	 */
 	default <P> Field<P, I> field(String name, Function<P, I> getter) {
-		return new Field<>(this, name, getter, false, true);
+		return new Field<>(this, name, getter, false, true, false);
 	}
 
+	/**
+	 * Creates a nullable field for the given parser. This field can be skipped.
+	 *
+	 * @param name   the name of the field
+	 * @param getter the getter for the field
+	 * @param <P>    the type that has the field
+	 * @return the new field
+	 */
 	default <P> Field<P, I> nullableField(String name, Function<P, I> getter) {
-		return new Field<>(this, name, getter, true, true);
+		return new Field<>(this, name, getter, true, true, false);
 	}
 }

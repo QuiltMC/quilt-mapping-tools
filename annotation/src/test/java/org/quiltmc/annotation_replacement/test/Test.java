@@ -85,7 +85,7 @@ public class Test {
 		Parser<AnnotationModificationEntry, TabSeparatedContent> serializer = modifications.getType().parser();
 		TabSeparatedContent written = serializer.serialize(modifications);
 		System.out.println(written);
-		AnnotationModificationEntry read = serializer.parse(written);
+		AnnotationModificationEntry read = serializer.deserialize(written);
 		System.out.println(modifications);
 		System.out.println(read);
 		System.out.println(modifications.makeFinal().equals(read));

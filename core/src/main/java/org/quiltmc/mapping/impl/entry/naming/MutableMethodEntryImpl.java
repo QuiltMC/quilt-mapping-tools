@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableMethodEntry;
+import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentDescriptorMappingEntry;
 import org.quiltmc.mapping.impl.entry.info.MutableArgEntryImpl;
@@ -39,8 +39,8 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 	private final Collection<MutableArgEntry> args;
 	private final Map<Integer, MutableArgEntry> indexToArg;
 
-	protected MutableMethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<? extends MutableMappingEntry<?>> children) {
-		super(fromName, toName, descriptor, new ArrayList<>(children));
+	protected MutableMethodEntryImpl(String fromName, List<String> toNames, String descriptor, Collection<? extends MutableMappingEntry<?>> children) {
+		super(fromName, toNames, descriptor, new ArrayList<>(children));
 
 		args = new ArrayList<>(this.streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).map(arg -> (MutableArgEntry) arg.makeMutable()).toList());
 		indexToArg = new HashMap<>(streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, arg -> (MutableArgEntry) arg.makeMutable())));
@@ -55,7 +55,7 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 	public MethodEntry merge(MappingEntry<?> other) {
 		MethodEntry method = ((MethodEntry) other);
 		Collection<MutableMappingEntry<?>> children = AbstractParentMappingEntry.mergeChildren(this.children, method.children());
-		return new MutableMethodEntryImpl(this.fromName, this.toName != null ? this.toName : method.getToName(), this.descriptor, children);
+		return new MutableMethodEntryImpl(this.fromName, AbstractNamedParentMappingEntry.joinNames(this.toNames, method.toNames()), this.descriptor, children);
 	}
 
 	@Override
@@ -65,22 +65,22 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 
 	@Override
 	public MethodEntry makeFinal() {
-		return new MethodEntryImpl(this.fromName, this.toName, this.descriptor, List.copyOf(children));
+		return new MethodEntryImpl(this.fromName, this.descriptor, this.toNames, List.copyOf(children));
 	}
 
 	@Override
-	public Collection<? extends MutableArgEntry> getArgs() {
+	public Collection<? extends MutableArgEntry> args() {
 		return args;
 	}
 
 	@Override
-	public Map<Integer, ? extends MutableArgEntry> getArgsByIndex() {
+	public Map<Integer, ? extends MutableArgEntry> argsByIndex() {
 		return indexToArg;
 	}
 
 	@Override
-	public Optional<? extends MutableArgEntry> getArgMapping(int index) {
-		return hasArgMapping(index) ? Optional.of(indexToArg.get(index)) : Optional.empty();
+	public Optional<? extends MutableArgEntry> arg(int index) {
+		return hasArg(index) ? Optional.of(indexToArg.get(index)) : Optional.empty();
 	}
 
 	@Override
@@ -94,14 +94,14 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 	}
 
 	@Override
-	public MutableArgEntry createArgEntry(int index, @Nullable String name) {
-		MutableArgEntryImpl arg = new MutableArgEntryImpl(index, name, List.of());
+	public MutableArgEntry createArgEntry(int index, List<String> names) {
+		MutableArgEntryImpl arg = new MutableArgEntryImpl(index, names, List.of());
 		this.addChild(arg);
 		return arg;
 	}
 
 	@Override
-	public boolean hasArgMapping(int index) {
+	public boolean hasArg(int index) {
 		return indexToArg.containsKey(index);
 	}
 
@@ -110,7 +110,7 @@ public class MutableMethodEntryImpl extends MutableAbstractNamedParentDescriptor
 		return "MethodEntry[" +
 			   "descriptor='" + descriptor + '\'' +
 			   ", fromName='" + fromName + '\'' +
-			   ", toName='" + toName + '\'' +
+			   ", toNames='" + toNames + '\'' +
 			   ", children=" + children +
 			   ']';
 	}

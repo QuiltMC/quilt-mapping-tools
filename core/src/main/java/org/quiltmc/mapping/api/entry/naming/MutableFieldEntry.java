@@ -20,5 +20,8 @@ import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
+/**
+ * A mutable representation of a Field Entry.
+ */
 public interface MutableFieldEntry extends FieldEntry, MutableNamedMappingEntry<FieldEntry>, MutableDescriptorMappingEntry<FieldEntry>, MutableParentMappingEntry<FieldEntry> {
 }

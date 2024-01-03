@@ -19,5 +19,5 @@ package org.quiltmc.mapping.api.entry.mutable;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 
 public interface MutableNamedMappingEntry<T extends NamedMappingEntry<T>> extends NamedMappingEntry<T>, MutableMappingEntry<T> {
-	void setToName(String name);
+	void setToName(int namespace, String name);
 }

@@ -20,9 +20,17 @@ import java.util.Collection;
 
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
 
+/**
+ * A mutable representation of a parent mapping entry.
+ *
+ * @param <T> the mapping entry type
+ */
 public interface MutableParentMappingEntry<T extends ParentMappingEntry<T>> extends ParentMappingEntry<T>, MutableMappingEntry<T> {
 	@Override
 	Collection<? extends MutableMappingEntry<?>> children();
 
+	/**
+	 * @param entry a child entry to add to this entry.
+	 */
 	void addChild(MutableMappingEntry<?> entry);
 }

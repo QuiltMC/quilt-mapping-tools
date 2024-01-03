@@ -17,6 +17,7 @@
 package org.quiltmc.mapping.impl.tree;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -30,28 +31,28 @@ import org.quiltmc.mapping.api.tree.MutableMappingTree;
 public class MappingTreeImpl implements MappingTree {
 	private final Collection<MappingEntry<?>> entries;
 	private final String fromNamespace;
-	private final String toNamespace;
+	private final List<String> toNamespaces;
 
 	private final Collection<ClassEntry> classes;
 	private final Map<String, ClassEntry> classesByName;
 
-	public MappingTreeImpl(Collection<MappingEntry<?>> entries, String fromNamespace, String toNamespace) {
+	public MappingTreeImpl(Collection<MappingEntry<?>> entries, String fromNamespace, List<String> toNamespaces) {
 		this.entries = entries;
 		this.fromNamespace = fromNamespace;
-		this.toNamespace = toNamespace;
+		this.toNamespaces = toNamespaces;
 
 		classes = this.getEntriesOfType(ClassEntry.CLASS_MAPPING_TYPE);
-		classesByName = this.streamEntriesOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::getFromName, Function.identity()));
+		classesByName = this.streamEntriesOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::fromName, Function.identity()));
 	}
 
 	@Override
-	public String getFromNamespace() {
+	public String fromNamespace() {
 		return this.fromNamespace;
 	}
 
 	@Override
-	public String getToNamespace() {
-		return this.toNamespace;
+	public List<String> toNamespaces() {
+		return this.toNamespaces;
 	}
 
 	@Override
@@ -60,12 +61,12 @@ public class MappingTreeImpl implements MappingTree {
 	}
 
 	@Override
-	public Collection<? extends ClassEntry> getClassEntries() {
+	public Collection<? extends ClassEntry> classes() {
 		return this.classes;
 	}
 
 	@Override
-	public Optional<? extends ClassEntry> getClassEntry(String fromName) {
+	public Optional<? extends ClassEntry> classEntry(String fromName) {
 		return this.hasClassEntry(fromName) ? Optional.of(this.classesByName.get(fromName)) : Optional.empty();
 	}
 
@@ -80,17 +81,12 @@ public class MappingTreeImpl implements MappingTree {
 	}
 
 	@Override
-	public MappingTree reverse() {
-		return null;
-	}
-
-	@Override
 	public MappingTree merge(MappingTree with) {
 		return null;
 	}
 
 	@Override
-	public MappingTree merge(MappingTree with, MappingTree dest) {
+	public MappingTree merge(MappingTree with, MutableMappingTree dest) {
 		return null;
 	}
 

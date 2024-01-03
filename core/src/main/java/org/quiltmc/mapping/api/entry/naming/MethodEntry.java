@@ -29,15 +29,21 @@ import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.naming.MethodEntryImpl;
 
+/**
+ * Represents a mapping entry for a Method.
+ */
 public interface MethodEntry extends NamedMappingEntry<MethodEntry>, DescriptorMappingEntry<MethodEntry>, ParentMappingEntry<MethodEntry> {
+	/**
+	 * The Mapping Type for Methods.
+	 */
 	MappingType<MethodEntry> METHOD_MAPPING_TYPE = MappingTypes.register(
 		new MappingType<>("method",
 			MethodEntry.class,
 			type -> type.equals(ClassEntry.CLASS_MAPPING_TYPE),
 			Parsers.createParent(
-				Parsers.STRING.field("from", MethodEntry::getFromName),
-				Parsers.STRING.nullableField("to", MethodEntry::getToName),
+				Parsers.STRING.field("from", MethodEntry::fromName),
 				Parsers.STRING.field("descriptor", MethodEntry::descriptor),
+				Parsers.STRING.greedyList().field("to", MethodEntry::toNames),
 				() -> MethodEntry.METHOD_MAPPING_TYPE,
 				MethodEntryImpl::new
 			)));
@@ -47,11 +53,25 @@ public interface MethodEntry extends NamedMappingEntry<MethodEntry>, DescriptorM
 		return METHOD_MAPPING_TYPE;
 	}
 
-	Collection<? extends ArgEntry> getArgs();
+	/**
+	 * @return the arguments for this method
+	 */
+	Collection<? extends ArgEntry> args();
 
-	Map<Integer, ? extends ArgEntry> getArgsByIndex();
+	/**
+	 * @return a map of the index to argument
+	 */
+	Map<Integer, ? extends ArgEntry> argsByIndex();
 
-	Optional<? extends ArgEntry> getArgMapping(int index);
+	/**
+	 * @param index the argument index
+	 * @return the argument wrapped in an optional if it exists, empty otherwirse
+	 */
+	Optional<? extends ArgEntry> arg(int index);
 
-	boolean hasArgMapping(int index);
+	/**
+	 * @param index the argument index
+	 * @return true if the argument exists
+	 */
+	boolean hasArg(int index);
 }

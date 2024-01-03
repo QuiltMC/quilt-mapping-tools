@@ -17,9 +17,12 @@
 package org.quiltmc.mapping.impl.entry;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
@@ -28,38 +31,43 @@ import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 
 public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractParentMappingEntry<T> implements MutableNamedMappingEntry<T> {
 	protected final String fromName;
-	protected @Nullable String toName;
+	protected List<String> toNames;
 
-	protected MutableAbstractNamedParentMappingEntry(String fromName, @Nullable String toName, Collection<MutableMappingEntry<?>> children) {
+	protected MutableAbstractNamedParentMappingEntry(String fromName, List<String> toNames, Collection<MutableMappingEntry<?>> children) {
 		super(children);
 		this.fromName = fromName;
-		this.toName = toName;
+		this.toNames = toNames;
 	}
 
 	@Override
-	public @Nullable String getToName() {
-		return this.toName;
+	public void setToName(int toNamespace, @Nullable String name) {
+		this.toNames.set(toNamespace, name);
 	}
 
 	@Override
-	public void setToName(@Nullable String name) {
-		this.toName = name;
-	}
-
-	@Override
-	public String getFromName() {
+	public String fromName() {
 		return this.fromName;
 	}
 
 	@Override
-	public boolean hasToName() {
-		return this.toName != null;
+	public boolean hasToName(int toNamespace) {
+		return toNamespace < this.toNames.size() && 0 <= toNamespace && this.toNames.get(toNamespace) != null;
+	}
+
+	@Override
+	public Optional<String> toName(int toNamespace) {
+		return this.hasToName(toNamespace) ? Optional.of(this.toNames.get(toNamespace)) : Optional.empty();
+	}
+
+	@Override
+	public List<String> toNames() {
+		return List.copyOf(this.toNames);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean shouldMerge(MappingEntry<?> other) {
-		return super.shouldMerge(other) && this.fromName.equals(((T) other).getFromName());
+		return super.shouldMerge(other) && this.fromName.equals(((T) other).fromName());
 	}
 
 	@Override
@@ -67,11 +75,11 @@ public abstract class MutableAbstractNamedParentMappingEntry<T extends NamedMapp
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		MutableAbstractNamedParentMappingEntry<?> that = (MutableAbstractNamedParentMappingEntry<?>) o;
-		return Objects.equals(fromName, that.fromName) && Objects.equals(toName, that.toName) && this.children.containsAll(that.children) && that.children.containsAll(this.children);
+		return Objects.equals(fromName, that.fromName) && Objects.equals(toNames, that.toNames) && this.children.containsAll(that.children) && that.children.containsAll(this.children);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), fromName, toName);
+		return Objects.hash(super.hashCode(), fromName, toNames);
 	}
 }

@@ -17,28 +17,48 @@
 package org.quiltmc.mapping.api.tree;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableClassEntry;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
+/**
+ * A mutable representation of a Mapping Tree.
+ */
 public interface MutableMappingTree extends MappingTree {
 	@Override
 	Collection<? extends MutableMappingEntry<?>> getEntries();
 
 	@Override
-	Collection<? extends MutableClassEntry> getClassEntries();
+	Collection<? extends MutableClassEntry> classes();
 
 	@Override
-	Optional<? extends MutableClassEntry> getClassEntry(String fromName);
+	Optional<? extends MutableClassEntry> classEntry(String fromName);
 
-	MutableClassEntry createClassEntry(String fromName, @Nullable String toName);
+	/**
+	 * Creates and adds a new subclass to this class
+	 *
+	 * @param fromName the from name for the class
+	 * @param toNames  the to names for the class
+	 * @return the new class entry
+	 */
+	MutableClassEntry createClassEntry(String fromName, List<String> toNames);
 
-	default MutableClassEntry getOrCreateClassEntry(String fromName, @Nullable String toName) {
-		return this.hasClassEntry(fromName) ? this.getClassEntry(fromName).get() : this.createClassEntry(fromName, toName);
+	/**
+	 * Gets the class if it exists or creates and adds a new subclass to this class
+	 *
+	 * @param fromName the from name for the class
+	 * @param toNames  the to names for the class
+	 * @return the class entry
+	 */
+	@SuppressWarnings("OptionalGetWithoutIsPresent")
+	default MutableClassEntry getOrCreateClassEntry(String fromName, List<String> toNames) {
+		return this.hasClassEntry(fromName) ? this.classEntry(fromName).get() : this.createClassEntry(fromName, toNames);
 	}
 
+	/**
+	 * @param entry an entry to add to the tree
+	 */
 	void addEntry(MutableMappingEntry<?> entry);
 }

@@ -16,7 +16,16 @@
 
 package org.quiltmc.mapping.api.entry;
 
+/**
+ * Represents a mapping entry that has a descriptor.
+ *
+ * @param <T> The mapping entry type.
+ */
 public interface DescriptorMappingEntry<T extends DescriptorMappingEntry<T>> extends MappingEntry<T> {
-	// TODO: add a class wrapper for this?
+	// TODO: add a class wrapper for descriptors?
+
+	/**
+	 * @return the descriptor
+	 */
 	String descriptor();
 }

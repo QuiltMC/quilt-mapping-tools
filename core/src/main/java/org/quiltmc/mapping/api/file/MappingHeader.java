@@ -17,16 +17,24 @@
 package org.quiltmc.mapping.api.file;
 
 
+import java.util.List;
 import java.util.Set;
 
 import org.quiltmc.mapping.api.parse.Parser;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 
-public record MappingHeader(String fromNamespace, String toNamespace, Set<String> extensions) {
+/**
+ * The header for a mapping file. Holds information about the from namespace, what to namespaces exist, and what extensions are present
+ *
+ * @param fromNamespace the source namespace for the file
+ * @param toNamespaces  the destination namespaces for the file
+ * @param extensions    the extensions in the file
+ */
+public record MappingHeader(String fromNamespace, List<String> toNamespaces, Set<String> extensions) {
 	public static final Parser<MappingHeader, TabSeparatedContent> PARSER = Parsers.create(
 		Parsers.STRING.field("from", MappingHeader::fromNamespace),
-		Parsers.STRING.field("to", MappingHeader::toNamespace),
+		Parsers.STRING.greedyList().field("to", MappingHeader::toNamespaces),
 		Parsers.STRING.set().field("extensions", MappingHeader::extensions),
 		"QUILT_MAPPING",
 		MappingHeader::new

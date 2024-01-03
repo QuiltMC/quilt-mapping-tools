@@ -17,29 +17,46 @@
 package org.quiltmc.mapping.api.entry.naming;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableDescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableNamedMappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
+/**
+ * A mutable representation of a Method Entry.
+ */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public interface MutableMethodEntry extends MethodEntry, MutableNamedMappingEntry<MethodEntry>, MutableDescriptorMappingEntry<MethodEntry>, MutableParentMappingEntry<MethodEntry> {
 	@Override
-	Collection<? extends MutableArgEntry> getArgs();
+	Collection<? extends MutableArgEntry> args();
 
 	@Override
-	Map<Integer, ? extends MutableArgEntry> getArgsByIndex();
+	Map<Integer, ? extends MutableArgEntry> argsByIndex();
 
 	@Override
-	Optional<? extends MutableArgEntry> getArgMapping(int index);
+	Optional<? extends MutableArgEntry> arg(int index);
 
-	MutableArgEntry createArgEntry(int index, @Nullable String name);
+	/**
+	 * Creates and adds a new argument to this method
+	 *
+	 * @param index the argument index
+	 * @param names the argument names
+	 * @return the new argument entry
+	 */
+	MutableArgEntry createArgEntry(int index, List<String> names);
 
-	default MutableArgEntry getOrCreateArgEntry(int index, @Nullable String name) {
-		return this.hasArgMapping(index) ? this.getArgMapping(index).get() : this.createArgEntry(index, name);
+	/**
+	 * Gets the argument if it exists or creates and adds a new argument to this method
+	 *
+	 * @param index the argument index
+	 * @param names the argument names
+	 * @return the argument entry
+	 */
+	default MutableArgEntry getOrCreateArgEntry(int index, List<String> names) {
+		return this.hasArg(index) ? this.arg(index).get() : this.createArgEntry(index, names);
 	}
 }

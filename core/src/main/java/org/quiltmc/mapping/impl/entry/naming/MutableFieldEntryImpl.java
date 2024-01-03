@@ -20,17 +20,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableFieldEntry;
+import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentDescriptorMappingEntry;
 
 public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorMappingEntry<FieldEntry> implements MutableFieldEntry {
-	protected MutableFieldEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<? extends MutableMappingEntry<?>> children) {
-		super(fromName, toName, descriptor, new ArrayList<>(children));
+	protected MutableFieldEntryImpl(String fromName, List<String> toNames, String descriptor, Collection<? extends MutableMappingEntry<?>> children) {
+		super(fromName, toNames, descriptor, new ArrayList<>(children));
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorM
 	public FieldEntry merge(MappingEntry<?> other) {
 		FieldEntry field = ((FieldEntry) other);
 		Collection<MutableMappingEntry<?>> children = AbstractParentMappingEntry.mergeChildren(this.children, field.children());
-		return new MutableFieldEntryImpl(this.fromName, this.toName != null ? this.toName : field.getToName(), this.descriptor, children);
+		return new MutableFieldEntryImpl(this.fromName, AbstractNamedParentMappingEntry.joinNames(this.toNames, field.toNames()), this.descriptor, children);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorM
 
 	@Override
 	public FieldEntry makeFinal() {
-		return new FieldEntryImpl(this.fromName, this.toName, this.descriptor, List.copyOf(children));
+		return new FieldEntryImpl(this.fromName, this.descriptor, this.toNames, List.copyOf(children));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class MutableFieldEntryImpl extends MutableAbstractNamedParentDescriptorM
 		return "FieldEntry[" +
 			   "descriptor='" + descriptor + '\'' +
 			   ", fromName='" + fromName + '\'' +
-			   ", toName='" + toName + '\'' +
+			   ", toNames='" + toNames + '\'' +
 			   ", children=" + children +
 			   ']';
 	}

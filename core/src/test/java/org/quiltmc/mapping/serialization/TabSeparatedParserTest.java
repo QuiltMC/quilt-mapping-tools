@@ -60,7 +60,7 @@ public class TabSeparatedParserTest {
 	public void parseToFileAndRemake() throws IOException {
 		String input = getInput("org/quiltmc/mapping/parser/TestMappingTabs.qm");
 
-		QuiltMappingFile file = QuiltMappingFile.PARSER.parse(TabSeparatedContent.parse(input));
+		QuiltMappingFile file = QuiltMappingFile.PARSER.deserialize(TabSeparatedContent.parse(input));
 		TabSeparatedContent content = QuiltMappingFile.PARSER.serialize(file);
 
 		Assertions.assertEquals(input.stripTrailing(), content.toString(-1).stripTrailing(), "Input matches parsed output");
@@ -70,14 +70,14 @@ public class TabSeparatedParserTest {
 	public void create() {
 		Parser<ArgEntry, TabSeparatedContent> argParser = ArgEntry.ARG_MAPPING_TYPE.parser();
 
-		ArgEntry arg = ArgEntry.arg(0, "name", List.of(CommentEntry.comment("Test comment!")));
+		ArgEntry arg = ArgEntry.arg(0, List.of("name"), List.of(CommentEntry.comment("Test comment!")));
 		TabSeparatedContent serialized = argParser.serialize(arg);
-		ArgEntry parsed = argParser.parse(serialized);
+		ArgEntry parsed = argParser.deserialize(serialized);
 		Assertions.assertEquals(arg, parsed, "Serialized and reparsed correctly");
 
-		arg = ArgEntry.arg(1, null, List.of(CommentEntry.comment("Test comment2!")));
+		arg = ArgEntry.arg(1, List.of(), List.of(CommentEntry.comment("Test comment2!")));
 		serialized = argParser.serialize(arg);
-		parsed = argParser.parse(serialized);
+		parsed = argParser.deserialize(serialized);
 		Assertions.assertEquals(arg, parsed, "Serialized and reparsed correctly part 2");
 	}
 

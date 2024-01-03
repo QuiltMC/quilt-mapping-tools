@@ -17,9 +17,10 @@
 package org.quiltmc.mapping.impl.entry.info;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
@@ -28,23 +29,23 @@ import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 
 public final class ArgEntryImpl extends AbstractParentMappingEntry<ArgEntry> implements ArgEntry {
 	private final int index;
-	private final @Nullable String name;
+	private final List<String> names;
 
-	public ArgEntryImpl(int index, @Nullable String name, Collection<MappingEntry<?>> children) {
+	public ArgEntryImpl(int index, List<String> names, Collection<MappingEntry<?>> children) {
 		super(children);
 		this.index = index;
-		this.name = name;
+		this.names = names;
 	}
 
 	@Override
 	public ArgEntry merge(MappingEntry<?> other) {
 		ArgEntry arg = (ArgEntry) other;
-		return new ArgEntryImpl(this.index, this.name != null ? this.name : arg.name(), AbstractNamedParentMappingEntry.mergeChildren(this.children, arg.children()));
+		return new ArgEntryImpl(this.index, AbstractNamedParentMappingEntry.joinNames(this.names, arg.names()), AbstractNamedParentMappingEntry.mergeChildren(this.children, arg.children()));
 	}
 
 	@Override
 	public MutableMappingEntry<ArgEntry> makeMutable() {
-		return new MutableArgEntryImpl(this.index, this.name, this.children.stream().map(MappingEntry::makeMutable).toList());
+		return new MutableArgEntryImpl(this.index, this.names, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override
@@ -56,8 +57,17 @@ public final class ArgEntryImpl extends AbstractParentMappingEntry<ArgEntry> imp
 		return index;
 	}
 
-	public @Nullable String name() {
-		return name;
+	public List<String> names() {
+		return names;
+	}
+
+	public boolean hasName(int namespace) {
+		return namespace < this.names.size() && 0 <= namespace && this.names.get(namespace) != null;
+	}
+
+	@Override
+	public Optional<String> name(int namespace) {
+		return this.hasName(namespace) ? Optional.of(this.names.get(namespace)) : Optional.empty();
 	}
 
 	@Override
@@ -66,20 +76,20 @@ public final class ArgEntryImpl extends AbstractParentMappingEntry<ArgEntry> imp
 		if (obj == null || obj.getClass() != this.getClass()) return false;
 		var that = (ArgEntryImpl) obj;
 		return this.index == that.index &&
-			   Objects.equals(this.name, that.name) &&
+			   Objects.equals(this.names, that.names) &&
 			   super.equals(that);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), index, name);
+		return Objects.hash(super.hashCode(), index, names);
 	}
 
 	@Override
 	public String toString() {
 		return "ArgEntry[" +
 			   "index=" + index + ", " +
-			   "name=" + name + ", " +
+			   "names=" + names + ", " +
 			   "children=" + children + ']';
 	}
 }

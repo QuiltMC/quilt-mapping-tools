@@ -18,5 +18,8 @@ package org.quiltmc.mapping.api.entry.info;
 
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
+/**
+ * A mutable representation of a Return Entry
+ */
 public interface MutableReturnEntry extends ReturnEntry, MutableParentMappingEntry<ReturnEntry> {
 }

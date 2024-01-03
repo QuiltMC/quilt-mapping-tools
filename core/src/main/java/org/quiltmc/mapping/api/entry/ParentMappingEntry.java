@@ -19,14 +19,32 @@ package org.quiltmc.mapping.api.entry;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+/**
+ * Represents a mapping entry that can be a parent to other entries.
+ *
+ * @param <T> the mapping entry type
+ */
 public interface ParentMappingEntry<T extends ParentMappingEntry<T>> extends MappingEntry<T> {
+	/**
+	 * @param type the child type
+	 * @param <C>  the child entry type
+	 * @return a collection of all the child mappings with the given type
+	 */
 	default <C extends MappingEntry<C>> Collection<C> getChildrenOfType(MappingType<C> type) {
 		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast).toList();
 	}
 
+	/**
+	 * @param type the child type
+	 * @param <C>  the child entry type
+	 * @return a stream of all the child mappings with the given type
+	 */
 	default <C extends MappingEntry<C>> Stream<C> streamChildrenOfType(MappingType<C> type) {
 		return children().stream().filter(mapping -> mapping.getType().equals(type)).map(type.targetEntry()::cast);
 	}
 
+	/**
+	 * @return a collection of all the children for this mapping entry
+	 */
 	Collection<? extends MappingEntry<?>> children();
 }

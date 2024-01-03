@@ -16,13 +16,15 @@
 
 package org.quiltmc.mapping.api.entry;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public interface NamedMappingEntry<T extends NamedMappingEntry<T>> extends MappingEntry<T> {
-	String getFromName();
+	String fromName();
 
-	@Nullable
-	String getToName();
+	Optional<String> toName(int toNamespace);
 
-	boolean hasToName();
+	List<String> toNames();
+
+	boolean hasToName(int toNamespace);
 }

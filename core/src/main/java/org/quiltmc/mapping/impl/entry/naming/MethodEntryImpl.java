@@ -17,24 +17,25 @@
 package org.quiltmc.mapping.impl.entry.naming;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentDescriptorMappingEntry;
+import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 
 public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<MethodEntry> implements MethodEntry {
 	private final Collection<ArgEntry> args;
 	private final Map<Integer, ArgEntry> indexToArg;
 
-	public MethodEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
-		super(fromName, toName, descriptor, children);
+	public MethodEntryImpl(String fromName, String descriptor, List<String> toNames, Collection<MappingEntry<?>> children) {
+		super(fromName, toNames, descriptor, children);
 		args = this.getChildrenOfType(ArgEntry.ARG_MAPPING_TYPE);
 		indexToArg = this.streamChildrenOfType(ArgEntry.ARG_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ArgEntry::index, Function.identity()));
 	}
@@ -48,31 +49,31 @@ public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<M
 	public MethodEntry merge(MappingEntry<?> other) {
 		MethodEntry method = ((MethodEntry) other);
 		Collection<MappingEntry<?>> children = mergeChildren(this.children, method.children());
-		return new MethodEntryImpl(this.fromName, this.toName != null ? this.toName : method.getToName(), this.descriptor, children);
+		return new MethodEntryImpl(this.fromName, this.descriptor, AbstractNamedParentMappingEntry.joinNames(this.toNames, method.toNames()), children);
 	}
 
 	@Override
 	public MutableMappingEntry<MethodEntry> makeMutable() {
-		return new MutableMethodEntryImpl(this.fromName, this.toName, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
+		return new MutableMethodEntryImpl(this.fromName, this.toNames, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override
-	public Collection<? extends ArgEntry> getArgs() {
+	public Collection<? extends ArgEntry> args() {
 		return args;
 	}
 
 	@Override
-	public Map<Integer, ? extends ArgEntry> getArgsByIndex() {
+	public Map<Integer, ? extends ArgEntry> argsByIndex() {
 		return indexToArg;
 	}
 
 	@Override
-	public Optional<? extends ArgEntry> getArgMapping(int index) {
-		return hasArgMapping(index) ? Optional.of(indexToArg.get(index)) : Optional.empty();
+	public Optional<? extends ArgEntry> arg(int index) {
+		return hasArg(index) ? Optional.of(indexToArg.get(index)) : Optional.empty();
 	}
 
 	@Override
-	public boolean hasArgMapping(int index) {
+	public boolean hasArg(int index) {
 		return indexToArg.containsKey(index);
 	}
 
@@ -81,7 +82,7 @@ public class MethodEntryImpl extends AbstractNamedParentDescriptorMappingEntry<M
 		return "MethodEntry[" +
 			   "descriptor='" + descriptor + '\'' +
 			   ", fromName='" + fromName + '\'' +
-			   ", toName='" + toName + '\'' +
+			   ", toNames='" + toNames + '\'' +
 			   ", children=" + children +
 			   ']';
 	}

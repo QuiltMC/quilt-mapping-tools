@@ -19,8 +19,18 @@ package org.quiltmc.mapping.api.entry.transitive;
 import org.quiltmc.mapping.api.entry.MappingType;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+/**
+ * A mutable representation of a Transitive Entry.
+ */
 public interface MutableTransitiveEntry extends TransitiveEntry, MutableMappingEntry<TransitiveEntry> {
+
+	/**
+	 * @param target the new target for the entry
+	 */
 	void setTarget(String target);
 
-	void addTransitiveType(MappingType<?> type);
+	/**
+	 * @param type the new type for the entry
+	 */
+	void addTransitiveType(MappingType<?> type); // TODO: needed?
 }

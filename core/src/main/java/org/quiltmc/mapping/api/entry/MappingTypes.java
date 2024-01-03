@@ -20,9 +20,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A holder for all the available mapping types. This allows for different types to be available at runtime, especially for plugins.
+ */
 public final class MappingTypes {
 	private static final Map<String, MappingType<?>> TYPES = new HashMap<>();
 
+	/**
+	 * Registers a mapping entry to be used.
+	 *
+	 * @param type the mapping type
+	 * @param <T>  the mapping entry type
+	 * @return the type
+	 */
 	public static <T extends MappingEntry<T>> MappingType<T> register(MappingType<T> type) {
 		var old = TYPES.put(type.key(), type);
 
@@ -37,10 +47,17 @@ public final class MappingTypes {
 		return type;
 	}
 
+	/**
+	 * @param type the type
+	 * @return all the types that can target the type
+	 */
 	public static Collection<MappingType<?>> getAllTargeting(MappingType<?> type) {
 		return TYPES.values().stream().filter(mappingType -> mappingType.targets().test(type)).toList();
 	}
 
+	/**
+	 * @return all the types
+	 */
 	public static Map<String, MappingType<?>> types() {
 		return Map.copyOf(TYPES);
 	}

@@ -40,7 +40,7 @@ public class ParentEntryParser<I extends ParentMappingEntry<I>> extends EntryPar
 	}
 
 	@Override
-	public I parse(TabSeparatedContent input) {
+	public I deserialize(TabSeparatedContent input) {
 		List<Object> values = new ArrayList<>();
 		int parsedSubcontents = parseFields(input, values);
 

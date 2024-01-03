@@ -17,9 +17,9 @@
 package org.quiltmc.mapping.impl.entry;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.DescriptorMappingEntry;
 import org.quiltmc.mapping.api.entry.NamedMappingEntry;
 import org.quiltmc.mapping.api.entry.ParentMappingEntry;
@@ -29,8 +29,8 @@ import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 public abstract class MutableAbstractNamedParentDescriptorMappingEntry<T extends DescriptorMappingEntry<T> & NamedMappingEntry<T> & ParentMappingEntry<T>> extends MutableAbstractNamedParentMappingEntry<T> implements MutableDescriptorMappingEntry<T> {
 	protected String descriptor;
 
-	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, @Nullable String toName, String descriptor, Collection<MutableMappingEntry<?>> children) {
-		super(fromName, toName, children);
+	protected MutableAbstractNamedParentDescriptorMappingEntry(String fromName, List<String> toNames, String descriptor, Collection<MutableMappingEntry<?>> children) {
+		super(fromName, toNames, children);
 		this.descriptor = descriptor;
 	}
 

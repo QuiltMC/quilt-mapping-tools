@@ -23,7 +23,13 @@ import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.info.ReturnEntryImpl;
 
+/**
+ * A Mapping Entry for the Return type of a Method.
+ */
 public interface ReturnEntry extends ParentMappingEntry<ReturnEntry> {
+	/**
+	 * The Mapping Type for Returns.
+	 */
 	MappingType<ReturnEntry> RETURN_MAPPING_TYPE = MappingTypes.register(new MappingType<>("return",
 		ReturnEntry.class,
 		type -> type.equals(MethodEntry.METHOD_MAPPING_TYPE),

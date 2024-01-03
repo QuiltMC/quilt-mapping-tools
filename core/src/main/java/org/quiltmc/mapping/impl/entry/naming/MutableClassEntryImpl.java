@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.ClassEntry;
@@ -33,6 +32,7 @@ import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableClassEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableFieldEntry;
 import org.quiltmc.mapping.api.entry.naming.MutableMethodEntry;
+import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.AbstractParentMappingEntry;
 import org.quiltmc.mapping.impl.entry.MutableAbstractNamedParentMappingEntry;
 
@@ -46,17 +46,17 @@ public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntr
 	private final Collection<MutableClassEntry> classes;
 	private final Map<String, MutableClassEntry> classesByName;
 
-	public MutableClassEntryImpl(String fromName, @Nullable String toName, Collection<? extends MutableMappingEntry<?>> children) {
-		super(fromName, toName, new ArrayList<>(children));
+	public MutableClassEntryImpl(String fromName, List<String> toNames, Collection<? extends MutableMappingEntry<?>> children) {
+		super(fromName, toNames, new ArrayList<>(children));
 
 		fields = new ArrayList<>(streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).map(field -> (MutableFieldEntry) field.makeMutable()).toList());
-		fieldsByName = new HashMap<>(this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::getFromName, field -> (MutableFieldEntry) field.makeMutable())));
+		fieldsByName = new HashMap<>(this.streamChildrenOfType(FieldEntry.FIELD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(FieldEntry::fromName, field -> (MutableFieldEntry) field.makeMutable())));
 
 		methods = new ArrayList<>(streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).map(field -> (MutableMethodEntry) field.makeMutable()).toList());
-		methodsByName = new HashMap<>(this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::getFromName, field -> (MutableMethodEntry) field.makeMutable())));
+		methodsByName = new HashMap<>(this.streamChildrenOfType(MethodEntry.METHOD_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(MethodEntry::fromName, field -> (MutableMethodEntry) field.makeMutable())));
 
 		classes = new ArrayList<>(streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).map(field -> (MutableClassEntry) field.makeMutable()).toList());
-		classesByName = new HashMap<>(this.streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::getFromName, field -> (MutableClassEntry) field.makeMutable())));
+		classesByName = new HashMap<>(this.streamChildrenOfType(ClassEntry.CLASS_MAPPING_TYPE).collect(Collectors.toUnmodifiableMap(ClassEntry::fromName, field -> (MutableClassEntry) field.makeMutable())));
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntr
 	public ClassEntry merge(MappingEntry<?> other) {
 		ClassEntry clazz = ((ClassEntry) other);
 		Collection<MutableMappingEntry<?>> children = AbstractParentMappingEntry.mergeChildren(this.children, clazz.children());
-		return new MutableClassEntryImpl(this.fromName, this.toName != null ? this.toName : clazz.getToName(), children);
+		return new MutableClassEntryImpl(this.fromName, AbstractNamedParentMappingEntry.joinNames(this.toNames, clazz.toNames()), children);
 	}
 
 	@Override
@@ -82,17 +82,17 @@ public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntr
 
 		if (entry instanceof MutableFieldEntry field) {
 			this.fields.add(field);
-			this.fieldsByName.put(field.getFromName(), field);
+			this.fieldsByName.put(field.fromName(), field);
 		}
 
 		if (entry instanceof MutableMethodEntry method) {
 			this.methods.add(method);
-			this.methodsByName.put(method.getFromName(), method);
+			this.methodsByName.put(method.fromName(), method);
 		}
 
 		if (entry instanceof MutableClassEntry clazz) {
 			this.classes.add(clazz);
-			this.classesByName.put(clazz.getFromName(), clazz);
+			this.classesByName.put(clazz.fromName(), clazz);
 		}
 	}
 
@@ -100,88 +100,88 @@ public class MutableClassEntryImpl extends MutableAbstractNamedParentMappingEntr
 	public String toString() {
 		return "ClassEntry[" +
 			   "fromName='" + fromName + '\'' +
-			   ", toName='" + toName + '\'' +
+			   ", toNames='" + toNames + '\'' +
 			   ", children=" + children +
 			   ']';
 	}
 
 	@Override
 	public ClassEntry makeFinal() {
-		return new ClassEntryImpl(this.fromName, this.toName, List.copyOf(this.children));
+		return new ClassEntryImpl(this.fromName, this.toNames, List.copyOf(this.children));
 	}
 
-	public Collection<? extends MutableFieldEntry> getFields() {
+	public Collection<? extends MutableFieldEntry> fields() {
 		return fields;
 	}
 
-	public Map<String, ? extends MutableFieldEntry> getFieldsByName() {
+	public Map<String, ? extends MutableFieldEntry> fieldsByName() {
 		return fieldsByName;
 	}
 
 	@Override
-	public Optional<? extends MutableFieldEntry> getFieldMapping(String fromName) {
-		return hasFieldMapping(fromName) ? Optional.of(fieldsByName.get(fromName)) : Optional.empty();
+	public Optional<? extends MutableFieldEntry> field(String fromName) {
+		return hasField(fromName) ? Optional.of(fieldsByName.get(fromName)) : Optional.empty();
 	}
 
 	@Override
-	public MutableFieldEntry createFieldEntry(String fromName, @Nullable String toName, String descriptor) {
-		MutableFieldEntryImpl field = new MutableFieldEntryImpl(fromName, toName, descriptor, List.of());
+	public MutableFieldEntry createFieldEntry(String fromName, List<String> toNames, String descriptor) {
+		MutableFieldEntryImpl field = new MutableFieldEntryImpl(fromName, toNames, descriptor, List.of());
 		this.addChild(field);
 		return field;
 	}
 
 	@Override
-	public boolean hasFieldMapping(String fromName) {
+	public boolean hasField(String fromName) {
 		return fieldsByName.containsKey(fromName);
 	}
 
-	public Collection<? extends MutableMethodEntry> getMethods() {
+	public Collection<? extends MutableMethodEntry> methods() {
 		return methods;
 	}
 
-	public Map<String, ? extends MutableMethodEntry> getMethodsByName() {
+	public Map<String, ? extends MutableMethodEntry> methodsByName() {
 		return methodsByName;
 	}
 
 	@Override
-	public Optional<? extends MutableMethodEntry> getMethodMapping(String fromName) {
-		return hasMethodMapping(fromName) ? Optional.of(methodsByName.get(fromName)) : Optional.empty();
+	public Optional<? extends MutableMethodEntry> method(String fromName) {
+		return hasMethod(fromName) ? Optional.of(methodsByName.get(fromName)) : Optional.empty();
 	}
 
 	@Override
-	public MutableMethodEntry createMethodEntry(String fromName, @Nullable String toName, String descriptor) {
-		MutableMethodEntryImpl method = new MutableMethodEntryImpl(fromName, toName, descriptor, List.of());
+	public MutableMethodEntry createMethodEntry(String fromName, List<String> toNames, String descriptor) {
+		MutableMethodEntryImpl method = new MutableMethodEntryImpl(fromName, toNames, descriptor, List.of());
 		this.addChild(method);
 		return method;
 	}
 
 	@Override
-	public boolean hasMethodMapping(String fromName) {
+	public boolean hasMethod(String fromName) {
 		return methodsByName.containsKey(fromName);
 	}
 
-	public Collection<? extends MutableClassEntry> getClasses() {
+	public Collection<? extends MutableClassEntry> classes() {
 		return classes;
 	}
 
-	public Map<String, ? extends MutableClassEntry> getClassesByName() {
+	public Map<String, ? extends MutableClassEntry> classesByName() {
 		return classesByName;
 	}
 
 	@Override
-	public Optional<? extends MutableClassEntry> getClassMapping(String fromName) {
-		return hasClassMapping(fromName) ? Optional.of(classesByName.get(fromName)) : Optional.empty();
+	public Optional<? extends MutableClassEntry> classEntry(String fromName) {
+		return hasClass(fromName) ? Optional.of(classesByName.get(fromName)) : Optional.empty();
 	}
 
 	@Override
-	public MutableClassEntry createClassEntry(String fromName, @Nullable String toName) {
-		MutableClassEntryImpl clazz = new MutableClassEntryImpl(fromName, toName, List.of());
+	public MutableClassEntry createClassEntry(String fromName, List<String> toName) {
+		MutableClassEntryImpl clazz = new MutableClassEntryImpl(fromName, toNames, List.of());
 		this.addChild(clazz);
 		return clazz;
 	}
 
 	@Override
-	public boolean hasClassMapping(String fromName) {
+	public boolean hasClass(String fromName) {
 		return classesByName.containsKey(fromName);
 	}
 }

@@ -17,10 +17,20 @@
 package org.quiltmc.mapping.api.entry.unpick;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+/**
+ * A mutable representation of an Unpick Entry
+ */
 public interface MutableUnpickEntry extends UnpickEntry, MutableMappingEntry<UnpickEntry> {
+	/**
+	 * @param group the new unpick group
+	 */
 	void setGroup(String group);
 
+	/**
+	 * @param type the new unpick type
+	 */
 	void setType(@Nullable UnpickType type);
 }

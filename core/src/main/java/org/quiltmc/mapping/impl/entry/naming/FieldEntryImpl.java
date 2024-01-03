@@ -17,23 +17,25 @@
 package org.quiltmc.mapping.impl.entry.naming;
 
 import java.util.Collection;
+import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 import org.quiltmc.mapping.api.entry.naming.FieldEntry;
 import org.quiltmc.mapping.impl.entry.AbstractNamedParentDescriptorMappingEntry;
+import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 
 public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<FieldEntry> implements FieldEntry {
-	public FieldEntryImpl(String fromName, @Nullable String toName, String descriptor, Collection<MappingEntry<?>> children) {
-		super(fromName, toName, descriptor, children);
+	public FieldEntryImpl(String fromName, String descriptor, List<String> toNames, Collection<MappingEntry<?>> children) {
+		super(fromName, toNames, descriptor, children);
 	}
 
 	@Override
 	public FieldEntry merge(MappingEntry<?> other) {
 		FieldEntry field = ((FieldEntry) other);
 		Collection<MappingEntry<?>> children = mergeChildren(this.children, field.children());
-		return new FieldEntryImpl(this.fromName, this.toName != null ? this.toName : field.getToName(), this.descriptor, children);
+
+		return new FieldEntryImpl(this.fromName, this.descriptor, AbstractNamedParentMappingEntry.joinNames(this.toNames, field.toNames()), children);
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<Fi
 
 	@Override
 	public MutableMappingEntry<FieldEntry> makeMutable() {
-		return new MutableFieldEntryImpl(this.fromName, this.toName, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
+		return new MutableFieldEntryImpl(this.fromName, this.toNames, this.descriptor, this.children.stream().map(MappingEntry::makeMutable).toList());
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class FieldEntryImpl extends AbstractNamedParentDescriptorMappingEntry<Fi
 		return "FieldEntry[" +
 			   "descriptor='" + descriptor + '\'' +
 			   ", fromName='" + fromName + '\'' +
-			   ", toName='" + toName + '\'' +
+			   ", toNames='" + toNames + '\'' +
 			   ", children=" + children +
 			   ']';
 	}

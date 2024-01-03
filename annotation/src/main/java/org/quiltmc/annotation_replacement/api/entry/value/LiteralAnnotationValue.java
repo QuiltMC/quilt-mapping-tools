@@ -33,7 +33,7 @@ import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 public interface LiteralAnnotationValue extends AnnotationValue<Object, LiteralAnnotationValue> {
 	Parser<LiteralAnnotationValue, TabSeparatedContent> PARSER = new Parser<>() {
 		@Override
-		public LiteralAnnotationValue parse(TabSeparatedContent input) {
+		public LiteralAnnotationValue deserialize(TabSeparatedContent input) {
 			String name = input.getContent().get(1);
 			String descriptor = input.getContent().get(2);
 

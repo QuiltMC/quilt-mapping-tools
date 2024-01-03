@@ -18,19 +18,42 @@ package org.quiltmc.mapping.api.entry;
 
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+/**
+ * The basic building block for all mapping entries. This builds a large tree that holds information about a mapping set.
+ *
+ * @param <T> The mapping entry type
+ */
 public interface MappingEntry<T extends MappingEntry<T>> {
-	T remap();
+	T remap(); // TODO: Remove?
 
+	/**
+	 * @return the type for the mapping
+	 */
 	MappingType<T> getType();
 
+	/**
+	 * Mapping entries should be able to merge if they both target the same entry.
+	 *
+	 * @param other the other mapping
+	 * @return true if the two mappings should merge
+	 */
 	default boolean shouldMerge(MappingEntry<?> other) {
 		return this.getType().equals(other.getType());
 	}
 
+	/**
+	 * If two mapping entries target the same entry, combine them.
+	 *
+	 * @param other the other entry
+	 * @return the merged entry
+	 */
 	@SuppressWarnings("unchecked")
 	default T merge(MappingEntry<?> other) {
 		return (T) this;
 	}
 
+	/**
+	 * @return a mutable representation of the current entry
+	 */
 	MutableMappingEntry<T> makeMutable();
 }

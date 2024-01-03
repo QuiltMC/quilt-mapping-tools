@@ -18,24 +18,30 @@ package org.quiltmc.mapping.api.file;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.MappingTypes;
 import org.quiltmc.mapping.api.parse.Parser;
 import org.quiltmc.mapping.api.parse.Parsers;
-import org.quiltmc.mapping.impl.entry.AbstractNamedParentMappingEntry;
 import org.quiltmc.mapping.impl.serialization.TabSeparatedContent;
 
+/**
+ * Represents a mapping file.
+ *
+ * @param header  the header for the file
+ * @param entries the entries present in the file
+ */
 public record QuiltMappingFile(MappingHeader header, Collection<MappingEntry<?>> entries) {
+	/**
+	 * The parser for the file.
+	 */
 	public static final Parser<QuiltMappingFile, TabSeparatedContent> PARSER = new Parser<>() {
 		@Override
-		public QuiltMappingFile parse(TabSeparatedContent input) {
+		public QuiltMappingFile deserialize(TabSeparatedContent input) {
 			List<TabSeparatedContent> subcontents = new ArrayList<>(input.getSubcontent());
 			TabSeparatedContent headerContent = subcontents.remove(0);
-			MappingHeader header = MappingHeader.PARSER.parse(headerContent);
+			MappingHeader header = MappingHeader.PARSER.deserialize(headerContent);
 
 			Collection<MappingEntry<?>> children = Parsers.parseChildren(MappingTypes.types().values(), subcontents);
 
@@ -57,11 +63,14 @@ public record QuiltMappingFile(MappingHeader header, Collection<MappingEntry<?>>
 		}
 	};
 
+	// TODO: Figure this out
 	public QuiltMappingFile merge(QuiltMappingFile other) {
-		Set<String> extensions = new HashSet<>(this.header.extensions());
-		extensions.addAll(other.header.extensions());
-		MappingHeader header = new MappingHeader(this.header.fromNamespace(), this.header.toNamespace(), extensions);
+		throw new IllegalStateException("Not implemented yet");
 
-		return new QuiltMappingFile(header, AbstractNamedParentMappingEntry.mergeChildren(this.entries, other.entries));
+//		Set<String> extensions = new HashSet<>(this.header.extensions());
+//		extensions.addAll(other.header.extensions());
+//		MappingHeader header = new MappingHeader(this.header.fromNamespace(), this.header.toNamespaces(), extensions);
+//
+//		return new QuiltMappingFile(header, AbstractNamedParentMappingEntry.mergeChildren(this.entries, other.entries));
 	}
 }

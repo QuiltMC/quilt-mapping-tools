@@ -17,10 +17,21 @@
 package org.quiltmc.mapping.api.entry.info;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.mutable.MutableParentMappingEntry;
 
+/**
+ * A mutable representation of an Argument Entry
+ */
 public interface MutableArgEntry extends ArgEntry, MutableParentMappingEntry<ArgEntry> {
+	/**
+	 * @param index the new index for the argument
+	 */
 	void setIndex(int index);
 
-	void setName(@Nullable String name);
+	/**
+	 * @param namespace the namespace to set
+	 * @param name      the name to set
+	 */
+	void setName(int namespace, @Nullable String name);
 }

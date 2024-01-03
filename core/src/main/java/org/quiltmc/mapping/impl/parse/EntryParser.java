@@ -18,6 +18,7 @@ package org.quiltmc.mapping.impl.parse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -31,6 +32,10 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 	protected final Function<List<Object>, I> constructor;
 
 	public EntryParser(List<Field<I, ?>> fields, Supplier<String> key, Function<List<Object>, I> constructor) {
+		if (fields.stream().filter(Field::greedy).count() > 1) {
+			throw new IllegalArgumentException("Cannot have more than two greedy fields");
+		}
+
 		this.fields = fields;
 		this.key = key;
 		this.constructor = constructor;
@@ -41,11 +46,13 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 		List<String> content = new ArrayList<>(input.getContent());
 		content.remove(0); // Remove the key
 
-		int nullableFields = (int) this.fields.stream().filter(f -> f.inline() && f.nullable()).count() - (this.fields.size() - content.size());
+		// I can't remember how this worked but it does
+		int nullableFields = (int) this.fields.stream().filter(f -> (f.inline() && !f.greedy()) && f.nullable()).count() - (this.fields.size() - content.size());
 
+		// First, we read the inline fields
 		int contentIndex = 0;
 		for (Field<I, ?> f : fields) {
-			if (!f.inline()) continue;
+			if (!f.inline() || f.greedy()) continue;
 
 			if (f.nullable()) {
 				if (nullableFields > 0) {
@@ -62,10 +69,26 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 
 			String value = content.get(contentIndex++);
 			Parser<Object, String> parser = (Parser<Object, String>) f.parser();
-			Object val = parser.parse(value);
+			Object val = parser.deserialize(value);
 			values.add(val);
 		}
 
+		Optional<Field<I, ?>> greedy = this.fields.stream().filter(Field::greedy).findFirst();
+
+		if (greedy.isPresent()) {
+			Field<I, ?> f = greedy.get();
+			if (f.nullable() && nullableFields == 0) {
+				values.add(null);
+			} else {
+				List<String> value = content.subList(contentIndex, content.size());
+				Parser<Object, List<String>> parser = (Parser<Object, List<String>>) f.parser();
+				Object val = parser.deserialize(value);
+				values.add(val);
+			}
+		}
+
+
+		// Then we read the sub-fields
 		int consumedSubcontent = 0;
 		for (Field<I, ?> f : fields) {
 			if (f.inline()) continue;
@@ -79,7 +102,7 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 
 
 			Parser<Object, List<String>> parser = (Parser<Object, List<String>>) f.parser();
-			Object val = parser.parse(value);
+			Object val = parser.deserialize(value);
 			values.add(val);
 		}
 
@@ -87,7 +110,7 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 	}
 
 	@Override
-	public I parse(TabSeparatedContent input) {
+	public I deserialize(TabSeparatedContent input) {
 		List<Object> values = new ArrayList<>();
 
 		parseFields(input, values);
@@ -104,9 +127,15 @@ public class EntryParser<I> implements Parser<I, TabSeparatedContent> {
 			}
 
 			if (f.inline()) {
-				Parser<Object, String> parser = (Parser<Object, String>) f.parser();
-				String serialized = parser.serialize(val);
-				content.pushContent(serialized);
+				if (f.greedy()) {
+					Parser<Object, List<String>> parser = (Parser<Object, List<String>>) f.parser();
+					List<String> serialized = parser.serialize(val);
+					serialized.forEach(content::pushContent);
+				} else {
+					Parser<Object, String> parser = (Parser<Object, String>) f.parser();
+					String serialized = parser.serialize(val);
+					content.pushContent(serialized);
+				}
 			} else {
 				Parser<Object, List<String>> parser = (Parser<Object, List<String>>) f.parser();
 				List<String> serialized = new ArrayList<>(parser.serialize(val));

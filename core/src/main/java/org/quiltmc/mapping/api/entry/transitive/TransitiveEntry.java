@@ -27,6 +27,9 @@ import org.quiltmc.mapping.api.entry.naming.MethodEntry;
 import org.quiltmc.mapping.api.parse.Parsers;
 import org.quiltmc.mapping.impl.entry.transitive.TransitiveEntryImpl;
 
+/**
+ * Represents a transitive entry. Transitive entries can apply to Classes, Fields, and Methods. The presence of a transitive entry on one of these entries means that the name given to target should be used. This allows for names to be linked between different entries.
+ */
 public interface TransitiveEntry extends MappingEntry<TransitiveEntry> {
 	MappingType<TransitiveEntry> TRANSITIVE_MAPPING_TYPE = MappingTypes.register(new MappingType<>("transitive",
 		TransitiveEntry.class,
@@ -35,9 +38,15 @@ public interface TransitiveEntry extends MappingEntry<TransitiveEntry> {
 			() -> TransitiveEntry.TRANSITIVE_MAPPING_TYPE,
 			target -> new TransitiveEntryImpl(target, Set.of()))));
 
+	/**
+	 * @return the target for the transitive entry
+	 */
 	String target();
 
-	Set<MappingType<?>> transitiveTypes();
+	/**
+	 * @return the subtypes to pull from the entry
+	 */
+	Set<MappingType<?>> transitiveTypes(); // TODO: how should this work, ie method args dont match
 
 	@Override
 	default boolean shouldMerge(MappingEntry<?> other) {

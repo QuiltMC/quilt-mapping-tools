@@ -18,6 +18,12 @@ package org.quiltmc.mapping.api.entry.info;
 
 import org.quiltmc.mapping.api.entry.mutable.MutableMappingEntry;
 
+/**
+ * A mutable representation of a Comment entry
+ */
 public interface MutableCommentEntry extends CommentEntry, MutableMappingEntry<CommentEntry> {
+	/**
+	 * @param comment the new comment
+	 */
 	void setComment(String comment);
 }

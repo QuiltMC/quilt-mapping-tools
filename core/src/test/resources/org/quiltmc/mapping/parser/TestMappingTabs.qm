@@ -1,11 +1,11 @@
-QUILT_MAPPING	<from_namespace>	[to_namespace]
+QUILT_MAPPING	<from_namespace>	[to_namespace_a]	[to_namespace_b]
 	EXTENSIONS	unpick	comment	transitive
-CLASS	<from_name>	[to_name]
+CLASS	<from_name>	[to_name_a]	[to_name_b]
 	COMMENT	This is a test comment!
-	FIELD	<from_name>	[to_name]	<from_descriptor>
+	FIELD	<from_name>	<from_descriptor>	[to_name_a]	[to_name_b]
 		UNPICK	<test_group>	constant
-	CLASS	<nested_from_name>	[nested_to_name]
-	METHOD	<from_name>	[to_name]	<from_descriptor>
+	CLASS	<nested_from_name>	[nested_to_name_a]	[nested_to_name_b]
+	METHOD	<from_name>	<from_descriptor>	[to_name_a]	[to_name_b]
 		ARG	0	[name]
 			UNPICK	<test_group>
 		ARG	1	[name]

@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.quiltmc.mapping.api.entry.MappingEntry;
 import org.quiltmc.mapping.api.entry.info.ArgEntry;
 import org.quiltmc.mapping.api.entry.info.MutableArgEntry;
@@ -31,18 +33,18 @@ import org.quiltmc.mapping.impl.entry.MutableAbstractParentMappingEntry;
 
 public class MutableArgEntryImpl extends MutableAbstractParentMappingEntry<ArgEntry> implements MutableArgEntry {
 	protected int index;
-	protected @Nullable String name;
+	protected List<String> names;
 
-	public MutableArgEntryImpl(int index, @Nullable String name, Collection<? extends MutableMappingEntry<?>> children) {
+	public MutableArgEntryImpl(int index, List<String> names, Collection<? extends MutableMappingEntry<?>> children) {
 		super(new ArrayList<>(children));
 		this.index = index;
-		this.name = name;
+		this.names = names;
 	}
 
 	@Override
 	public ArgEntry merge(MappingEntry<?> other) {
 		ArgEntry arg = (ArgEntry) other;
-		return new MutableArgEntryImpl(this.index, this.name != null ? this.name : arg.name(), AbstractNamedParentMappingEntry.mergeChildren(this.children, arg.children()));
+		return new MutableArgEntryImpl(this.index, AbstractNamedParentMappingEntry.joinNames(this.names, arg.names()), AbstractNamedParentMappingEntry.mergeChildren(this.children, arg.children()));
 	}
 
 	@Override
@@ -59,8 +61,17 @@ public class MutableArgEntryImpl extends MutableAbstractParentMappingEntry<ArgEn
 		return index;
 	}
 
-	public @Nullable String name() {
-		return name;
+	public List<String> names() {
+		return names;
+	}
+
+	public boolean hasName(int namespace) {
+		return namespace < this.names.size() && 0 <= namespace && this.names.get(namespace) != null;
+	}
+
+	@Override
+	public Optional<String> name(int namespace) {
+		return this.hasName(namespace) ? Optional.of(this.names.get(namespace)) : Optional.empty();
 	}
 
 	@Override
@@ -69,20 +80,20 @@ public class MutableArgEntryImpl extends MutableAbstractParentMappingEntry<ArgEn
 		if (obj == null || obj.getClass() != this.getClass()) return false;
 		var that = (MutableArgEntryImpl) obj;
 		return this.index == that.index &&
-			   Objects.equals(this.name, that.name) &&
+			   Objects.equals(this.names, that.names) &&
 			   Objects.equals(this.children, that.children);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), index, name);
+		return Objects.hash(super.hashCode(), index, names);
 	}
 
 	@Override
 	public String toString() {
 		return "MutableArgEntry[" +
 			   "index=" + index + ", " +
-			   "name=" + name + ", " +
+			   "names=" + names + ", " +
 			   "children=" + children + ']';
 	}
 
@@ -92,12 +103,12 @@ public class MutableArgEntryImpl extends MutableAbstractParentMappingEntry<ArgEn
 	}
 
 	@Override
-	public void setName(@Nullable String name) {
-		this.name = name;
+	public void setName(int namespace, @Nullable String name) {
+		this.names.set(namespace, name);
 	}
 
 	@Override
 	public ArgEntry makeFinal() {
-		return new ArgEntryImpl(this.index, this.name, List.copyOf(this.children));
+		return new ArgEntryImpl(this.index, this.names, List.copyOf(this.children));
 	}
 }

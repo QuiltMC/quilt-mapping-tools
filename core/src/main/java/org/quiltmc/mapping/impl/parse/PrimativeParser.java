@@ -16,9 +16,11 @@
 
 package org.quiltmc.mapping.impl.parse;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.quiltmc.mapping.api.parse.Field;
@@ -26,7 +28,7 @@ import org.quiltmc.mapping.api.parse.Parser;
 
 public record PrimativeParser<I>(Function<String, I> parser) implements Parser<I, String> {
 	@Override
-	public I parse(String input) {
+	public I deserialize(String input) {
 		return parser.apply(input);
 	}
 
@@ -36,50 +38,40 @@ public record PrimativeParser<I>(Function<String, I> parser) implements Parser<I
 	}
 
 	public Parser<List<I>, List<String>> list() {
-		return new Parser<>() {
-			@Override
-			public List<I> parse(List<String> input) {
-				return input.stream().map(PrimativeParser.this::parse).toList();
-			}
+		return new CollectionParser<>(this, Collectors.toList(), false);
+	}
 
-			@Override
-			public List<String> serialize(List<I> input) {
-				return input.stream().map(PrimativeParser.this::serialize).toList();
-			}
-
-			@Override
-			public <P> Field<P, List<I>> field(String name, Function<P, List<I>> getter) {
-				return new Field<>(this, name, getter, false, false);
-			}
-
-			@Override
-			public <P> Field<P, List<I>> nullableField(String name, Function<P, List<I>> getter) {
-				return new Field<>(this, name, getter, true, false);
-			}
-		};
+	public Parser<List<I>, List<String>> greedyList() {
+		return new CollectionParser<>(this, Collectors.toList(), true);
 	}
 
 	public Parser<Set<I>, List<String>> set() {
-		return new Parser<>() {
-			@Override
-			public Set<I> parse(List<String> input) {
-				return input.stream().map(PrimativeParser.this::parse).collect(Collectors.toSet());
-			}
+		return new CollectionParser<>(this, Collectors.toSet(), false);
+	}
 
-			@Override
-			public List<String> serialize(Set<I> input) {
-				return input.stream().map(PrimativeParser.this::serialize).toList();
-			}
+	public Parser<Set<I>, List<String>> greedySet() {
+		return new CollectionParser<>(this, Collectors.toSet(), true);
+	}
 
-			@Override
-			public <P> Field<P, Set<I>> field(String name, Function<P, Set<I>> getter) {
-				return new Field<>(this, name, getter, false, false);
-			}
+	private record CollectionParser<T, C extends Collection<T>>(PrimativeParser<T> parser, Collector<T, ?, C> collector, boolean greedy) implements Parser<C, List<String>> {
+		@Override
+		public C deserialize(List<String> input) {
+			return input.stream().map(this.parser::deserialize).collect(this.collector);
+		}
 
-			@Override
-			public <P> Field<P, Set<I>> nullableField(String name, Function<P, Set<I>> getter) {
-				return new Field<>(this, name, getter, true, false);
-			}
-		};
+		@Override
+		public List<String> serialize(C input) {
+			return input.stream().map(this.parser::serialize).toList();
+		}
+
+		@Override
+		public <P> Field<P, C> field(String name, Function<P, C> getter) {
+			return new Field<>(this, name, getter, false, this.greedy, this.greedy);
+		}
+
+		@Override
+		public <P> Field<P, C> nullableField(String name, Function<P, C> getter) {
+			return new Field<>(this, name, getter, true, this.greedy, this.greedy);
+		}
 	}
 }
